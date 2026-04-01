@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Documentation
-    url: https://mrd-chart.dev/docs
+    url: https://github.com/PhamNhinh/kline-orderbook-chart#documentation
     about: Check the documentation before opening an issue
   - name: Sales & Licensing
-    url: https://mrd-chart.dev/contact
+    url: mailto:support@mrd-indicators.com
     about: For license purchases, upgrades, and sales inquiries

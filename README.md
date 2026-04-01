@@ -13,7 +13,7 @@
   <a href="#run-demo-locally">Run Demo Locally</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="#documentation">Documentation</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="#pricing">Pricing</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
-  <a href="mailto:license@mrd-chart.dev">Contact Sales</a>
+  <a href="mailto:support@mrd-indicators.com">Contact Sales</a>
 </p>
 
 <p align="center">
@@ -429,7 +429,7 @@ Free 14-day trial included. Contact us for pricing and license options:
 
 <p align="center">
   <a href="https://app.mrd-indicators.com/trading/chart-terminal">Try live demo</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
-  <a href="mailto:license@mrd-chart.dev"><strong>Contact for pricing &rarr;</strong></a>
+  <a href="mailto:support@mrd-indicators.com"><strong>Contact for pricing &rarr;</strong></a>
 </p>
 
 ---
