@@ -18,7 +18,8 @@
 </p>
 
 <p align="center">
-  <img alt="npm version" src="https://img.shields.io/npm/v/@mrd/chart-engine?color=0a7cff&label=version" />
+  <a href="https://www.npmjs.com/package/kline-orderbook-chart"><img alt="npm version" src="https://img.shields.io/npm/v/kline-orderbook-chart?color=0a7cff&label=npm" /></a>
+  <a href="https://www.npmjs.com/package/kline-orderbook-chart"><img alt="npm downloads" src="https://img.shields.io/npm/dm/kline-orderbook-chart?color=0a7cff" /></a>
   <img alt="bundle size" src="https://img.shields.io/badge/bundle-380KB_gzip-0a7cff" />
   <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-brightgreen" />
   <img alt="framework agnostic" src="https://img.shields.io/badge/framework-agnostic-blueviolet" />
@@ -235,13 +236,13 @@ Even with **8 indicators active simultaneously** on 10K candles, sustained rende
 ### Install
 
 ```bash
-npm install @mrd/chart-engine
+npm install kline-orderbook-chart
 ```
 
 ### Basic usage
 
 ```javascript
-import { createChartBridge, prefetchEngine } from '@mrd/chart-engine'
+import { createChartBridge, prefetchEngine } from 'kline-orderbook-chart'
 
 // Pre-load engine for faster first render (optional)
 prefetchEngine()
@@ -318,7 +319,7 @@ For the **full experience with real market data** and live orderbook heatmap str
 │  Your Application  (React / Vue / Svelte / Vanilla JS)       │
 │                                                              │
 │  ┌────────────────────────────────────────────────────────┐  │
-│  │  @mrd/chart-engine                                      │  │
+│  │  kline-orderbook-chart                                      │  │
 │  │                                                         │  │
 │  │  ┌───────────────────────────────────────────────────┐  │  │
 │  │  │  Native Engine (compiled)                           │  │  │
@@ -348,7 +349,7 @@ For the **full experience with real market data** and live orderbook heatmap str
 
 ```jsx
 import { useEffect, useRef } from 'react'
-import { createChartBridge } from '@mrd/chart-engine'
+import { createChartBridge } from 'kline-orderbook-chart'
 
 function Chart({ data }) {
   const ref = useRef(null)
@@ -381,7 +382,7 @@ function Chart({ data }) {
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { createChartBridge } from '@mrd/chart-engine'
+import { createChartBridge } from 'kline-orderbook-chart'
 
 const el = ref(null)
 let chart = null
@@ -407,7 +408,7 @@ onBeforeUnmount(() => chart?.destroy())
 ```html
 <canvas id="chart" style="width:100%;height:600px"></canvas>
 <script type="module">
-  import { createChartBridge } from '@mrd/chart-engine'
+  import { createChartBridge } from 'kline-orderbook-chart'
 
   const chart = await createChartBridge(
     document.getElementById('chart'),
