@@ -1,90 +1,254 @@
 /**
  * MRD Chart Engine — Quick Start Demo
  *
- * This file shows how to integrate @mrd/chart-engine into a vanilla JS project.
- * Run `npm install && npm run dev` to see it in action.
+ * Loads 10 000 real candles from the Binance REST API and streams
+ * real-time updates via Binance WebSocket.
  *
- * For the full live demo with real data, visit:
+ * Full live demo with orderbook heatmap + footprint:
  * https://app.mrd-indicators.com/trading/chart-terminal
  */
 
 import { createChartBridge, prefetchWasm as prefetchEngine } from '../lib/mrd-chart-engine.mjs'
-import { generateKlines, generateHeatmapMatrix, generateOIData, simulateLive } from './sample-data.js'
+import { generateHeatmapMatrix, generateOIData } from './sample-data.js'
 
-// ── License key ──
-// Trial mode: omit licenseKey or pass 'trial' → 14-day trial with watermark
-// Production: pass your license key here → no watermark, full features
 const LICENSE_KEY = 'trial'
+
+// ── Binance endpoints ──
+const REST = 'https://api.binance.com/api/v3'
+const WS  = 'wss://stream.binance.com:9443/ws'
+const TF_INTERVAL = { 60: '1m', 300: '5m', 900: '15m', 3600: '1h', 14400: '4h', 86400: '1d' }
 
 // ── State ──
 let bridge = null
 let klines = []
-let stopLive = null
+let ws = null
+let wsTarget = null
+let lastKlineTs = 0
 let currentSymbol = 'BTCUSDT'
-let currentPrice = 68500
 let currentTf = 300
 
-// ── Init ──
-prefetchEngine()
+// ── Helpers ──
 
-const canvas = document.getElementById('chart')
-const loading = document.getElementById('loading')
+function decompose(arr) {
+  const n = arr.length
+  const t = new Array(n), o = new Array(n), h = new Array(n)
+  const l = new Array(n), c = new Array(n), v = new Array(n)
+  for (let i = 0; i < n; i++) {
+    const k = arr[i]
+    t[i] = k.t; o[i] = k.o; h[i] = k.h
+    l[i] = k.l; c[i] = k.c; v[i] = k.v
+  }
+  return { t, o, h, l, c, v }
+}
 
-async function initChart() {
-  bridge = await createChartBridge(canvas, { licenseKey: LICENSE_KEY })
+function feedKlines(arr) {
+  const d = decompose(arr)
+  bridge.setKlines(d.t, d.o, d.h, d.l, d.c, d.v)
+}
 
-  klines = generateKlines(1000, currentPrice, currentTf)
-  bridge.setKlines(klines)
-  bridge.setCandleInterval(currentTf)
-  bridge.setPrecision(currentPrice > 1000 ? 1 : 2)
+function precision(price) {
+  if (price >= 10000) return 1
+  if (price >= 100) return 2
+  if (price >= 1) return 4
+  return 6
+}
 
-  bridge.enableVolume(true)
+// ── Footprint builder (synthetic from OHLCV) ──
 
-  bridge.start()
+function buildFootprintFromKlines() {
+  const n = klines.length
+  if (n === 0) return
 
-  loading.classList.add('hidden')
+  let atr = 0
+  const atrN = Math.min(200, n)
+  for (let i = n - atrN; i < n; i++) atr += klines[i].h - klines[i].l
+  atr /= atrN
+  const tick = Math.max(atr / 12, 0.01)
 
-  updatePriceDisplay()
-  startLiveSimulation()
+  bridge.footprintClear()
+  bridge.setFootprintTickSize(tick)
+  bridge.footprintEnsureLen(n)
+
+  for (let i = 0; i < n; i++) {
+    const k = klines[i]
+    _buildBarFp(bridge, i, k.o, k.h, k.l, k.c, k.v * k.c, tick)
+  }
+}
+
+function _buildBarFp(br, idx, o, h, l, c, v, tick) {
+  if (v <= 0 || h <= l) return
+  const isBull = c >= o
+  const bodyTop = Math.max(o, c), bodyBot = Math.min(o, c)
+  const bodyMid = (bodyTop + bodyBot) / 2
+  const candleRange = h - l
+
+  const rowLo = Math.floor(l / tick), rowHi = Math.ceil(h / tick)
+  const bodyRows = [], upperRows = [], lowerRows = []
+  for (let r = rowLo; r <= rowHi; r++) {
+    const p = r * tick
+    if (p >= bodyBot && p <= bodyTop) bodyRows.push(r)
+    else if (p > bodyTop) upperRows.push(r)
+    else lowerRows.push(r)
+  }
+
+  const nBody = Math.max(bodyRows.length, 1)
+  const bodyVol = v * 0.70, upperVol = v * 0.15, lowerVol = v * 0.15
+
+  const prices = [], bids = [], asks = []
+  const sigma = Math.max((bodyTop - bodyBot) / 2, tick)
+  const gauss = (p) => Math.exp(-0.5 * ((p - bodyMid) / sigma) ** 2)
+
+  let wSum = 0
+  const bw = bodyRows.map(r => { const w = gauss(r * tick + tick / 2); wSum += w; return w })
+
+  for (let j = 0; j < bodyRows.length; j++) {
+    const p = bodyRows[j] * tick
+    const share = bodyVol * (wSum > 0 ? bw[j] / wSum : 1 / nBody)
+    const dist = Math.abs(p + tick / 2 - c) / Math.max(candleRange, tick)
+    const dom = 0.55 + 0.25 * (1 - dist)
+    const bidS = isBull ? share * dom : share * (1 - dom)
+    prices.push(p); bids.push(bidS); asks.push(share - bidS)
+  }
+
+  for (let j = 0; j < upperRows.length; j++) {
+    const p = upperRows[j] * tick
+    const fade = 1 - (j + 1) / (upperRows.length + 1)
+    let ws = 0; for (let k = 0; k < upperRows.length; k++) ws += 1 - (k + 1) / (upperRows.length + 1)
+    const share = ws > 0 ? upperVol * fade / ws : upperVol / upperRows.length
+    const bidR = isBull ? 0.35 : 0.25
+    prices.push(p); bids.push(share * bidR); asks.push(share * (1 - bidR))
+  }
+
+  for (let j = 0; j < lowerRows.length; j++) {
+    const p = lowerRows[lowerRows.length - 1 - j] * tick
+    const fade = 1 - (j + 1) / (lowerRows.length + 1)
+    let ws = 0; for (let k = 0; k < lowerRows.length; k++) ws += 1 - (k + 1) / (lowerRows.length + 1)
+    const share = ws > 0 ? lowerVol * fade / ws : lowerVol / lowerRows.length
+    const bidR = isBull ? 0.75 : 0.65
+    prices.push(p); bids.push(share * bidR); asks.push(share * (1 - bidR))
+  }
+
+  br.footprintSetBar(idx, tick, new Float64Array(prices), new Float64Array(bids), new Float64Array(asks))
 }
 
 function updatePriceDisplay() {
   if (!klines.length) return
   const last = klines[klines.length - 1]
   const first = klines[0]
+  const prec = precision(last.c)
   const change = ((last.c - first.o) / first.o * 100).toFixed(2)
   const isUp = last.c >= first.o
 
-  document.getElementById('last-price').textContent = last.c.toFixed(currentPrice > 1000 ? 1 : 2)
-  const changeEl = document.getElementById('price-change')
-  changeEl.textContent = `${isUp ? '+' : ''}${change}%`
-  changeEl.className = `change ${isUp ? 'up' : 'down'}`
+  document.getElementById('last-price').textContent = last.c.toFixed(prec)
+  const el = document.getElementById('price-change')
+  el.textContent = `${isUp ? '+' : ''}${change}%`
+  el.className = `change ${isUp ? 'up' : 'down'}`
 }
 
-function startLiveSimulation() {
-  if (stopLive) stopLive()
-  stopLive = simulateLive(klines, 800, (type, kline) => {
+// ── Binance REST — paginated fetch (10 × 1 000) ──
+
+function parseBinanceKline(k) {
+  return { t: Math.floor(k[0] / 1000), o: +k[1], h: +k[2], l: +k[3], c: +k[4], v: +k[5] }
+}
+
+async function fetchKlines(symbol, tfSec, total = 10000) {
+  const interval = TF_INTERVAL[tfSec] || '5m'
+  const batch = 1000
+  let all = []
+  let endTime = null
+
+  while (all.length < total) {
+    let url = `${REST}/klines?symbol=${symbol}&interval=${interval}&limit=${batch}`
+    if (endTime) url += `&endTime=${endTime}`
+
+    const res = await fetch(url)
+    if (!res.ok) throw new Error(`Binance ${res.status}`)
+    const data = await res.json()
+    if (!data.length) break
+
+    all = data.map(parseBinanceKline).concat(all)
+    endTime = data[0][0] - 1
+    if (data.length < batch) break
+  }
+
+  return all.slice(-total)
+}
+
+// ── Binance WebSocket — real-time kline stream ──
+
+function connectWs(symbol, tfSec) {
+  if (ws) { ws.close(); ws = null }
+
+  const interval = TF_INTERVAL[tfSec] || '5m'
+  const target = `${symbol}@${interval}`
+  wsTarget = target
+
+  const url = `${WS}/${symbol.toLowerCase()}@kline_${interval}`
+  ws = new WebSocket(url)
+
+  ws.onmessage = (evt) => {
     if (!bridge) return
-    if (type === 'update') {
-      bridge.updateLastKline(kline.t, kline.o, kline.h, kline.l, kline.c, kline.v)
+    const { k } = JSON.parse(evt.data)
+    const ts = Math.floor(k.t / 1000)
+    const o = +k.o, h = +k.h, l = +k.l, c = +k.c, v = +k.v
+
+    if (ts > lastKlineTs) {
+      bridge.appendKline(ts, o, h, l, c, v)
+      klines.push({ t: ts, o, h, l, c, v })
+      lastKlineTs = ts
     } else {
-      bridge.appendKline(kline.t, kline.o, kline.h, kline.l, kline.c, kline.v)
+      bridge.updateLastKline(ts, o, h, l, c, v)
+      const last = klines[klines.length - 1]
+      if (last) { last.o = o; last.h = h; last.l = l; last.c = c; last.v = v }
     }
     updatePriceDisplay()
-  })
+  }
+
+  ws.onerror = () => console.warn('[WS] error')
+  ws.onclose = () => {
+    if (wsTarget === target) setTimeout(() => connectWs(symbol, tfSec), 3000)
+  }
 }
 
-function switchSymbol(sym, price) {
-  currentSymbol = sym
-  currentPrice = price
-  document.getElementById('symbol').textContent = sym
-  if (stopLive) stopLive()
+// ── Load symbol data ──
 
-  klines = generateKlines(1000, price, currentTf)
-  bridge.setKlines(klines)
-  bridge.setPrecision(price > 1000 ? 1 : 2)
-  updatePriceDisplay()
-  startLiveSimulation()
+const loadingEl = document.getElementById('loading')
+const loadingText = loadingEl?.querySelector('p')
+
+async function loadSymbol(symbol, tfSec) {
+  loadingEl?.classList.remove('hidden')
+  if (loadingText) loadingText.textContent = `Loading ${symbol} ${TF_INTERVAL[tfSec] || '5m'}…`
+
+  try {
+    klines = await fetchKlines(symbol, tfSec, 10000)
+    if (!klines.length) throw new Error('empty response')
+
+    const lastPrice = klines[klines.length - 1].c
+    feedKlines(klines)
+    bridge.setCandleInterval(tfSec)
+    bridge.setPrecision(precision(lastPrice))
+
+    lastKlineTs = klines[klines.length - 1].t
+    connectWs(symbol, tfSec)
+    updatePriceDisplay()
+  } catch (err) {
+    console.error('[Demo] load failed:', err)
+    if (loadingText) loadingText.textContent = `Failed to load — ${err.message}`
+  } finally {
+    loadingEl?.classList.add('hidden')
+  }
+}
+
+// ── Init ──
+
+prefetchEngine()
+const canvas = document.getElementById('chart')
+
+async function initChart() {
+  bridge = await createChartBridge(canvas, { licenseKey: LICENSE_KEY })
+  bridge.enableVolume()
+  bridge.start()
+  await loadSymbol(currentSymbol, currentTf)
 }
 
 // ── Toolbar: Symbol ──
@@ -92,7 +256,9 @@ document.querySelectorAll('[data-sym]').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('[data-sym]').forEach(b => b.classList.remove('active'))
     btn.classList.add('active')
-    switchSymbol(btn.dataset.sym, +btn.dataset.price)
+    currentSymbol = btn.dataset.sym
+    document.getElementById('symbol').textContent = currentSymbol
+    loadSymbol(currentSymbol, currentTf)
   })
 })
 
@@ -102,18 +268,14 @@ document.querySelectorAll('[data-tf]').forEach(btn => {
     document.querySelectorAll('[data-tf]').forEach(b => b.classList.remove('active'))
     btn.classList.add('active')
     currentTf = +btn.dataset.tf
-    bridge.setCandleInterval(currentTf)
-    if (stopLive) stopLive()
-    klines = generateKlines(1000, currentPrice, currentTf)
-    bridge.setKlines(klines)
-    updatePriceDisplay()
-    startLiveSimulation()
+    loadSymbol(currentSymbol, currentTf)
   })
 })
 
 // ── Toolbar: Indicators ──
 function toggleIndicator(btnId, enableFn, disableFn) {
   const btn = document.getElementById(btnId)
+  if (!btn) return
   let enabled = btn.classList.contains('on')
   btn.addEventListener('click', () => {
     enabled = !enabled
@@ -124,32 +286,43 @@ function toggleIndicator(btnId, enableFn, disableFn) {
 }
 
 toggleIndicator('tog-vol',
-  () => bridge.enableVolume(true),
-  () => bridge.enableVolume(false),
+  () => bridge.enableVolume(),
+  () => bridge.disableVolume(),
 )
 toggleIndicator('tog-rsi',
-  () => bridge.enableRsi(true, 14),
-  () => bridge.enableRsi(false),
+  () => { bridge.enableRsi(); bridge.setRsiPeriod(14) },
+  () => bridge.disableRsi(),
 )
 toggleIndicator('tog-oi',
   () => {
-    bridge.enableOi(true)
+    bridge.enableOi()
     const oiData = generateOIData(klines)
-    oiData.forEach(d => bridge.appendOi(d.t, d.value))
+    const ts = new Float64Array(oiData.map(d => d.t))
+    const vals = new Float64Array(oiData.map(d => d.value))
+    bridge.setOiDataTs(ts, vals)
   },
-  () => bridge.enableOi(false),
+  () => bridge.disableOi(),
 )
 toggleIndicator('tog-fp',
-  () => bridge.enableFootprint(true),
-  () => bridge.enableFootprint(false),
+  () => {
+    bridge.setChartType(1)
+    buildFootprintFromKlines()
+  },
+  () => {
+    bridge.setChartType(0)
+    bridge.footprintClear()
+  },
 )
 toggleIndicator('tog-hm',
   () => {
     const hm = generateHeatmapMatrix(klines)
-    if (hm) bridge.setHeatmap(hm.data, hm.rows, hm.cols, hm.priceMin, hm.priceMax, hm.timeStart, hm.timeEnd)
-    bridge.enableHeatmap(true)
+    if (hm) {
+      const xStep = hm.cols > 1 ? (hm.timeEnd - hm.timeStart) / (hm.cols - 1) : currentTf
+      const yStep = hm.rows > 1 ? (hm.priceMax - hm.priceMin) / (hm.rows - 1) : 1
+      bridge.setHeatmap(hm.data, hm.rows, hm.cols, hm.timeStart, xStep, hm.priceMin, yStep)
+    }
   },
-  () => bridge.enableHeatmap(false),
+  () => bridge.setHeatmap(new Float64Array(0), 0, 0, 0, 1, 0, 1),
 )
 
 // ── Toolbar: Drawing tools ──
@@ -162,13 +335,13 @@ document.querySelectorAll('[data-draw]').forEach(btn => {
 })
 
 // ── Toolbar: Theme ──
-document.getElementById('btn-dark').addEventListener('click', () => {
+document.getElementById('btn-dark')?.addEventListener('click', () => {
   document.getElementById('btn-dark').classList.add('active')
   document.getElementById('btn-light').classList.remove('active')
   document.body.classList.remove('light')
   bridge.setTheme('dark')
 })
-document.getElementById('btn-light').addEventListener('click', () => {
+document.getElementById('btn-light')?.addEventListener('click', () => {
   document.getElementById('btn-light').classList.add('active')
   document.getElementById('btn-dark').classList.remove('active')
   document.body.classList.add('light')
