@@ -423,33 +423,13 @@ onBeforeUnmount(() => chart?.destroy())
 
 ---
 
-## Pricing
+## Licensing
 
-| | Standard | Professional | Enterprise |
-|---|:---:|:---:|:---:|
-| Candles + Volume + Viewport | Yes | Yes | Yes |
-| Theme (dark + light + custom) | Yes | Yes | Yes + white-label |
-| RSI + EMA | Yes | Yes | Yes |
-| Basic drawings (5 tools) | Yes | Yes | Yes |
-| All drawings (10+ tools) | -- | Yes | Yes |
-| **Orderbook Heatmap** | -- | **Yes** | **Yes** |
-| **Footprint Chart** | -- | **Yes** | **Yes** |
-| **VRVP / TPO** | -- | **Yes** | **Yes** |
-| OI / CVD / Funding Rate | -- | Yes | Yes |
-| Large Trade Bubbles | -- | Yes | Yes |
-| Custom Indicator Plugin | -- | Yes | Yes |
-| Bar Replay | -- | Yes | Yes |
-| **Liquidation Heatmap** | -- | -- | **Yes** |
-| Live Signals Overlay | -- | -- | Yes |
-| White-label (remove branding) | -- | -- | Yes |
-| Support | Email | Email + Discord | Dedicated |
-| | | | |
-| **Monthly** | $49/mo | $149/mo | Contact us |
-| **Yearly** | $490/yr | $1,490/yr | Contact us |
-| **Lifetime** | $1,490 | $4,490 | Contact us |
+Free 14-day trial included. Contact us for pricing and license options:
 
 <p align="center">
-  <a href="mailto:license@mrd-chart.dev"><strong>Start free 14-day trial &rarr;</strong></a>
+  <a href="https://app.mrd-indicators.com/trading/chart-terminal">Try live demo</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  <a href="mailto:license@mrd-chart.dev"><strong>Contact for pricing &rarr;</strong></a>
 </p>
 
 ---
