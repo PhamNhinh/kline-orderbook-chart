@@ -248,6 +248,21 @@ async function initChart() {
   bridge = await createChartBridge(canvas, { licenseKey: LICENSE_KEY })
   await loadSymbol(currentSymbol, currentTf)
   bridge.enableVolume()
+
+  // Auto-enable footprint
+  bridge.setChartType(1)
+  buildFootprintFromKlines()
+  document.getElementById('tog-fp')?.classList.add('on')
+
+  // Auto-enable heatmap
+  const hm = generateHeatmapMatrix(klines)
+  if (hm) {
+    const xStep = hm.cols > 1 ? (hm.timeEnd - hm.timeStart) / (hm.cols - 1) : currentTf
+    const yStep = hm.rows > 1 ? (hm.priceMax - hm.priceMin) / (hm.rows - 1) : 1
+    bridge.setHeatmap(hm.data, hm.rows, hm.cols, hm.timeStart, xStep, hm.priceMin, yStep)
+  }
+  document.getElementById('tog-hm')?.classList.add('on')
+
   bridge.start()
 }
 
@@ -276,9 +291,8 @@ document.querySelectorAll('[data-tf]').forEach(btn => {
 function toggleIndicator(btnId, enableFn, disableFn) {
   const btn = document.getElementById(btnId)
   if (!btn) return
-  let enabled = btn.classList.contains('on')
   btn.addEventListener('click', () => {
-    enabled = !enabled
+    const enabled = !btn.classList.contains('on')
     btn.classList.toggle('on', enabled)
     if (enabled) enableFn()
     else disableFn()
