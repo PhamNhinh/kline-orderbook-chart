@@ -87,6 +87,94 @@ Give it a `<canvas>` element. It works with React, Vue, Svelte, Angular, or vani
 
 ---
 
+## Benchmark
+
+<p align="center">
+  <img src="assets/media/benchmark.png" alt="Kline Orderbook Chart — WebAssembly Engine Benchmark Results" width="100%" />
+</p>
+
+Real benchmark from the built-in performance suite, measured on a standard desktop (M-series Mac, Chrome):
+
+### Engine Init & Rendering
+
+| Metric | Result |
+|---|---|
+| **Engine init** | **6 ms** |
+| **Peak FPS** | **29,412 fps** |
+| **Render (all indicators)** | **0.10 ms/frame** |
+| **Benchmark score** | **95 / 100 — Exceptional** |
+
+### Candle Scaling (RSI + Volume enabled)
+
+| Candle count | FPS |
+|---|---|
+| 100 | 29,412 |
+| 500 | 11,905 |
+| 1K | 11,628 |
+| 5K | 11,905 |
+| 10K | 12,195 |
+| 25K | 11,628 |
+| 50K | 11,905 |
+| 100K | 11,628 |
+
+FPS stays above **11,000** even at 100K candles — essentially **zero performance degradation** at scale.
+
+### Render Breakdown (10K candles, 100 bars avg)
+
+| Component | Time |
+|---|---|
+| Candles | 0.045 ms |
+| RSI | 0.027 ms |
+| Volume | 0.081 ms |
+| Smart Ranges | 0.002 ms |
+| EMA Structure | 0.017 ms |
+| **Total** | **0.10 ms** |
+
+### Interaction Latency (10K candles, 200 bars avg)
+
+| Action | Latency |
+|---|---|
+| Pan | 0.11 ms |
+| Zoom | 0.11 ms |
+| Crosshair | 0.10 ms |
+
+Sub-millisecond response for all user interactions.
+
+### First Render Time
+
+| Candle count | Time |
+|---|---|
+| 100 | 0.3 ms |
+| 1K | 0.3 ms |
+| 10K | 2.1 ms |
+| 50K | 9.1 ms |
+
+50,000 candles render in **under 10 ms** on first load.
+
+### Real-Time Streaming Performance (10K candles, RSI + Volume, simulated WebSocket feed)
+
+| Operation | FPS | Latency |
+|---|---|---|
+| Kline tick update | 711 fps | 1.41 ms avg |
+| New candle append | 696 fps | 1.44 ms avg |
+| Heatmap update | 5,792 fps | 0.17 ms avg |
+| Combined stress | 653 fps | 1.53 ms avg |
+
+All real-time operations maintain **60+ fps** with headroom to spare. Heatmap updates run at nearly **6,000 fps**.
+
+### Full Indicator Stress Test (8 indicators: RSI + Volume + Smart Ranges + EMA + VRVP + OI + CVD + Large Trades)
+
+| Test | Result |
+|---|---|
+| Cold load + render | 57 fps, 17.98 ms/frame |
+| Sustained render | 6,135 fps, 0.16 ms/frame |
+| Tick + all indicators | 150 fps, 6.68 ms/frame |
+| Pan + all indicators | 4,950 fps, 0.20 ms/frame |
+
+Even with **8 indicators active simultaneously** on 10K candles, sustained rendering runs at **6,135 fps**.
+
+---
+
 ## Full Feature Set
 
 <table>
