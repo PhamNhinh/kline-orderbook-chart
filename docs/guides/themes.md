@@ -1,84 +1,108 @@
-# Theming
+# Themes
 
-MRD Chart Engine supports dark mode, light mode, and fully custom themes.
+Kline Orderbook Chart supports dark mode and light mode with runtime switching. The chart re-renders immediately when the theme changes — no reload required.
 
-## Built-in Themes
+## Built-in themes
+
+### Set at initialization
 
 ```javascript
-// Set at creation
-const chart = await MrdChart.create(canvas, {
-  theme: 'dark',   // 'dark' | 'light'
+const chart = await createChartBridge(canvas, {
+  licenseKey: 'YOUR_KEY',
 })
 
-// Switch at runtime
-chart.setTheme('light')
-chart.setTheme('dark')
+// The chart defaults to dark theme
 ```
 
-## Custom Theme
-
-Pass a theme configuration object:
+### Switch at runtime
 
 ```javascript
-chart.setTheme({
-  background: '#1a1a2e',
-  text: '#e0e0e0',
-  textSecondary: '#6b7280',
+chart.setTheme('dark')    // dark mode (default)
+chart.setTheme('light')   // light mode
+```
 
-  bullCandle: '#00d4aa',
-  bearCandle: '#ff6b6b',
-  bullVolume: 'rgba(0, 212, 170, 0.3)',
-  bearVolume: 'rgba(255, 107, 107, 0.3)',
+### Read the current theme
 
-  grid: '#252540',
-  crosshair: 'rgba(255, 255, 255, 0.12)',
-  separator: '#2a2a45',
+```javascript
+const current = chart.getTheme()   // returns 'dark' or 'light'
+```
 
-  priceTag: {
-    bull: { bg: '#00d4aa', text: '#ffffff' },
-    bear: { bg: '#ff6b6b', text: '#ffffff' },
-  },
+## Responding to system theme changes
 
-  indicators: {
-    rsi: { line: '#3b82f6', overbought: 'rgba(255,107,107,0.08)', oversold: 'rgba(0,212,170,0.08)' },
-    oi: { line: '#f59e0b' },
-    cvd: { positive: '#00d4aa', negative: '#ff6b6b' },
-  },
+Match the user's OS dark/light preference:
 
-  pane: {
-    background: '#1a1a2e',
-    dragDot: '#4a4a6a',
-    separator: '#2a2a45',
-  },
+```javascript
+const media = window.matchMedia('(prefers-color-scheme: dark)')
+
+chart.setTheme(media.matches ? 'dark' : 'light')
+
+media.addEventListener('change', (e) => {
+  chart.setTheme(e.matches ? 'dark' : 'light')
 })
 ```
 
-## Theme Properties Reference
+## Theme toggle button
 
-| Property | Type | Description |
+```javascript
+const btn = document.getElementById('theme-toggle')
+btn.addEventListener('click', () => {
+  const isDark = chart.getTheme() === 'dark'
+  chart.setTheme(isDark ? 'light' : 'dark')
+  btn.textContent = isDark ? 'Dark Mode' : 'Light Mode'
+})
+```
+
+## What changes between themes
+
+| Element | Dark | Light |
 |---|---|---|
-| `background` | `string` | Main chart background color |
-| `text` | `string` | Primary text color |
-| `textSecondary` | `string` | Secondary/axis text color |
-| `bullCandle` | `string` | Bullish candle body color |
-| `bearCandle` | `string` | Bearish candle body color |
-| `bullVolume` | `string` | Bullish volume bar color |
-| `bearVolume` | `string` | Bearish volume bar color |
-| `grid` | `string` | Grid line color |
-| `crosshair` | `string` | Crosshair color |
-| `separator` | `string` | Pane separator color |
+| Background | `#0d1117` | `#ffffff` |
+| Candle (bull) | Green | Green |
+| Candle (bear) | Red | Red |
+| Grid lines | Subtle gray | Subtle gray |
+| Axis text | Light gray | Dark gray |
+| Crosshair | White, semi-transparent | Black, semi-transparent |
+| Pane separators | Dark gray | Light gray |
+| Heatmap palette | Adjusted for dark bg | Adjusted for light bg |
+| Indicator lines | Optimized per theme | Optimized per theme |
 
-## White-label (Enterprise)
+All drawing tools, markers, and custom colors remain unchanged across themes — only the chart chrome adapts.
 
-Enterprise license holders can fully remove the MRD branding:
+## Framework integration
 
-```javascript
-const chart = await MrdChart.create(canvas, {
-  licenseKey: 'MRD-ENT-...',
-  whiteLabel: {
-    removeBranding: true,
-    customLogo: '/path/to/logo.svg',
-    companyName: 'Your Platform',
-  },
-})
+### React
+
+```jsx
+function Chart({ theme }) {
+  const chartRef = useRef(null)
+
+  useEffect(() => {
+    chartRef.current?.setTheme(theme)
+  }, [theme])
+
+  // ... chart init
+}
 ```
+
+### Vue 3
+
+```vue
+<script setup>
+import { watch } from 'vue'
+
+const props = defineProps({ theme: String })
+let chart = null
+
+watch(() => props.theme, (val) => {
+  chart?.setTheme(val)
+})
+</script>
+```
+
+---
+
+## Next steps
+
+- [Getting Started](getting-started.md) — Basic chart setup
+- [Indicators](indicators.md) — Enable indicators
+- [API Reference](../api/README.md) — Full `setTheme` documentation

@@ -246,9 +246,9 @@ const canvas = document.getElementById('chart')
 
 async function initChart() {
   bridge = await createChartBridge(canvas, { licenseKey: LICENSE_KEY })
+  await loadSymbol(currentSymbol, currentTf)
   bridge.enableVolume()
   bridge.start()
-  await loadSymbol(currentSymbol, currentTf)
 }
 
 // ── Toolbar: Symbol ──

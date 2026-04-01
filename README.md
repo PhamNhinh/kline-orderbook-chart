@@ -242,10 +242,10 @@ npm install kline-orderbook-chart
 ### Basic usage
 
 ```javascript
-import { createChartBridge, prefetchEngine } from 'kline-orderbook-chart'
+import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
 
 // Pre-load engine for faster first render (optional)
-prefetchEngine()
+prefetchWasm()
 
 // Create chart
 const canvas = document.getElementById('chart')
@@ -253,42 +253,48 @@ const chart = await createChartBridge(canvas, {
   licenseKey: 'YOUR_LICENSE_KEY',   // omit for 14-day trial
 })
 
-// Load data
-chart.setKlines([
-  { t: 1710000000, o: 65200, h: 65800, l: 65100, c: 65600, v: 1234.5 },
-  { t: 1710003600, o: 65600, h: 66100, l: 65400, c: 65900, v: 987.2 },
-  // ...
-])
+// Load data (six separate arrays)
+chart.setKlines(
+  [1710000000, 1710003600],   // timestamps (seconds)
+  [65200, 65600],             // opens
+  [65800, 66100],             // highs
+  [65100, 65400],             // lows
+  [65600, 65900],             // closes
+  [1234.5, 987.2],            // volumes
+)
 chart.setCandleInterval(3600)
 chart.setPrecision(1)
 
 // Enable indicators
-chart.enableVolume(true)
-chart.enableRsi(true, 14)
-chart.enableFootprint(true)
+chart.enableVolume()
+chart.enableRsi()
+chart.setRsiPeriod(14)
 
 // Start rendering
 chart.start()
 
 // Real-time update
-ws.on('kline', (k) => {
-  chart.updateLastKline(k.t, k.o, k.h, k.l, k.c, k.v)
-})
+ws.onmessage = (e) => {
+  const { k } = JSON.parse(e.data)
+  chart.updateLastKline(Math.floor(k.t / 1000), +k.o, +k.h, +k.l, +k.c, +k.v)
+}
 ```
 
 ### Enable orderbook heatmap
 
 ```javascript
+const yStep = (priceMax - priceMin) / rows
+const xStep = (timeEnd - timeStart) / cols
+
 chart.setHeatmap(
-  depthMatrix,     // Float32Array — flattened row-major
+  depthMatrix,     // Float64Array — flattened row-major
   200,             // rows (price levels)
   100,             // cols (time columns)
-  64000,           // priceMin
-  66000,           // priceMax
-  1710000000,      // timeStart
-  1710050000,      // timeEnd
+  timeStart,       // timestamp of first column (seconds)
+  xStep,           // time interval between columns
+  priceMin,        // price of first row
+  yStep,           // price interval between rows
 )
-chart.enableHeatmap(true)
 ```
 
 ---
@@ -349,27 +355,44 @@ For the **full experience with real market data** and live orderbook heatmap str
 
 ```jsx
 import { useEffect, useRef } from 'react'
-import { createChartBridge } from 'kline-orderbook-chart'
+import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
 
-function Chart({ data }) {
-  const ref = useRef(null)
-  const chart = useRef(null)
+prefetchWasm()
+
+function Chart({ licenseKey }) {
+  const canvasRef = useRef(null)
+  const chartRef = useRef(null)
 
   useEffect(() => {
-    createChartBridge(ref.current, {
-      licenseKey: process.env.REACT_APP_MRD_KEY,
-    }).then(c => {
-      chart.current = c
-      c.setKlines(data)
-      c.enableVolume(true)
-      c.start()
-    })
-    return () => chart.current?.destroy()
-  }, [])
+    let destroyed = false
 
-  return <canvas ref={ref} style={{ width: '100%', height: '100%' }} />
+    createChartBridge(canvasRef.current, { licenseKey }).then(chart => {
+      if (destroyed) { chart.destroy(); return }
+      chartRef.current = chart
+
+      fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=5m&limit=1000')
+        .then(r => r.json())
+        .then(raw => {
+          chart.setKlines(
+            raw.map(k => Math.floor(k[0] / 1000)),
+            raw.map(k => +k[1]), raw.map(k => +k[2]),
+            raw.map(k => +k[3]), raw.map(k => +k[4]), raw.map(k => +k[5]),
+          )
+          chart.setCandleInterval(300)
+          chart.setPrecision(1)
+          chart.enableVolume()
+          chart.start()
+        })
+    })
+
+    return () => { destroyed = true; chartRef.current?.destroy() }
+  }, [licenseKey])
+
+  return <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }} />
 }
 ```
+
+See [full React guide](docs/examples/react.md) for hooks, resize handling, and WebSocket integration.
 </details>
 
 <details>
@@ -382,7 +405,9 @@ function Chart({ data }) {
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { createChartBridge } from 'kline-orderbook-chart'
+import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
+
+prefetchWasm()
 
 const el = ref(null)
 let chart = null
@@ -391,15 +416,25 @@ onMounted(async () => {
   chart = await createChartBridge(el.value, {
     licenseKey: import.meta.env.VITE_MRD_KEY,
   })
-  chart.setKlines(props.data)
-  chart.enableVolume(true)
-  chart.enableHeatmap(true)
+
+  const res = await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=5m&limit=1000')
+  const raw = await res.json()
+  chart.setKlines(
+    raw.map(k => Math.floor(k[0] / 1000)),
+    raw.map(k => +k[1]), raw.map(k => +k[2]),
+    raw.map(k => +k[3]), raw.map(k => +k[4]), raw.map(k => +k[5]),
+  )
+  chart.setCandleInterval(300)
+  chart.setPrecision(1)
+  chart.enableVolume()
   chart.start()
 })
 
 onBeforeUnmount(() => chart?.destroy())
 </script>
 ```
+
+See [full Vue guide](docs/examples/vue.md) for composables, theme switching, and drawing tools.
 </details>
 
 <details>
@@ -408,16 +443,22 @@ onBeforeUnmount(() => chart?.destroy())
 ```html
 <canvas id="chart" style="width:100%;height:600px"></canvas>
 <script type="module">
-  import { createChartBridge } from 'kline-orderbook-chart'
+  import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
 
-  const chart = await createChartBridge(
-    document.getElementById('chart'),
-    { licenseKey: 'YOUR_KEY' }
+  prefetchWasm()
+
+  const chart = await createChartBridge(document.getElementById('chart'))
+
+  const res = await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=5m&limit=1000')
+  const raw = await res.json()
+  chart.setKlines(
+    raw.map(k => Math.floor(k[0] / 1000)),
+    raw.map(k => +k[1]), raw.map(k => +k[2]),
+    raw.map(k => +k[3]), raw.map(k => +k[4]), raw.map(k => +k[5]),
   )
-
-  const res = await fetch('/api/klines?symbol=BTCUSDT&limit=1000')
-  chart.setKlines(await res.json())
-  chart.enableVolume(true)
+  chart.setCandleInterval(300)
+  chart.setPrecision(1)
+  chart.enableVolume()
   chart.start()
 </script>
 ```
@@ -440,13 +481,18 @@ Free 14-day trial included. Contact us for pricing and license options:
 
 | Resource | Description |
 |---|---|
-| [Getting Started](docs/guides/getting-started.md) | Install, initialize, load data, enable indicators |
-| [Indicator Reference](docs/guides/indicators.md) | All 12+ indicators with parameters |
+| [Getting Started](docs/guides/getting-started.md) | Install, create a chart, load data, first render |
+| [Real-Time Data](docs/guides/real-time-data.md) | Binance WebSocket integration, paginated loading |
+| [Orderbook Heatmap](docs/guides/orderbook-heatmap.md) | Render depth data behind candles |
+| [Footprint Chart](docs/guides/footprint-chart.md) | Bid/ask volume at every price level, POC, delta |
+| [Indicators](docs/guides/indicators.md) | RSI, Volume, OI, CVD, VRVP, TPO, and more |
 | [Drawing Tools](docs/guides/drawings.md) | 10+ tools, serialization, events |
-| [Theming](docs/guides/themes.md) | Dark, light, custom theme objects |
-| [API Reference](docs/api/README.md) | Full method & event documentation |
-| [React Example](docs/examples/react.md) | Full React integration |
-| [Vue Example](docs/examples/vue.md) | Full Vue 3 integration |
+| [Themes](docs/guides/themes.md) | Dark/light mode switching |
+| [Performance](docs/guides/performance.md) | Benchmarks, memory, optimization tips |
+| [Licensing](docs/guides/licensing.md) | Trial mode, license keys, plans |
+| [API Reference](docs/api/README.md) | Complete method & event documentation |
+| [React Integration](docs/examples/react.md) | Hooks, resize, WebSocket |
+| [Vue 3 Integration](docs/examples/vue.md) | Composables, theme switching |
 
 ---
 

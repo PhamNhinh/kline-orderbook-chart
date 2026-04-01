@@ -1,117 +1,201 @@
 # Indicators
 
-MRD Chart Engine includes 12+ professional indicators computed entirely in the native engine for maximum performance.
+Kline Orderbook Chart includes 12+ professional indicators. All computations run inside the native engine for maximum performance — enabling multiple indicators adds negligible overhead.
 
-## Enabling Indicators
+## Pattern
+
+Every indicator follows the same enable/disable pattern:
 
 ```javascript
-chart.indicators.enable('rsi', { period: 14, showSignals: true })
-chart.indicators.enable('volume')
+chart.enableRsi()      // turn on
+chart.disableRsi()     // turn off
 ```
 
-## Disabling Indicators
+Indicators that require external data (OI, CVD, Funding Rate, Large Trades) have a separate `set*Data()` method.
+
+---
+
+## Built-in Indicators
+
+### Volume
+
+Volume histogram rendered below the candles. Bars are colored by candle direction. Includes optional climax detection and moving average.
 
 ```javascript
-chart.indicators.disable('rsi')
+chart.enableVolume()
+chart.disableVolume()
+
+chart.setVolumeMaPeriod(20)   // moving average overlay on volume bars
 ```
 
-## Updating Parameters
+### RSI (Relative Strength Index)
+
+Classic momentum oscillator rendered in a sub-pane. Supports overbought/oversold signals and divergence detection.
 
 ```javascript
-chart.indicators.update('rsi', { period: 21 })
+chart.enableRsi()
+chart.disableRsi()
+
+chart.setRsiPeriod(14)
+chart.setRsiShowSignals(true)      // show overbought/oversold markers
+chart.setRsiShowDivergence(true)   // show divergence lines
+```
+
+### EMA Structure
+
+Multi-period EMA (Exponential Moving Average) lines on the main chart, showing trend structure at multiple timeframes.
+
+```javascript
+chart.enableEmaStructure()
+chart.disableEmaStructure()
+```
+
+### VRVP (Visible Range Volume Profile)
+
+Horizontal volume profile for the visible price range, drawn as a panel on the right side. Computed automatically from loaded kline data.
+
+```javascript
+chart.enableVrvp()
+chart.disableVrvp()
+```
+
+### TPO / Market Profile
+
+Time-at-price distribution showing how long price spent at each level.
+
+```javascript
+chart.enableTpo()
+chart.disableTpo()
+```
+
+### Smart Ranges (SMC)
+
+Smart Money Concepts zones — order blocks, fair value gaps, and institutional ranges.
+
+```javascript
+chart.enableSmartRanges()
+chart.disableSmartRanges()
 ```
 
 ---
 
-## Available Indicators
+## Data-Driven Indicators
 
-### Core (Standard tier)
+These indicators require external data that you feed from your backend or exchange API.
 
-| Indicator | ID | Parameters | Description |
+### Open Interest
+
+Open interest line in a sub-pane. Requires OI data as two parallel arrays:
+
+```javascript
+chart.enableOi()
+chart.disableOi()
+
+const timestamps = [1710000000, 1710003600, 1710007200]
+const values     = [15000000, 15250000, 15100000]
+chart.setOiDataTs(timestamps, values)
+```
+
+### CVD (Cumulative Volume Delta)
+
+Shows cumulative buying vs selling pressure. Feed data from your trade aggregator:
+
+```javascript
+chart.enableCvd()
+chart.disableCvd()
+
+chart.setCvdData(timestamps, values)
+```
+
+### Funding Rate
+
+Perpetual futures funding rate overlay.
+
+```javascript
+chart.enableFundingRate()
+chart.disableFundingRate()
+
+chart.setFundingRateData(timestamps, rates)
+```
+
+### Large Trades
+
+Bubble visualization of large (whale) trades on the chart. Bubble size is proportional to trade volume.
+
+```javascript
+chart.enableLargeTrades()
+chart.disableLargeTrades()
+
+chart.addLargeTrade(timestamp, price, volume, isBuy)
+chart.clearLargeTrades()
+```
+
+### Liquidation Heatmap
+
+Estimated leveraged liquidation level clusters rendered as a heat overlay. Shows where cascading liquidations may trigger.
+
+```javascript
+chart.enableLiqHeatmap()
+chart.disableLiqHeatmap()
+
+chart.setLiqHeatmapData(matrix, rows, cols, xStart, xStep, yStart, yStep)
+```
+
+### Live Signals
+
+Real-time trading signal overlay — shows buy/sell arrows with configurable logic.
+
+```javascript
+chart.enableLiveSignals()
+chart.disableLiveSignals()
+```
+
+---
+
+## Multiple indicators
+
+Enable as many indicators as needed — the native engine handles them all efficiently:
+
+```javascript
+chart.enableVolume()
+chart.enableRsi()
+chart.setRsiPeriod(14)
+chart.enableOi()
+chart.setOiDataTs(oiTimestamps, oiValues)
+chart.enableVrvp()
+chart.enableEmaStructure()
+chart.enableCvd()
+chart.setCvdData(cvdTimestamps, cvdValues)
+```
+
+Even with 8 indicators active on 10K candles, rendering stays at **6,000+ fps** (see [Benchmarks](../../README.md#benchmark)).
+
+---
+
+## Indicator plan tiers
+
+| Indicator | Standard | Professional | Enterprise |
 |---|---|---|---|
-| **Volume** | `volume` | `showClimax: bool` | Volume histogram with climax detection |
-| **RSI** | `rsi` | `period: number, showSignals: bool, showDivergence: bool` | Relative Strength Index with signal overlays |
-| **EMA Structure** | `ema` | `periods: number[]` | Multi-EMA trend structure |
-
-### Crypto / Derivatives (Professional tier)
-
-| Indicator | ID | Data Required | Description |
-|---|---|---|---|
-| **Open Interest** | `openInterest` | OI array | OI with delta tracking |
-| **CVD** | `cvd` | Trade data | Cumulative Volume Delta |
-| **Funding Rate** | `fundingRate` | Funding array | Perpetual funding overlay |
-| **Large Trades** | `largeTrades` | Trade feed | Bubble visualization of whale orders |
-| **VRVP** | `vrvp` | -- (computed from klines) | Visible Range Volume Profile |
-| **TPO** | `tpo` | -- (computed from klines) | Market Profile / time-at-price |
-| **Orderbook Heatmap** | `heatmap` | Depth matrix | Real-time orderbook depth visualization |
-| **Footprint** | `footprint` | Tick data | Bid/ask volume at each price level |
-
-### Enterprise tier
-
-| Indicator | ID | Description |
-|---|---|---|
-| **Liquidation Heatmap** | `liqHeatmap` | Estimated liquidation level clusters |
-| **Live Signals** | `liveSignals` | Real-time trading signal overlay |
-| **Smart Ranges (SMC)** | `smartRanges` | Smart Money Concepts zones |
+| Volume | Yes | Yes | Yes |
+| RSI | Yes | Yes | Yes |
+| EMA Structure | Yes | Yes | Yes |
+| Open Interest | — | Yes | Yes |
+| CVD | — | Yes | Yes |
+| Funding Rate | — | Yes | Yes |
+| Large Trades | — | Yes | Yes |
+| VRVP | — | Yes | Yes |
+| TPO | — | Yes | Yes |
+| Orderbook Heatmap | — | Yes | Yes |
+| Footprint | — | Yes | Yes |
+| Liquidation Heatmap | — | — | Yes |
+| Live Signals | — | — | Yes |
+| Smart Ranges (SMC) | — | — | Yes |
 
 ---
 
-## Data-driven Indicators
+## Next steps
 
-Some indicators require external data feeds. Use the data API:
-
-```javascript
-// Open Interest
-chart.indicators.setData('openInterest', [
-  { t: 1710000000, value: 15000000, delta: 250000 },
-  // ...
-])
-
-// CVD
-chart.indicators.setData('cvd', {
-  takerBuyVolume: [...],
-  totalVolume: [...],
-})
-
-// Funding Rate
-chart.indicators.setData('fundingRate', [
-  { t: 1710000000, rate: 0.0001 },
-  // ...
-])
-
-// Heatmap (orderbook depth matrix)
-chart.setHeatmap({
-  data: Float32Array,    // flattened row-major matrix
-  rows: 200,             // price levels
-  cols: 100,             // time columns
-  priceMin: 64000,
-  priceMax: 66000,
-  timeStart: 1710000000,
-  timeEnd: 1710050000,
-})
-```
-
----
-
-## Custom Indicators (Plugin API)
-
-Create your own indicators using the plugin system:
-
-```javascript
-chart.plugins.register('myVWAP', {
-  pane: 'main',         // 'main' for overlay, 'sub' for separate pane
-  params: {
-    period: { default: 20, min: 1, max: 200 },
-    color: { default: '#ff9800' },
-  },
-  compute(klines, params) {
-    // Your calculation logic
-    return {
-      series: [{ time, value }],
-      bands: [{ time, upper, lower }],
-    }
-  },
-})
-```
-
-See [Custom Indicator Examples](../examples/custom-indicators.md) for full implementations.
+- [Orderbook Heatmap](orderbook-heatmap.md) — Depth matrix rendering
+- [Footprint Chart](footprint-chart.md) — Bid/ask volume per level
+- [Drawing Tools](drawings.md) — Trendline, Fibonacci, serialization
+- [API Reference](../api/README.md) — Complete method signatures
