@@ -1,6 +1,6 @@
 # Indicators
 
-MRD Chart Engine includes 12+ professional indicators computed entirely in WebAssembly for maximum performance.
+MRD Chart Engine includes 12+ professional indicators computed entirely in the native engine for maximum performance.
 
 ## Enabling Indicators
 

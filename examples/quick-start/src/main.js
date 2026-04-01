@@ -8,7 +8,7 @@
  * https://app.mrd-indicators.com/trading/chart-terminal
  */
 
-import { createChartBridge, prefetchWasm } from '../lib/mrd-chart-engine.mjs'
+import { createChartBridge, prefetchWasm as prefetchEngine } from '../lib/mrd-chart-engine.mjs'
 import { generateKlines, generateHeatmapMatrix, generateOIData, simulateLive } from './sample-data.js'
 
 // ── License key ──
@@ -25,7 +25,7 @@ let currentPrice = 68500
 let currentTf = 300
 
 // ── Init ──
-prefetchWasm()
+prefetchEngine()
 
 const canvas = document.getElementById('chart')
 const loading = document.getElementById('loading')

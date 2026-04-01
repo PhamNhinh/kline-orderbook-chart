@@ -3,7 +3,7 @@
 ## Requirements
 
 - Node.js 18+ (for npm install)
-- Modern browser with WebAssembly support (Chrome 80+, Firefox 79+, Safari 15.2+)
+- Modern browser (Chrome 80+, Firefox 79+, Safari 15.2+)
 - A valid MRD Chart Engine license key
 
 ## Installation

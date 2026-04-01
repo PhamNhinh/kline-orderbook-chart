@@ -5,7 +5,7 @@
 <h1 align="center">Kline Orderbook Chart</h1>
 
 <p align="center">
-  <strong>The only chart library with built-in orderbook heatmap, footprint chart, and liquidation heatmap<br/>all in one <code>&lt;canvas&gt;</code>, powered by a native WebAssembly engine</strong>
+  <strong>The only chart library with built-in orderbook heatmap, footprint chart, and liquidation heatmap<br/>all in one <code>&lt;canvas&gt;</code>, powered by a native high-performance engine</strong>
 </p>
 
 <p align="center">
@@ -18,7 +18,7 @@
 
 <p align="center">
   <img alt="npm version" src="https://img.shields.io/npm/v/@mrd/chart-engine?color=0a7cff&label=version" />
-  <img alt="WASM size" src="https://img.shields.io/badge/wasm-380KB_gzip-0a7cff" />
+  <img alt="bundle size" src="https://img.shields.io/badge/bundle-380KB_gzip-0a7cff" />
   <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-brightgreen" />
   <img alt="framework agnostic" src="https://img.shields.io/badge/framework-agnostic-blueviolet" />
   <img alt="license" src="https://img.shields.io/badge/license-commercial-orange" />
@@ -32,7 +32,7 @@ You need a candlestick chart that also renders **real-time orderbook depth as a 
 
 Building it yourself means months of work: Canvas rendering, depth matrix management, color mapping, scroll sync, zoom, crosshair, touch events, and performance optimization for hundreds of thousands of data points updating in real-time.
 
-**Kline Orderbook Chart solves this.** One npm install. One `<canvas>`. Candlesticks with orderbook heatmap, footprint chart, liquidation heatmap, and 12+ indicators — all rendered at 60 fps by a native WebAssembly engine.
+**Kline Orderbook Chart solves this.** One npm install. One `<canvas>`. Candlesticks with orderbook heatmap, footprint chart, liquidation heatmap, and 12+ indicators — all rendered at 60 fps by a native high-performance engine.
 
 ---
 
@@ -72,14 +72,14 @@ Bid/ask volume at every price level, rendered inline on each candle. Delta color
 
 Estimated liquidation level clusters rendered as a heat overlay. See where leveraged positions are concentrated and where cascading liquidations may trigger — directly on the price chart.
 
-### Native WebAssembly Performance
+### Native Performance
 
-The entire computation pipeline — indicator math, heatmap color mapping, viewport transforms, hit testing — runs in a native-compiled WebAssembly module. JavaScript only handles Canvas 2D draw calls via a zero-copy binary command protocol. The result:
+The entire computation pipeline — indicator math, heatmap color mapping, viewport transforms, hit testing — runs in a native-compiled engine. JavaScript only handles Canvas 2D draw calls via a zero-copy binary command protocol. The result:
 
 - **60 fps** with 100K+ candles and a 500x200 heatmap matrix updating in real-time
 - **~12 MB memory** at 50K candles (vs 50-120 MB for JS-only libraries)
 - **Near-zero GC pressure** — no jank from garbage collection pauses
-- **380 KB gzip** total bundle — WASM + JS bridge + renderer
+- **380 KB gzip** total bundle
 
 ### Framework Agnostic
 
@@ -90,7 +90,7 @@ Give it a `<canvas>` element. It works with React, Vue, Svelte, Angular, or vani
 ## Benchmark
 
 <p align="center">
-  <img src="assets/media/benchmark.png" alt="Kline Orderbook Chart — WebAssembly Engine Benchmark Results" width="100%" />
+  <img src="assets/media/benchmark.png" alt="Kline Orderbook Chart — Native Engine Benchmark Results" width="100%" />
 </p>
 
 Real benchmark from the built-in performance suite, measured on a standard desktop (M-series Mac, Chrome):
@@ -240,10 +240,10 @@ npm install @mrd/chart-engine
 ### Basic usage
 
 ```javascript
-import { createChartBridge, prefetchWasm } from '@mrd/chart-engine'
+import { createChartBridge, prefetchEngine } from '@mrd/chart-engine'
 
-// Pre-load WASM for faster first render (optional)
-prefetchWasm()
+// Pre-load engine for faster first render (optional)
+prefetchEngine()
 
 // Create chart
 const canvas = document.getElementById('chart')
@@ -320,7 +320,7 @@ For the **full experience with real market data** and live orderbook heatmap str
 │  │  @mrd/chart-engine                                      │  │
 │  │                                                         │  │
 │  │  ┌───────────────────────────────────────────────────┐  │  │
-│  │  │  Native Engine (WebAssembly)                       │  │  │
+│  │  │  Native Engine (compiled)                           │  │  │
 │  │  │                                                   │  │  │
 │  │  │  Kline ─── Orderbook Heatmap ─── Footprint       │  │  │
 │  │  │  Viewport ── Indicators ── Drawings ── Axis       │  │  │
@@ -452,13 +452,13 @@ Free 14-day trial included. Contact us for pricing and license options:
 
 Chrome 80+ &bull; Firefox 79+ &bull; Safari 15.2+ &bull; Edge 80+ &bull; Mobile Chrome &bull; Mobile Safari
 
-Requires WebAssembly and ES2020.
+Requires ES2020.
 
 ---
 
 ## Keywords
 
-`orderbook heatmap chart` · `kline heatmap` · `candlestick orderbook depth` · `footprint chart library` · `crypto chart heatmap` · `trading chart wasm` · `orderbook depth visualization` · `liquidation heatmap` · `volume profile chart` · `market depth chart javascript` · `real-time orderbook heatmap` · `kline orderbook chart`
+`orderbook heatmap chart` · `kline heatmap` · `candlestick orderbook depth` · `footprint chart library` · `crypto chart heatmap` · `trading chart library` · `orderbook depth visualization` · `liquidation heatmap` · `volume profile chart` · `market depth chart javascript` · `real-time orderbook heatmap` · `kline orderbook chart`
 
 ---
 
@@ -472,6 +472,6 @@ See [LICENSE](./LICENSE) for full terms.
 ---
 
 <p align="center">
-  <sub>Native WebAssembly engine. Designed for traders who need to see the full order book.</sub><br/>
+  <sub>Native high-performance engine. Designed for traders who need to see the full order book.</sub><br/>
   <sub>&copy; 2026 MRD Technologies. All rights reserved.</sub>
 </p>

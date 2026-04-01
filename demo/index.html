@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MRD Chart Engine — Candlestick + Orderbook Heatmap Chart Library</title>
-  <meta name="description" content="The only chart library with built-in orderbook heatmap, footprint chart, and liquidation heatmap. Native WebAssembly engine. 60 fps, zero dependencies." />
-  <meta name="keywords" content="orderbook heatmap chart, kline heatmap, candlestick orderbook depth, footprint chart library, crypto chart heatmap, trading chart wasm, liquidation heatmap, volume profile chart, market depth chart javascript" />
+  <meta name="description" content="The only chart library with built-in orderbook heatmap, footprint chart, and liquidation heatmap. Native high-performance engine. 60 fps, zero dependencies." />
+  <meta name="keywords" content="orderbook heatmap chart, kline heatmap, candlestick orderbook depth, footprint chart library, crypto chart heatmap, trading chart library, liquidation heatmap, volume profile chart, market depth chart javascript" />
   <meta property="og:title" content="MRD Chart Engine — Orderbook Heatmap + Candlestick Chart Library" />
-  <meta property="og:description" content="Built-in orderbook heatmap, footprint chart, liquidation heatmap, 12+ indicators, 10+ drawing tools — all in one canvas, powered by a native WebAssembly engine." />
+  <meta property="og:description" content="Built-in orderbook heatmap, footprint chart, liquidation heatmap, 12+ indicators, 10+ drawing tools — all in one canvas, powered by a native high-performance engine." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://mrd-chart.dev/og-image.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,7 +39,7 @@
     <p class="hero-sub">
       Built-in orderbook heatmap, footprint chart, liquidation heatmap, 12+ indicators,
       10+ drawing tools — all rendered at 60 fps in a single <code>&lt;canvas&gt;</code>
-      by a native WebAssembly engine.
+      by a native high-performance engine.
     </p>
     <div class="hero-actions">
       <a href="https://app.mrd-indicators.com/trading/chart-terminal" class="btn btn-primary" target="_blank">Live demo with real data</a>
@@ -124,7 +124,7 @@
         <div class="placeholder-content">
           <div class="spinner"></div>
           <p>Loading MRD Chart Engine...</p>
-          <p class="placeholder-sub">WASM module initializing (~380 KB)</p>
+          <p class="placeholder-sub">Engine initializing (~380 KB)</p>
         </div>
       </div>
       <canvas id="chart-canvas"></canvas>
@@ -158,7 +158,7 @@
 
       <div class="feature-card">
         <h3>12+ Technical Indicators</h3>
-        <p>RSI with divergence &amp; pullback signals, Open Interest with delta, CVD, Funding Rate, VRVP, TPO/Market Profile, Large Trade Bubbles, EMA Structure — all computed in WASM, all theme-aware.</p>
+        <p>RSI with divergence &amp; pullback signals, Open Interest with delta, CVD, Funding Rate, VRVP, TPO/Market Profile, Large Trade Bubbles, EMA Structure — all computed natively, all theme-aware.</p>
       </div>
 
       <div class="feature-card">
@@ -167,8 +167,8 @@
       </div>
 
       <div class="feature-card">
-        <h3>Native WASM Performance</h3>
-        <p>The entire pipeline runs in a native-compiled WebAssembly module. Zero garbage collection pauses. Zero-copy binary command protocol. 60 fps with 100K+ candles and a live heatmap matrix updating every second. 380 KB gzip total.</p>
+        <h3>Native Performance</h3>
+        <p>The entire pipeline runs in a native-compiled engine. Zero garbage collection pauses. Zero-copy binary command protocol. 60 fps with 100K+ candles and a live heatmap matrix updating every second. 380 KB gzip total.</p>
       </div>
     </div>
   </section>
@@ -246,7 +246,7 @@ ws.<span class="fn">on</span>(<span class="str">'depth'</span>, col =&gt; chart.
           <div class="logo-mark">M</div>
           <span class="logo-text">MRD Chart Engine</span>
         </div>
-        <p class="footer-desc">Candlestick + orderbook heatmap + footprint chart — all in one native WebAssembly-powered canvas.</p>
+        <p class="footer-desc">Candlestick + orderbook heatmap + footprint chart — all in one native high-performance canvas.</p>
       </div>
       <div>
         <h4>Product</h4>

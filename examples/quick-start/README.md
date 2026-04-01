@@ -33,8 +33,8 @@ For the complete experience with real market data and live orderbook streaming:
 quick-start/
 ├── lib/                          # Pre-built chart engine (do not modify)
 │   ├── mrd-chart-engine.mjs      # Library bundle
-│   ├── chart_engine.js           # WebAssembly glue
-│   ├── chart_engine_bg.wasm      # WebAssembly binary
+│   ├── chart_engine.js           # Engine runtime
+│   ├── chart_engine_bg.*         # Engine binary
 │   └── index.d.ts                # TypeScript declarations
 ├── src/
 │   ├── main.js                   # Demo app code

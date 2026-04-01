@@ -35,7 +35,7 @@ function generateOHLCV(count = 500, startPrice = 65000, volatility = 0.008) {
   return data
 }
 
-// ── Mini canvas chart renderer (demo-only, replaces WASM in showcase) ──
+// ── Mini canvas chart renderer (demo-only, replaces engine in showcase) ──
 
 class DemoChart {
   constructor(canvas) {
