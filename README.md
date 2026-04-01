@@ -12,8 +12,9 @@
   <a href="https://app.mrd-indicators.com/trading/chart-terminal">Live Demo</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="#run-demo-locally">Run Demo Locally</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="#documentation">Documentation</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
-  <a href="#pricing">Pricing</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
-  <a href="mailto:support@mrd-indicators.com">Contact Sales</a>
+  <a href="https://discord.gg/buX2h5ZZm">Discord</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  <a href="https://x.com/mrDocTradingIO">X</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  <a href="mailto:support@mrd-indicators.com">Contact</a>
 </p>
 
 <p align="center">
