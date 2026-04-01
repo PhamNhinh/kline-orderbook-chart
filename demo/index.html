@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MRD Chart Engine — Candlestick + Orderbook Heatmap Chart Library</title>
+  <meta name="description" content="The only chart library with built-in orderbook heatmap, footprint chart, and liquidation heatmap. Native WebAssembly engine. 60 fps, zero dependencies." />
+  <meta name="keywords" content="orderbook heatmap chart, kline heatmap, candlestick orderbook depth, footprint chart library, crypto chart heatmap, trading chart wasm, liquidation heatmap, volume profile chart, market depth chart javascript" />
+  <meta property="og:title" content="MRD Chart Engine — Orderbook Heatmap + Candlestick Chart Library" />
+  <meta property="og:description" content="Built-in orderbook heatmap, footprint chart, liquidation heatmap, 12+ indicators, 10+ drawing tools — all in one canvas, powered by a native WebAssembly engine." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://mrd-chart.dev/og-image.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230a7cff'/><text x='5' y='23' font-size='18' font-weight='700' fill='white'>M</text></svg>" />
+</head>
+<body>
+  <!-- ========== Header ========== -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <div class="logo-mark">M</div>
+        <span class="logo-text">MRD Chart Engine</span>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <a href="#features">Features</a>
+      <a href="#live-chart">Demo</a>
+      <a href="https://mrd-chart.dev/docs" target="_blank">Docs</a>
+      <a href="https://mrd-chart.dev/pricing" target="_blank">Pricing</a>
+    </nav>
+  </header>
+
+  <!-- ========== Hero ========== -->
+  <section class="hero">
+    <div class="hero-badge">Orderbook Heatmap + Candlestick — in one chart</div>
+    <h1>The charting library that<br/><span class="gradient-text">sees the full order book</span></h1>
+    <p class="hero-sub">
+      Built-in orderbook heatmap, footprint chart, liquidation heatmap, 12+ indicators,
+      10+ drawing tools — all rendered at 60 fps in a single <code>&lt;canvas&gt;</code>
+      by a native WebAssembly engine.
+    </p>
+    <div class="hero-actions">
+      <a href="https://app.mrd-indicators.com/trading/chart-terminal" class="btn btn-primary" target="_blank">Live demo with real data</a>
+      <a href="https://mrd-chart.dev/docs/getting-started" class="btn btn-ghost">Get started</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><strong>380 KB</strong><span>gzip bundle</span></div>
+      <div class="stat"><strong>60 fps</strong><span>100K+ candles</span></div>
+      <div class="stat"><strong>0</strong><span>dependencies</span></div>
+      <div class="stat"><strong>12+</strong><span>indicators</span></div>
+      <div class="stat"><strong>10+</strong><span>drawing tools</span></div>
+    </div>
+  </section>
+
+  <!-- ========== Screenshots ========== -->
+  <section class="screenshots" id="screenshots">
+    <div class="screenshot-row">
+      <div class="screenshot-card">
+        <img src="../packages/js-bridge/assets/media/heatmap-large-trades.png" alt="Candlestick chart with real-time orderbook heatmap, large trade bubbles, and liquidation heatmap" />
+        <div class="screenshot-caption">
+          <strong>Orderbook Heatmap + Large Trades + Liquidation Heatmap</strong>
+          <p>Real-time orderbook depth rendered as a color-mapped heatmap behind candlesticks. Whale trades shown as bubbles. Liquidation clusters as horizontal bands.</p>
+        </div>
+      </div>
+      <div class="screenshot-card">
+        <img src="../packages/js-bridge/assets/media/footprint-chart.png" alt="Footprint chart with bid ask volume delta POC imbalance detection and volume profile" />
+        <div class="screenshot-caption">
+          <strong>Footprint Chart + VRVP Profile</strong>
+          <p>Bid/ask volume at every price level, inline on each candle. Delta coloring, imbalance dots, POC highlighting, and volume profile panel on the right.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Live Chart Demo ========== -->
+  <section class="demo-section" id="live-chart">
+    <h2>Interactive Demo</h2>
+    <p class="section-sub">Scroll to zoom, drag to pan. Toggle indicators and themes below.</p>
+    <div class="demo-toolbar">
+      <div class="toolbar-group">
+        <span class="toolbar-label">Symbol</span>
+        <button class="toolbar-btn active" data-symbol="BTCUSDT">BTC/USDT</button>
+        <button class="toolbar-btn" data-symbol="ETHUSDT">ETH/USDT</button>
+        <button class="toolbar-btn" data-symbol="SOLUSDT">SOL/USDT</button>
+      </div>
+      <div class="toolbar-group">
+        <span class="toolbar-label">Interval</span>
+        <button class="toolbar-btn" data-tf="1m">1m</button>
+        <button class="toolbar-btn active" data-tf="5m">5m</button>
+        <button class="toolbar-btn" data-tf="15m">15m</button>
+        <button class="toolbar-btn" data-tf="1h">1H</button>
+        <button class="toolbar-btn" data-tf="4h">4H</button>
+      </div>
+      <div class="toolbar-group">
+        <span class="toolbar-label">Theme</span>
+        <button class="toolbar-btn active" id="btn-dark">Dark</button>
+        <button class="toolbar-btn" id="btn-light">Light</button>
+      </div>
+      <div class="toolbar-group">
+        <span class="toolbar-label">Indicators</span>
+        <button class="toolbar-btn toggle" data-indicator="volume" data-active="true">Vol</button>
+        <button class="toolbar-btn toggle" data-indicator="rsi">RSI</button>
+        <button class="toolbar-btn toggle" data-indicator="heatmap">Heatmap</button>
+        <button class="toolbar-btn toggle" data-indicator="footprint">Footprint</button>
+      </div>
+      <div class="toolbar-group">
+        <span class="toolbar-label">Draw</span>
+        <button class="toolbar-btn" data-tool="trendline" title="Trendline">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="2" y1="14" x2="14" y2="2"/></svg>
+        </button>
+        <button class="toolbar-btn" data-tool="fibonacci" title="Fibonacci">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="1" y1="2" x2="15" y2="2"/><line x1="1" y1="6" x2="15" y2="6" opacity=".6"/><line x1="1" y1="10" x2="15" y2="10" opacity=".4"/><line x1="1" y1="14" x2="15" y2="14" opacity=".2"/></svg>
+        </button>
+        <button class="toolbar-btn" data-tool="channel" title="Channel">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="1" y1="12" x2="15" y2="4"/><line x1="1" y1="8" x2="15" y2="0" opacity=".5"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="chart-container" id="chart-container">
+      <div class="chart-placeholder">
+        <div class="placeholder-content">
+          <div class="spinner"></div>
+          <p>Loading MRD Chart Engine...</p>
+          <p class="placeholder-sub">WASM module initializing (~380 KB)</p>
+        </div>
+      </div>
+      <canvas id="chart-canvas"></canvas>
+      <div class="watermark">MRD Chart Engine — Demo</div>
+    </div>
+  </section>
+
+  <!-- ========== Core Strengths ========== -->
+  <section class="features" id="features">
+    <h2>Built for order flow</h2>
+    <p class="section-sub">Everything you need to visualize the full order book — in a single embeddable component.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card feature-highlight">
+        <div class="feature-tag">Unique</div>
+        <h3>Orderbook Heatmap</h3>
+        <p>Real-time orderbook depth rendered as a color-mapped heatmap directly behind your candlesticks. See where limit orders stack up across price and time. Adaptive color intensity, smooth scrolling, and real-time column updates. No other charting library does this.</p>
+      </div>
+
+      <div class="feature-card feature-highlight">
+        <div class="feature-tag">Unique</div>
+        <h3>Footprint Chart</h3>
+        <p>Bid/ask volume at every price level, rendered inline on each candle. Delta coloring shows who's in control. Imbalance dot detection spots absorption. POC highlighting marks the most traded level. Full profile panel on the right side with session statistics.</p>
+      </div>
+
+      <div class="feature-card feature-highlight">
+        <div class="feature-tag">Unique</div>
+        <h3>Liquidation Heatmap</h3>
+        <p>Estimated liquidation level clusters rendered as a heat overlay on the price chart. Identify where leveraged positions are concentrated and anticipate cascade events — without switching to a different tool.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>12+ Technical Indicators</h3>
+        <p>RSI with divergence &amp; pullback signals, Open Interest with delta, CVD, Funding Rate, VRVP, TPO/Market Profile, Large Trade Bubbles, EMA Structure — all computed in WASM, all theme-aware.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>10+ Drawing Tools</h3>
+        <p>Trendline, Fibonacci retracement, parallel channel, pitchfork, Elliott Wave, horizontal ray, brush, rectangle, multi-segment path. Full JSON export/import for user persistence.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>Native WASM Performance</h3>
+        <p>The entire pipeline runs in a native-compiled WebAssembly module. Zero garbage collection pauses. Zero-copy binary command protocol. 60 fps with 100K+ candles and a live heatmap matrix updating every second. 380 KB gzip total.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Code Example ========== -->
+  <section class="code-section">
+    <h2>Orderbook heatmap in 15 lines</h2>
+    <p class="section-sub">This is all it takes to get candlesticks with a live orderbook heatmap.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-dot red"></span>
+        <span class="code-dot yellow"></span>
+        <span class="code-dot green"></span>
+        <span class="code-title">app.js</span>
+      </div>
+      <pre><code><span class="kw">import</span> { MrdChart } <span class="kw">from</span> <span class="str">'@mrd/chart-engine'</span>
+
+<span class="kw">const</span> chart = <span class="kw">await</span> MrdChart.<span class="fn">create</span>(canvas, {
+  licenseKey: <span class="str">'MRD-PRO-XXXXXXXX-20270101-XXXXXX'</span>,
+  theme: <span class="str">'dark'</span>,
+})
+
+chart.<span class="fn">setKlines</span>(ohlcvData)
+chart.<span class="fn">setHeatmap</span>({ data: depthMatrix, rows: <span class="num">200</span>, cols: <span class="num">100</span>,
+  priceMin: <span class="num">64000</span>, priceMax: <span class="num">66000</span>,
+  timeStart: <span class="num">1710000000</span>, timeEnd: <span class="num">1710050000</span>,
+})
+chart.indicators.<span class="fn">enable</span>(<span class="str">'footprint'</span>)
+chart.<span class="fn">start</span>()
+
+<span class="cm">// Real-time updates</span>
+ws.<span class="fn">on</span>(<span class="str">'kline'</span>, k =&gt; chart.<span class="fn">updateLastKline</span>(k))
+ws.<span class="fn">on</span>(<span class="str">'depth'</span>, col =&gt; chart.<span class="fn">updateHeatmapColumn</span>(col.i, col.data))</code></pre>
+    </div>
+  </section>
+
+  <!-- ========== Use Cases ========== -->
+  <section class="use-cases">
+    <h2>Who uses MRD Chart Engine</h2>
+    <div class="use-case-grid">
+      <div class="use-case-card">
+        <h3>Crypto Exchanges</h3>
+        <p>Embed a professional chart with orderbook heatmap on your trading page. Users see depth data without leaving the chart.</p>
+      </div>
+      <div class="use-case-card">
+        <h3>Prop Trading Firms</h3>
+        <p>Footprint, delta, POC, imbalance — the same order flow tools institutional desks rely on, now in the browser at 60 fps.</p>
+      </div>
+      <div class="use-case-card">
+        <h3>Trading Platforms</h3>
+        <p>A complete charting solution with indicators, drawings, and persistence. No need to build from scratch or combine multiple libraries.</p>
+      </div>
+      <div class="use-case-card">
+        <h3>Signal Providers</h3>
+        <p>Overlay signals directly on candlesticks. Drawing tools let users annotate charts for trade journaling and analysis sharing.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA ========== -->
+  <section class="cta">
+    <h2>Ready to add orderbook heatmap to your chart?</h2>
+    <p>Start with a free evaluation license. No credit card required.</p>
+    <div class="cta-actions">
+      <a href="https://mrd-chart.dev/trial" class="btn btn-primary btn-lg">Get free trial</a>
+      <a href="https://mrd-chart.dev/contact" class="btn btn-ghost btn-lg">Contact sales</a>
+    </div>
+  </section>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom: 12px;">
+          <div class="logo-mark">M</div>
+          <span class="logo-text">MRD Chart Engine</span>
+        </div>
+        <p class="footer-desc">Candlestick + orderbook heatmap + footprint chart — all in one native WebAssembly-powered canvas.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <a href="https://mrd-chart.dev/pricing">Pricing</a>
+        <a href="https://mrd-chart.dev/changelog">Changelog</a>
+        <a href="https://mrd-chart.dev/roadmap">Roadmap</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="https://mrd-chart.dev/docs">Documentation</a>
+        <a href="https://mrd-chart.dev/docs/api">API Reference</a>
+        <a href="https://mrd-chart.dev/docs/heatmap">Heatmap Guide</a>
+        <a href="https://mrd-chart.dev/docs/footprint">Footprint Guide</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="mailto:sales@mrd-chart.dev">Sales</a>
+        <a href="mailto:support@mrd-chart.dev">Support</a>
+        <a href="https://mrd-chart.dev/terms">Terms</a>
+        <a href="https://mrd-chart.dev/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MRD Technologies. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="demo.js"></script>
+</body>
+</html>

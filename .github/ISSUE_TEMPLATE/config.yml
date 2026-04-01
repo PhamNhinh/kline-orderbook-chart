@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://mrd-chart.dev/docs
+    about: Check the documentation before opening an issue
+  - name: Sales & Licensing
+    url: https://mrd-chart.dev/contact
+    about: For license purchases, upgrades, and sales inquiries

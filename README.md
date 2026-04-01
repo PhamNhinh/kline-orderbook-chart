@@ -1,0 +1,409 @@
+<p align="center">
+  <img src="assets/media/heatmap-large-trades.png" alt="Kline Orderbook Heatmap Chart — Candlestick with real-time orderbook depth heatmap" width="100%" />
+</p>
+
+<h1 align="center">Kline Orderbook Chart</h1>
+
+<p align="center">
+  <strong>The only chart library with built-in orderbook heatmap, footprint chart, and liquidation heatmap<br/>all in one <code>&lt;canvas&gt;</code>, powered by a native WebAssembly engine</strong>
+</p>
+
+<p align="center">
+  <a href="https://app.mrd-indicators.com/trading/chart-terminal">Live Demo</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  <a href="#run-demo-locally">Run Demo Locally</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  <a href="#documentation">Documentation</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  <a href="#pricing">Pricing</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  <a href="mailto:license@mrd-chart.dev">Contact Sales</a>
+</p>
+
+<p align="center">
+  <img alt="npm version" src="https://img.shields.io/npm/v/@mrd/chart-engine?color=0a7cff&label=version" />
+  <img alt="WASM size" src="https://img.shields.io/badge/wasm-380KB_gzip-0a7cff" />
+  <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-brightgreen" />
+  <img alt="framework agnostic" src="https://img.shields.io/badge/framework-agnostic-blueviolet" />
+  <img alt="license" src="https://img.shields.io/badge/license-commercial-orange" />
+</p>
+
+---
+
+## The problem
+
+You need a candlestick chart that also renders **real-time orderbook depth as a heatmap** behind the candles. You search for "orderbook heatmap chart library" or "kline heatmap javascript" — and find nothing. Every existing charting library gives you candles OR a heatmap, never both rendered together in a single performant canvas.
+
+Building it yourself means months of work: Canvas rendering, depth matrix management, color mapping, scroll sync, zoom, crosshair, touch events, and performance optimization for hundreds of thousands of data points updating in real-time.
+
+**Kline Orderbook Chart solves this.** One npm install. One `<canvas>`. Candlesticks with orderbook heatmap, footprint chart, liquidation heatmap, and 12+ indicators — all rendered at 60 fps by a native WebAssembly engine.
+
+---
+
+## See it in action
+
+<p align="center">
+  <img src="assets/media/heatmap-large-trades.png" alt="Candlestick chart with orderbook heatmap, large trade bubbles, and liquidation heatmap overlay" width="100%" />
+</p>
+
+<p align="center">
+  <em>BTC/USDT — Candlestick + Orderbook Heatmap + Large Trade Bubbles + Liquidation Heatmap + RSI with signals</em>
+</p>
+
+<p align="center">
+  <img src="assets/media/footprint-chart.png" alt="Footprint chart with bid ask volume, delta, imbalance detection, and VRVP profile" width="100%" />
+</p>
+
+<p align="center">
+  <em>BTC/USDT — Footprint chart with bid/ask volume at every price level, POC, delta, VRVP profile panel</em>
+</p>
+
+> **Video demos:** See the full interactive experience in the [`assets/media/`](assets/media/) folder — real-time orderbook heatmap streaming, drawing tools, theme switching, and more.
+
+---
+
+## What makes this different
+
+### Orderbook Heatmap + Candlestick — in one chart
+
+No other charting library renders orderbook depth data as a heatmap layer behind candlesticks. This library takes a real-time depth matrix (price levels x time columns) and renders it as a color-mapped heatmap with adaptive intensity — while simultaneously drawing candles, volume, and all your indicators on top. One canvas, one render loop, zero lag.
+
+### Footprint Chart — built-in, not a plugin
+
+Bid/ask volume at every price level, rendered inline on each candle. Delta coloring, imbalance dot detection, POC (Point of Control) highlighting, and a full volume profile panel on the right side. This is the same visualization prop trading firms pay thousands for — now embeddable in any web app.
+
+### Liquidation Heatmap
+
+Estimated liquidation level clusters rendered as a heat overlay. See where leveraged positions are concentrated and where cascading liquidations may trigger — directly on the price chart.
+
+### Native WebAssembly Performance
+
+The entire computation pipeline — indicator math, heatmap color mapping, viewport transforms, hit testing — runs in a native-compiled WebAssembly module. JavaScript only handles Canvas 2D draw calls via a zero-copy binary command protocol. The result:
+
+- **60 fps** with 100K+ candles and a 500x200 heatmap matrix updating in real-time
+- **~12 MB memory** at 50K candles (vs 50-120 MB for JS-only libraries)
+- **Near-zero GC pressure** — no jank from garbage collection pauses
+- **380 KB gzip** total bundle — WASM + JS bridge + renderer
+
+### Framework Agnostic
+
+Give it a `<canvas>` element. It works with React, Vue, Svelte, Angular, or vanilla JavaScript. No framework lock-in, no virtual DOM overhead.
+
+---
+
+## Full Feature Set
+
+<table>
+<tr>
+<td width="50%">
+
+### Order Flow Visualization
+- **Orderbook Heatmap** — real-time depth matrix behind candles
+- **Footprint Chart** — bid/ask volume, delta, imbalance, POC
+- **Liquidation Heatmap** — leveraged position cluster overlay
+- **VRVP** — Visible Range Volume Profile
+- **TPO / Market Profile** — time-at-price distribution
+- **Large Trade Bubbles** — whale order visualization
+
+</td>
+<td width="50%">
+
+### Technical Indicators
+- **RSI** with divergence detection & pullback signals
+- **Open Interest** with delta tracking
+- **Cumulative Volume Delta (CVD)**
+- **Funding Rate** overlay
+- **EMA Structure** — multi-period trend strength
+- **Custom Indicator Plugin API** — build your own
+
+</td>
+</tr>
+<tr>
+<td>
+
+### Drawing & Interaction
+- 10+ tools: Trendline, Fibonacci, Channel, Pitchfork, Elliott Wave, Brush, Rectangle, Path, and more
+- Full JSON export/import for persistence
+- Multi-pane crosshair sync
+- Rich tooltip with OHLCV + indicator data
+- Bar replay mode
+
+</td>
+<td>
+
+### Core Charting
+- Candlestick, Heikin-Ashi, Line, Area chart types
+- Volume histogram with climax detection
+- Responsive time & price axes with auto-scaling
+- Dark, light, and fully custom themes
+- Smooth pan, pinch-zoom, mouse wheel zoom
+- Touch-optimized for mobile & tablet
+
+</td>
+</tr>
+</table>
+
+---
+
+## Quick Start
+
+### Install
+
+```bash
+npm install @mrd/chart-engine
+```
+
+### Basic usage
+
+```javascript
+import { createChartBridge, prefetchWasm } from '@mrd/chart-engine'
+
+// Pre-load WASM for faster first render (optional)
+prefetchWasm()
+
+// Create chart
+const canvas = document.getElementById('chart')
+const chart = await createChartBridge(canvas, {
+  licenseKey: 'YOUR_LICENSE_KEY',   // omit for 14-day trial
+})
+
+// Load data
+chart.setKlines([
+  { t: 1710000000, o: 65200, h: 65800, l: 65100, c: 65600, v: 1234.5 },
+  { t: 1710003600, o: 65600, h: 66100, l: 65400, c: 65900, v: 987.2 },
+  // ...
+])
+chart.setCandleInterval(3600)
+chart.setPrecision(1)
+
+// Enable indicators
+chart.enableVolume(true)
+chart.enableRsi(true, 14)
+chart.enableFootprint(true)
+
+// Start rendering
+chart.start()
+
+// Real-time update
+ws.on('kline', (k) => {
+  chart.updateLastKline(k.t, k.o, k.h, k.l, k.c, k.v)
+})
+```
+
+### Enable orderbook heatmap
+
+```javascript
+chart.setHeatmap(
+  depthMatrix,     // Float32Array — flattened row-major
+  200,             // rows (price levels)
+  100,             // cols (time columns)
+  64000,           // priceMin
+  66000,           // priceMax
+  1710000000,      // timeStart
+  1710050000,      // timeEnd
+)
+chart.enableHeatmap(true)
+```
+
+---
+
+## Run Demo Locally
+
+Download and run the demo project — no API keys needed, uses synthetic sample data:
+
+```bash
+git clone https://github.com/PhamNhinh/kline-orderbook-chart.git
+cd kline-orderbook-chart/examples/quick-start
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) — candlestick chart with volume, real-time updates, indicator toggles, drawing tools, and theme switching.
+
+For the **full experience with real market data** and live orderbook heatmap streaming:
+
+**[app.mrd-indicators.com/trading/chart-terminal](https://app.mrd-indicators.com/trading/chart-terminal)**
+
+---
+
+## Architecture
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  Your Application  (React / Vue / Svelte / Vanilla JS)       │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  @mrd/chart-engine                                      │  │
+│  │                                                         │  │
+│  │  ┌───────────────────────────────────────────────────┐  │  │
+│  │  │  Native Engine (WebAssembly)                       │  │  │
+│  │  │                                                   │  │  │
+│  │  │  Kline ─── Orderbook Heatmap ─── Footprint       │  │  │
+│  │  │  Viewport ── Indicators ── Drawings ── Axis       │  │  │
+│  │  │                                                   │  │  │
+│  │  │         ▼ Binary Command Buffer (zero-copy)       │  │  │
+│  │  └───────────────────────────────────────────────────┘  │  │
+│  │                         ▼                               │  │
+│  │  ┌───────────────────────────────────────────────────┐  │  │
+│  │  │  Canvas 2D Renderer (JS)                          │  │  │
+│  │  │  Dispatches binary opcodes → fillRect/stroke/text │  │  │
+│  │  └───────────────────────────────────────────────────┘  │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  <canvas> ← one element, everything renders here             │
+└──────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Framework Examples
+
+<details>
+<summary><strong>React</strong></summary>
+
+```jsx
+import { useEffect, useRef } from 'react'
+import { createChartBridge } from '@mrd/chart-engine'
+
+function Chart({ data }) {
+  const ref = useRef(null)
+  const chart = useRef(null)
+
+  useEffect(() => {
+    createChartBridge(ref.current, {
+      licenseKey: process.env.REACT_APP_MRD_KEY,
+    }).then(c => {
+      chart.current = c
+      c.setKlines(data)
+      c.enableVolume(true)
+      c.start()
+    })
+    return () => chart.current?.destroy()
+  }, [])
+
+  return <canvas ref={ref} style={{ width: '100%', height: '100%' }} />
+}
+```
+</details>
+
+<details>
+<summary><strong>Vue 3</strong></summary>
+
+```vue
+<template>
+  <canvas ref="el" style="width:100%;height:100%" />
+</template>
+
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { createChartBridge } from '@mrd/chart-engine'
+
+const el = ref(null)
+let chart = null
+
+onMounted(async () => {
+  chart = await createChartBridge(el.value, {
+    licenseKey: import.meta.env.VITE_MRD_KEY,
+  })
+  chart.setKlines(props.data)
+  chart.enableVolume(true)
+  chart.enableHeatmap(true)
+  chart.start()
+})
+
+onBeforeUnmount(() => chart?.destroy())
+</script>
+```
+</details>
+
+<details>
+<summary><strong>Vanilla JS</strong></summary>
+
+```html
+<canvas id="chart" style="width:100%;height:600px"></canvas>
+<script type="module">
+  import { createChartBridge } from '@mrd/chart-engine'
+
+  const chart = await createChartBridge(
+    document.getElementById('chart'),
+    { licenseKey: 'YOUR_KEY' }
+  )
+
+  const res = await fetch('/api/klines?symbol=BTCUSDT&limit=1000')
+  chart.setKlines(await res.json())
+  chart.enableVolume(true)
+  chart.start()
+</script>
+```
+</details>
+
+---
+
+## Pricing
+
+| | Standard | Professional | Enterprise |
+|---|:---:|:---:|:---:|
+| Candles + Volume + Viewport | Yes | Yes | Yes |
+| Theme (dark + light + custom) | Yes | Yes | Yes + white-label |
+| RSI + EMA | Yes | Yes | Yes |
+| Basic drawings (5 tools) | Yes | Yes | Yes |
+| All drawings (10+ tools) | -- | Yes | Yes |
+| **Orderbook Heatmap** | -- | **Yes** | **Yes** |
+| **Footprint Chart** | -- | **Yes** | **Yes** |
+| **VRVP / TPO** | -- | **Yes** | **Yes** |
+| OI / CVD / Funding Rate | -- | Yes | Yes |
+| Large Trade Bubbles | -- | Yes | Yes |
+| Custom Indicator Plugin | -- | Yes | Yes |
+| Bar Replay | -- | Yes | Yes |
+| **Liquidation Heatmap** | -- | -- | **Yes** |
+| Live Signals Overlay | -- | -- | Yes |
+| White-label (remove branding) | -- | -- | Yes |
+| Support | Email | Email + Discord | Dedicated |
+| | | | |
+| **Monthly** | $49/mo | $149/mo | Contact us |
+| **Yearly** | $490/yr | $1,490/yr | Contact us |
+| **Lifetime** | $1,490 | $4,490 | Contact us |
+
+<p align="center">
+  <a href="mailto:license@mrd-chart.dev"><strong>Start free 14-day trial &rarr;</strong></a>
+</p>
+
+---
+
+## Documentation
+
+| Resource | Description |
+|---|---|
+| [Getting Started](docs/guides/getting-started.md) | Install, initialize, load data, enable indicators |
+| [Indicator Reference](docs/guides/indicators.md) | All 12+ indicators with parameters |
+| [Drawing Tools](docs/guides/drawings.md) | 10+ tools, serialization, events |
+| [Theming](docs/guides/themes.md) | Dark, light, custom theme objects |
+| [API Reference](docs/api/README.md) | Full method & event documentation |
+| [React Example](docs/examples/react.md) | Full React integration |
+| [Vue Example](docs/examples/vue.md) | Full Vue 3 integration |
+
+---
+
+## Browser Support
+
+Chrome 80+ &bull; Firefox 79+ &bull; Safari 15.2+ &bull; Edge 80+ &bull; Mobile Chrome &bull; Mobile Safari
+
+Requires WebAssembly and ES2020.
+
+---
+
+## Keywords
+
+`orderbook heatmap chart` · `kline heatmap` · `candlestick orderbook depth` · `footprint chart library` · `crypto chart heatmap` · `trading chart wasm` · `orderbook depth visualization` · `liquidation heatmap` · `volume profile chart` · `market depth chart javascript` · `real-time orderbook heatmap` · `kline orderbook chart`
+
+---
+
+## License
+
+This is proprietary commercial software. A valid license key is required for production use.
+Free 14-day trial is available with watermark.
+
+See [LICENSE](./LICENSE) for full terms.
+
+---
+
+<p align="center">
+  <sub>Native WebAssembly engine. Designed for traders who need to see the full order book.</sub><br/>
+  <sub>&copy; 2026 MRD Technologies. All rights reserved.</sub>
+</p>

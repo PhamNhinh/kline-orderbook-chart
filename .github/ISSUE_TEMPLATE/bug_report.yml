@@ -1,0 +1,81 @@
+name: Bug Report
+description: Report a bug in MRD Chart Engine
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug. Please fill out the information below so we can investigate.
+
+  - type: input
+    id: license
+    attributes:
+      label: License Tier
+      description: Which license tier are you using?
+      placeholder: "Standard / Professional / Enterprise"
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Package Version
+      description: The version of @mrd/chart-engine you're using
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Mobile Chrome
+        - Mobile Safari
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: Describe what happened and what you expected
+      placeholder: |
+        **What happened:**
+        ...
+
+        **What I expected:**
+        ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Provide the steps to reproduce the issue
+      placeholder: |
+        1. Initialize chart with ...
+        2. Enable indicator ...
+        3. See error in console
+    validations:
+      required: true
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Code Snippet
+      description: Minimal code to reproduce the issue
+      render: javascript
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console Output / Error
+      description: Any relevant error messages
+      render: text

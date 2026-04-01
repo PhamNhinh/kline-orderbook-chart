@@ -1,0 +1,49 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Package demo project
+        run: |
+          cd examples/quick-start
+          zip -r ../../kline-orderbook-chart-demo.zip . -x "node_modules/*" "dist/*" ".DS_Store" "package-lock.json"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: kline-orderbook-chart-demo.zip
+          body: |
+            ## Quick Start
+
+            Download `kline-orderbook-chart-demo.zip`, then:
+
+            ```bash
+            unzip kline-orderbook-chart-demo.zip
+            cd quick-start
+            npm install
+            npm run dev
+            ```
+
+            Open http://localhost:3000 to see the chart.
+
+            ## Live Demo
+
+            Full experience with real market data: [app.mrd-indicators.com/trading/chart-terminal](https://app.mrd-indicators.com/trading/chart-terminal)
+
+            ## Install via npm
+
+            ```bash
+            npm install @mrd/chart-engine
+            ```

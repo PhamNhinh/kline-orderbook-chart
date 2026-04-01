@@ -1,0 +1,30 @@
+{
+  "name": "kline-orderbook-chart",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Candlestick chart with built-in orderbook heatmap, footprint chart, and liquidation heatmap. WebAssembly engine.",
+  "homepage": "https://github.com/PhamNhinh/kline-orderbook-chart",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PhamNhinh/kline-orderbook-chart.git"
+  },
+  "keywords": [
+    "orderbook-heatmap",
+    "kline-heatmap",
+    "candlestick-orderbook",
+    "footprint-chart",
+    "crypto-chart",
+    "trading-chart",
+    "liquidation-heatmap",
+    "volume-profile",
+    "market-depth",
+    "orderbook-depth-chart",
+    "wasm",
+    "webassembly",
+    "canvas",
+    "chart",
+    "heatmap",
+    "kline-orderbook-chart"
+  ],
+  "license": "SEE LICENSE IN LICENSE"
+}
