@@ -339,6 +339,21 @@ toggleIndicator('tog-hm',
   () => bridge.setHeatmap(new Float64Array(0), 0, 0, 0, 1, 0, 1),
 )
 
+toggleIndicator('tog-delta-hist',
+  () => bridge.enableDeltaHistogram(),
+  () => bridge.disableDeltaHistogram(),
+)
+
+// ── Toolbar: Footprint display mode ──
+document.querySelectorAll('[id^="fp-mode-"]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[id^="fp-mode-"]').forEach(b => b.classList.remove('active'))
+    btn.classList.add('active')
+    const modes = { 'fp-mode-bidask': 0, 'fp-mode-delta': 1, 'fp-mode-vol': 2 }
+    bridge.footprintSetDisplayMode(modes[btn.id] ?? 0)
+  })
+})
+
 // ── Toolbar: Drawing tools ──
 document.querySelectorAll('[data-draw]').forEach(btn => {
   btn.addEventListener('click', () => {
