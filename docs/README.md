@@ -21,6 +21,7 @@ Welcome to the official documentation for **Kline Orderbook Chart**, the only ch
 | [Indicators](guides/indicators.md) | RSI, Volume, OI, CVD, VRVP, TPO, Large Trades, and more |
 | [Drawing Tools](guides/drawings.md) | Trendline, Fibonacci, Channel, Elliott Wave, serialization |
 | [Themes](guides/themes.md) | Dark mode, light mode, runtime switching |
+| [Custom Indicators](guides/custom-indicators.md) | Build your own indicators with the plugin API |
 | [Performance](guides/performance.md) | Benchmarks, memory profile, optimization best practices |
 
 ## Reference

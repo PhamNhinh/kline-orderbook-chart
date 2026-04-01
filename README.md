@@ -488,6 +488,7 @@ Free 14-day trial included. Contact us for pricing and license options:
 | [Indicators](docs/guides/indicators.md) | RSI, Volume, OI, CVD, VRVP, TPO, and more |
 | [Drawing Tools](docs/guides/drawings.md) | 10+ tools, serialization, events |
 | [Themes](docs/guides/themes.md) | Dark/light mode switching |
+| [Custom Indicators](docs/guides/custom-indicators.md) | Build your own indicators with the plugin API |
 | [Performance](docs/guides/performance.md) | Benchmarks, memory, optimization tips |
 | [Licensing](docs/guides/licensing.md) | Trial mode, license keys, plans |
 | [API Reference](docs/api/README.md) | Complete method & event documentation |
