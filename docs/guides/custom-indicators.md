@@ -1,29 +1,45 @@
-# Custom Indicators (Plugin API)
+# Custom Indicators
 
-Build your own indicators using the plugin system. Custom indicators render through the same native pipeline as built-in indicators — pixel-perfect alignment, consistent performance, and automatic viewport synchronization.
+The Custom Indicator API lets you create your own indicators with a `compute` + `render` plugin interface. Custom indicators render through the native command buffer pipeline — the same path as built-in indicators — ensuring pixel-perfect alignment and consistent performance.
 
-## How it works
+**Plan requirement:** Enterprise.
 
-1. You register an indicator with a `compute` function and a `render` function
-2. When kline data changes, the engine calls `compute` with OHLCV data and your parameters
-3. On each frame, the engine calls `render` with a drawing API and the computed results
-4. All drawing commands are dispatched through the native command buffer — not Canvas2D overlay
+---
 
-## Quick example: SMA (Simple Moving Average)
+## How It Works
+
+A custom indicator has two phases:
+
+1. **`compute(ohlcv, params)`** — receives OHLCV data and parameters, returns computed values (e.g. SMA values, signal points). Runs once when data changes.
+
+2. **`render(draw, computed, ohlcv)`** — receives an engine-backed drawing API and the computed values. Called every frame.
+
+```
+  Data changes → compute() → cached result
+                                   │
+  Each frame  → render(draw, cached) → native command buffer → Canvas 2D
+```
+
+---
+
+## Quick Start: Simple Moving Average
 
 ```javascript
-const id = chart.addIndicator({
+const smaId = chart.addIndicator({
   name: 'SMA 20',
   params: { period: 20, color: '#e8a04a', lineWidth: 1.5 },
 
   compute(ohlcv, params) {
-    const sma = []
     const { close } = ohlcv
+    const sma = new Array(close.length)
     for (let i = 0; i < close.length; i++) {
-      if (i < params.period - 1) { sma.push(NaN); continue }
+      if (i < params.period - 1) {
+        sma[i] = NaN
+        continue
+      }
       let sum = 0
       for (let j = i - params.period + 1; j <= i; j++) sum += close[j]
-      sma.push(sum / params.period)
+      sma[i] = sum / params.period
     }
     return { sma }
   },
@@ -34,296 +50,329 @@ const id = chart.addIndicator({
 })
 ```
 
-## Indicator lifecycle
+---
 
-### Register
+## API
 
-```javascript
-const id = chart.addIndicator({
-  name: 'My Indicator',        // display name
-  params: { period: 14 },      // your custom parameters
-  compute(ohlcv, params) {},    // computation logic
-  render(draw, computed) {},    // drawing logic
-})
-```
+### `chart.addIndicator(config)` → `number | null`
 
-### Update parameters
+Registers a new custom indicator. Returns an integer ID, or `null` if the feature is gated.
 
-```javascript
-chart.updateIndicatorParams(id, { period: 50 })
-```
+| Property | Type | Required | Description |
+|---|---|---|---|
+| `name` | `string` | No | Display name (default: "Custom N") |
+| `params` | `object` | No | Key-value parameters accessible via `this.params` in render |
+| `compute` | `function` | No | `(ohlcv, params) → object` — computation function |
+| `render` | `function` | **Yes** | `(draw, computed, ohlcv) → void` — rendering function |
 
-This triggers a recomputation on the next frame.
+### `chart.removeIndicator(id)`
 
-### Enable / Disable
+Unregisters and removes a custom indicator.
 
 ```javascript
-chart.setIndicatorEnabled(id, false)   // hide without removing
-chart.setIndicatorEnabled(id, true)    // show again
+chart.removeIndicator(smaId)
 ```
 
-### Remove
+### `chart.updateIndicatorParams(id, params)`
+
+Updates the parameter object and triggers recomputation.
 
 ```javascript
-chart.removeIndicator(id)
+chart.updateIndicatorParams(smaId, { period: 50 })   // change SMA to 50
+chart.updateIndicatorParams(smaId, { color: '#26a69a' })   // change color
 ```
 
-### List all
+### `chart.setIndicatorEnabled(id, enabled)`
+
+Toggles visibility without removing the indicator.
+
+```javascript
+chart.setIndicatorEnabled(smaId, false)   // hide
+chart.setIndicatorEnabled(smaId, true)    // show
+```
+
+### `chart.listIndicators()` → `Array`
+
+Returns all registered custom indicators.
 
 ```javascript
 const indicators = chart.listIndicators()
-// [{ id: 1, name: 'SMA 20', params: { period: 20, ... }, enabled: true }]
+// → [{ id: 1, name: 'SMA 20', params: { period: 20, ... }, enabled: true }]
+```
+
+### `chart.invalidateCustomIndicators()`
+
+Forces recomputation of all custom indicators on the next frame.
+
+```javascript
+chart.invalidateCustomIndicators()
 ```
 
 ---
 
-## The `compute` function
+## The `compute` Function
 
-Called automatically when kline data changes. Receives:
+```typescript
+compute(ohlcv: OHLCV, params: object): object
+```
 
-| Parameter | Type | Description |
+### `ohlcv` Parameter
+
+| Property | Type | Description |
 |---|---|---|
-| `ohlcv` | `object` | Contains `timestamps`, `open`, `high`, `low`, `close`, `volume` arrays and `length` |
-| `params` | `object` | Your indicator's current parameters |
+| `timestamps` | `number[]` | Unix timestamps (seconds) |
+| `open` | `number[]` | Open prices |
+| `high` | `number[]` | High prices |
+| `low` | `number[]` | Low prices |
+| `close` | `number[]` | Close prices |
+| `volume` | `number[]` | Volume |
+| `length` | `number` | Number of candles |
 
-Returns an object with computed data (any shape you want). This object is passed to `render`.
+### When `compute` Runs
+
+- After `setKlines()` (data replaced)
+- After `appendKline()` (new candle)
+- After `updateLastKline()` (last close changes)
+- After `updateIndicatorParams()` (params changed)
+- After `invalidateCustomIndicators()`
+
+The result is **cached** and reused across frames until data changes.
+
+### Return Value
+
+Return any object — its properties will be passed to `render` as the second argument.
 
 ```javascript
 compute(ohlcv, params) {
-  const { close, high, low, length } = ohlcv
-
-  // Access individual candles
-  for (let i = 0; i < length; i++) {
-    const c = close[i]
-    const h = high[i]
-    const l = low[i]
+  return {
+    sma: [...],
+    signals: [...],
+    level: 67500,
   }
-
-  // Return computed data for render
-  return { myLine: [...], mySignals: [...] }
-}
-```
-
-### OHLCV data object
-
-```javascript
-{
-  timestamps: number[],   // unix timestamps (seconds)
-  open: number[],
-  high: number[],
-  low: number[],
-  close: number[],
-  volume: number[],
-  length: number,         // array length
 }
 ```
 
 ---
 
-## The `render` function
+## The `render` Function
 
-Called on every frame. Receives a `draw` API and the object returned by `compute`.
-
-Inside render, `this` refers to the indicator object, so you can access `this.params`.
-
-```javascript
-render(draw, computed, ohlcv) {
-  // draw.seriesLine, draw.marker, draw.hline, etc.
-  // `ohlcv` is also available if needed
-}
+```typescript
+render(draw: DrawAPI, computed: object, ohlcv: OHLCV): void
 ```
+
+The `render` function is called **every frame** when the indicator is enabled. Inside `render`, `this` refers to the indicator object — use `this.params` to access parameters.
+
+The `draw` object provides engine-backed drawing primitives.
 
 ---
 
-## Drawing API reference
+## Drawing API (`draw`)
 
-### Series (data-aligned)
+### Series Drawing
 
-These methods draw data aligned to kline timestamps. Array values correspond to candle indices.
+#### `draw.seriesLine(series, color?, lineWidth?)`
 
-| Method | Description |
-|---|---|
-| `draw.seriesLine(values, color?, lineWidth?)` | Smooth polyline. `NaN` = gap. |
-| `draw.seriesDashedLine(values, color?, lineWidth?, dash?, gap?)` | Dashed polyline |
-| `draw.band(upper, lower, fillColor?)` | Filled area between two series |
+Draw a data series as a smooth polyline aligned to kline timestamps. `NaN` values create gaps.
 
 ```javascript
-draw.seriesLine(sma, '#e8a04a', 1.5)
-draw.seriesDashedLine(signal, '#ffffff66', 1, 4, 4)
-draw.band(bbUpper, bbLower, 'rgba(100,149,237,0.08)')
+draw.seriesLine(computed.sma, '#e8a04a', 1.5)
 ```
 
-### Horizontal lines
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `series` | `number[]` | — | Values aligned to kline indices |
+| `color` | `string` | `'#ffffff99'` | CSS color: `'#rrggbb'`, `'#rrggbbaa'`, `'rgba(r,g,b,a)'` |
+| `lineWidth` | `number` | `1.5` | Line width in pixels |
 
-| Method | Description |
-|---|---|
-| `draw.hline(price, color?, lineWidth?)` | Solid horizontal line |
-| `draw.dashedHline(price, color?, lineWidth?, dash?, gap?)` | Dashed horizontal line |
+#### `draw.seriesDashedLine(series, color?, lineWidth?, dash?, gap?)`
+
+Dashed variant of `seriesLine`.
 
 ```javascript
-draw.hline(70, '#ff4757', 1)              // RSI overbought
-draw.dashedHline(30, '#26a69a', 1, 6, 4)  // RSI oversold
+draw.seriesDashedLine(computed.signal, '#ffffff66', 1, 4, 4)
 ```
 
-### Markers (at candle index + price)
+#### `draw.band(upper, lower, fillColor?)`
 
-| Method | Description |
-|---|---|
-| `draw.marker(index, price, color?, radius?)` | Circle marker |
-| `draw.markerUp(index, price, color?, size?)` | Up-triangle (buy signal) |
-| `draw.markerDown(index, price, color?, size?)` | Down-triangle (sell signal) |
+Filled band between two series (e.g. Bollinger Bands, Keltner Channel).
 
 ```javascript
-draw.markerUp(i, ohlcv.low[i], '#26a69a', 5)    // buy signal below candle
-draw.markerDown(i, ohlcv.high[i], '#ef5350', 5)  // sell signal above candle
+draw.band(computed.upperBB, computed.lowerBB, 'rgba(100, 149, 237, 0.08)')
+```
+
+### Horizontal Lines
+
+#### `draw.hline(price, color?, lineWidth?)`
+
+Horizontal line across the entire chart at a price level.
+
+```javascript
+draw.hline(67500, '#ffffff66', 1)
+```
+
+#### `draw.dashedHline(price, color?, lineWidth?, dash?, gap?)`
+
+Dashed horizontal line.
+
+```javascript
+draw.dashedHline(67500, '#ffffff66', 1, 6, 4)
+```
+
+### Point Markers
+
+#### `draw.marker(index, price, color?, radius?)`
+
+Circle marker at a candle index and price.
+
+```javascript
+draw.marker(42, 67500, '#e8a04a', 3)
+```
+
+#### `draw.markerUp(index, price, color?, size?)`
+
+Up-triangle marker (buy signal).
+
+```javascript
+draw.markerUp(42, 67200, '#26a69a', 5)
+```
+
+#### `draw.markerDown(index, price, color?, size?)`
+
+Down-triangle marker (sell signal).
+
+```javascript
+draw.markerDown(42, 68100, '#ef5350', 5)
 ```
 
 ### Text
 
-| Method | Description |
-|---|---|
-| `draw.text(index, price, text, color?, fontSize?, align?)` | Text at candle index + price |
-| `draw.priceLabel(price, text, color?, fontSize?)` | Label at the right price axis |
+#### `draw.text(index, price, text, color?, fontSize?, align?)`
+
+Text at a candle index and price level.
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `index` | `number` | — | Candle index (0-based) |
+| `price` | `number` | — | Price level |
+| `text` | `string` | — | Text content |
+| `color` | `string` | `'#ffffffaa'` | Text color |
+| `fontSize` | `number` | `10` | Font size in pixels |
+| `align` | `string` | `'center'` | `'left'`, `'center'`, `'right'` |
 
 ```javascript
-draw.text(i, price, 'BUY', '#26a69a', 10, 'center')
-draw.priceLabel(65000, 'Support', '#e8a04a', 10)
+draw.text(42, 67500, 'Buy', '#26a69a', 10, 'center')
 ```
 
-### Low-level (screen pixel coordinates)
+#### `draw.priceLabel(price, text, color?, fontSize?)`
 
-For custom layouts that don't align to candle data:
+Text label on the right edge of the chart (price axis area).
 
-| Method | Description |
-|---|---|
-| `draw.linePx(x1, y1, x2, y2, color, lineWidth?)` | Line in pixels |
-| `draw.fillRectPx(x, y, w, h, color)` | Filled rectangle in pixels |
-| `draw.strokeRectPx(x, y, w, h, color, lineWidth?)` | Stroked rectangle in pixels |
-| `draw.textPx(x, y, text, color, fontSize?, align?)` | Text in pixels |
+```javascript
+draw.priceLabel(67500, 'SMA(20)', '#e8a04a', 10)
+```
 
-### Coordinate conversion
+### Screen-Coordinate Primitives
 
-| Method | Description |
-|---|---|
-| `draw.worldToScreenX(timestamp)` | Convert timestamp → screen X pixel |
-| `draw.worldToScreenY(price)` | Convert price → screen Y pixel |
-| `draw.screenToWorldX(px)` | Convert screen X → timestamp |
-| `draw.screenToWorldY(py)` | Convert screen Y → price |
-| `draw.chartArea()` | Returns `{ x, y, w, h }` of the chart drawing area |
+For low-level drawing in pixel coordinates:
+
+#### `draw.linePx(x1, y1, x2, y2, color, lineWidth?)`
+
+```javascript
+draw.linePx(100, 200, 400, 200, '#ffffff66', 1)
+```
+
+#### `draw.fillRectPx(x, y, w, h, color)`
+
+```javascript
+draw.fillRectPx(100, 200, 50, 20, 'rgba(255, 255, 255, 0.1)')
+```
+
+#### `draw.strokeRectPx(x, y, w, h, color, lineWidth?)`
+
+```javascript
+draw.strokeRectPx(100, 200, 50, 20, '#ffffff66', 1)
+```
+
+#### `draw.textPx(x, y, text, color, fontSize?, align?)`
+
+```javascript
+draw.textPx(100, 200, 'Label', '#ffffffaa', 10, 'left')
+```
+
+### Coordinate Helpers
+
+#### `draw.worldToScreenX(worldX)` → `number`
+
+#### `draw.worldToScreenY(worldY)` → `number`
+
+#### `draw.screenToWorldX(screenX)` → `number`
+
+#### `draw.screenToWorldY(screenY)` → `number`
+
+Convert between world (timestamp/price) and screen (pixel) coordinates.
+
+```javascript
+const sx = draw.worldToScreenX(1710000000)
+const sy = draw.worldToScreenY(67500)
+```
+
+#### `draw.chartArea()` → `{ x, y, w, h }`
+
+Returns the pixel bounds of the chart plotting area (excluding axes).
+
+```javascript
+const area = draw.chartArea()
+// → { x: 0, y: 0, w: 800, h: 500 }
+```
 
 ---
 
-## Color format
-
-Colors accept these formats:
-
-```javascript
-'#ff9800'                 // hex RGB
-'#ff980080'               // hex RGBA
-'rgba(255, 152, 0, 0.5)'  // CSS rgba
-'rgb(255, 152, 0)'        // CSS rgb (fully opaque)
-```
-
----
-
-## Full examples
+## Complete Examples
 
 ### Bollinger Bands
 
 ```javascript
 chart.addIndicator({
   name: 'Bollinger Bands',
-  params: { period: 20, stdDev: 2, color: '#6366f1' },
+  params: { period: 20, multiplier: 2, color: '#6495ED' },
 
   compute(ohlcv, params) {
-    const { close, length } = ohlcv
-    const mid = [], upper = [], lower = []
+    const { close } = ohlcv
+    const len = close.length
+    const middle = new Array(len)
+    const upper = new Array(len)
+    const lower = new Array(len)
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < len; i++) {
       if (i < params.period - 1) {
-        mid.push(NaN); upper.push(NaN); lower.push(NaN)
+        middle[i] = upper[i] = lower[i] = NaN
         continue
       }
-      let sum = 0
-      for (let j = i - params.period + 1; j <= i; j++) sum += close[j]
-      const avg = sum / params.period
-
-      let variance = 0
-      for (let j = i - params.period + 1; j <= i; j++) variance += (close[j] - avg) ** 2
-      const std = Math.sqrt(variance / params.period)
-
-      mid.push(avg)
-      upper.push(avg + params.stdDev * std)
-      lower.push(avg - params.stdDev * std)
+      let sum = 0, sumSq = 0
+      for (let j = i - params.period + 1; j <= i; j++) {
+        sum += close[j]
+        sumSq += close[j] * close[j]
+      }
+      const mean = sum / params.period
+      const std = Math.sqrt(sumSq / params.period - mean * mean)
+      middle[i] = mean
+      upper[i] = mean + params.multiplier * std
+      lower[i] = mean - params.multiplier * std
     }
-    return { mid, upper, lower }
+    return { middle, upper, lower }
   },
 
   render(draw, computed) {
-    const { color } = this.params
-    draw.band(computed.upper, computed.lower, color + '15')
-    draw.seriesLine(computed.upper, color + '80', 1)
-    draw.seriesLine(computed.lower, color + '80', 1)
-    draw.seriesLine(computed.mid, color, 1.5)
+    const color = this.params.color
+    draw.band(computed.upper, computed.lower, color + '14')
+    draw.seriesLine(computed.upper, color + '66', 1)
+    draw.seriesLine(computed.lower, color + '66', 1)
+    draw.seriesLine(computed.middle, color, 1.5)
   },
 })
 ```
 
-### RSI with signals
-
-```javascript
-chart.addIndicator({
-  name: 'Custom RSI',
-  params: { period: 14, overbought: 70, oversold: 30 },
-
-  compute(ohlcv, params) {
-    const { close, length } = ohlcv
-    const rsi = []
-    let gains = 0, losses = 0
-
-    for (let i = 0; i < length; i++) {
-      if (i === 0) { rsi.push(NaN); continue }
-      const change = close[i] - close[i - 1]
-      if (i <= params.period) {
-        if (change > 0) gains += change; else losses -= change
-        if (i === params.period) {
-          gains /= params.period; losses /= params.period
-          rsi.push(100 - 100 / (1 + gains / (losses || 1e-10)))
-        } else { rsi.push(NaN) }
-      } else {
-        gains = (gains * (params.period - 1) + Math.max(change, 0)) / params.period
-        losses = (losses * (params.period - 1) + Math.max(-change, 0)) / params.period
-        rsi.push(100 - 100 / (1 + gains / (losses || 1e-10)))
-      }
-    }
-
-    const signals = []
-    for (let i = 1; i < length; i++) {
-      if (rsi[i - 1] > params.overbought && rsi[i] <= params.overbought) {
-        signals.push({ index: i, type: 'sell' })
-      } else if (rsi[i - 1] < params.oversold && rsi[i] >= params.oversold) {
-        signals.push({ index: i, type: 'buy' })
-      }
-    }
-    return { rsi, signals }
-  },
-
-  render(draw, computed, ohlcv) {
-    draw.dashedHline(this.params.overbought, '#ff475766', 1, 6, 4)
-    draw.dashedHline(this.params.oversold, '#26a69a66', 1, 6, 4)
-
-    for (const s of computed.signals) {
-      if (s.type === 'buy') {
-        draw.markerUp(s.index, ohlcv.low[s.index], '#26a69a', 6)
-      } else {
-        draw.markerDown(s.index, ohlcv.high[s.index], '#ef5350', 6)
-      }
-    }
-  },
-})
-```
-
-### EMA Crossover
+### EMA Crossover Signals
 
 ```javascript
 chart.addIndicator({
@@ -332,82 +381,98 @@ chart.addIndicator({
 
   compute(ohlcv, params) {
     const { close } = ohlcv
-    const fast = ema(close, params.fast)
-    const slow = ema(close, params.slow)
+    const fastEma = ema(close, params.fast)
+    const slowEma = ema(close, params.slow)
+    const buySignals = []
+    const sellSignals = []
 
-    const crosses = []
     for (let i = 1; i < close.length; i++) {
-      if (fast[i - 1] <= slow[i - 1] && fast[i] > slow[i]) {
-        crosses.push({ index: i, type: 'bullish' })
-      } else if (fast[i - 1] >= slow[i - 1] && fast[i] < slow[i]) {
-        crosses.push({ index: i, type: 'bearish' })
+      if (fastEma[i - 1] <= slowEma[i - 1] && fastEma[i] > slowEma[i]) {
+        buySignals.push(i)
+      }
+      if (fastEma[i - 1] >= slowEma[i - 1] && fastEma[i] < slowEma[i]) {
+        sellSignals.push(i)
       }
     }
-    return { fast, slow, crosses }
+    return { fastEma, slowEma, buySignals, sellSignals }
   },
 
   render(draw, computed, ohlcv) {
-    draw.seriesLine(computed.fast, '#26a69a', 1.5)
-    draw.seriesLine(computed.slow, '#ef5350', 1.5)
+    draw.seriesLine(computed.fastEma, '#26a69a', 1.5)
+    draw.seriesLine(computed.slowEma, '#ef5350', 1.5)
 
-    for (const c of computed.crosses) {
-      const price = ohlcv.close[c.index]
-      if (c.type === 'bullish') {
-        draw.markerUp(c.index, ohlcv.low[c.index] * 0.999, '#26a69a', 6)
-      } else {
-        draw.markerDown(c.index, ohlcv.high[c.index] * 1.001, '#ef5350', 6)
-      }
+    for (const i of computed.buySignals) {
+      draw.markerUp(i, ohlcv.low[i], '#26a69a', 6)
+    }
+    for (const i of computed.sellSignals) {
+      draw.markerDown(i, ohlcv.high[i], '#ef5350', 6)
     }
   },
 })
 
 function ema(data, period) {
   const k = 2 / (period + 1)
-  const result = [data[0]]
+  const result = new Array(data.length)
+  result[0] = data[0]
   for (let i = 1; i < data.length; i++) {
-    result.push(data[i] * k + result[i - 1] * (1 - k))
+    result[i] = data[i] * k + result[i - 1] * (1 - k)
   }
   return result
 }
 ```
 
-### Custom watermark / info panel
-
-Use screen-coordinate primitives for UI overlays:
+### Custom Dashboard Panel
 
 ```javascript
 chart.addIndicator({
-  name: 'Info Panel',
+  name: 'Stats Panel',
   params: {},
-  compute() { return {} },
 
-  render(draw, _, ohlcv) {
-    const { x, y } = draw.chartArea()
-    const last = ohlcv.close[ohlcv.length - 1]
-    const first = ohlcv.close[0]
-    const change = ((last - first) / first * 100).toFixed(2)
+  compute(ohlcv) {
+    const c = ohlcv.close
+    const len = c.length
+    const last = c[len - 1]
+    const change24h = len > 24 ? ((last - c[len - 25]) / c[len - 25] * 100).toFixed(2) : '—'
+    const high24h = len > 24 ? Math.max(...c.slice(-24)) : last
+    const low24h = len > 24 ? Math.min(...c.slice(-24)) : last
+    return { last, change24h, high24h, low24h }
+  },
 
-    draw.fillRectPx(x + 10, y + 10, 140, 50, 'rgba(0,0,0,0.5)')
-    draw.textPx(x + 20, y + 30, `Price: ${last.toFixed(2)}`, '#e8eaed', 12, 'left')
-    draw.textPx(x + 20, y + 48, `Change: ${change}%`, change >= 0 ? '#26a69a' : '#ef5350', 11, 'left')
+  render(draw, computed) {
+    const area = draw.chartArea()
+    const x = area.x + 10
+    let y = area.y + 20
+
+    draw.fillRectPx(x - 5, y - 15, 160, 70, 'rgba(0,0,0,0.5)')
+    draw.textPx(x, y, `Last: ${computed.last.toFixed(2)}`, '#ffffffcc', 11, 'left')
+    y += 16
+    draw.textPx(x, y, `24h: ${computed.change24h}%`, '#ffffffaa', 10, 'left')
+    y += 16
+    draw.textPx(x, y, `H: ${computed.high24h.toFixed(2)}`, '#26a69a', 10, 'left')
+    y += 16
+    draw.textPx(x, y, `L: ${computed.low24h.toFixed(2)}`, '#ef5350', 10, 'left')
   },
 })
 ```
 
 ---
 
-## Tips
+## Performance Tips
 
-- **Return `NaN` for gaps** — The series methods skip `NaN` values, creating gaps in the line.
-- **Use `this.params`** — Access your parameters in `render` via `this.params` instead of hardcoding values.
-- **Avoid heavy computation in `render`** — `compute` is only called when data changes; `render` is called every frame. Keep `render` fast.
-- **Multiple indicators** — Register as many as you need. They all render through the same native pipeline.
-- **Colors with alpha** — Use `#rrggbbaa` format or `rgba()` for semi-transparent overlays.
+| Tip | Why |
+|---|---|
+| Keep `compute` fast | It blocks the main thread. Use typed arrays for math. |
+| Cache expensive calculations | Return object is cached until data changes. |
+| Minimize `draw` calls in `render` | Each call writes to the native command buffer. |
+| Use `NaN` for gaps | `seriesLine` skips NaN values efficiently. |
+| Avoid DOM access in `render` | `render` is called every frame — keep it pure. |
 
 ---
 
-## Next steps
+## Next Steps
 
-- [Indicators](indicators.md) — Built-in indicators
-- [Drawing Tools](drawings.md) — Interactive drawing tools
-- [API Reference](../api/README.md) — Full method documentation
+| Topic | Link |
+|---|---|
+| Handle events & tooltips | [Events & Tooltips](./tooltip.md) |
+| All built-in indicators | [Built-in Indicators](./indicators.md) |
+| Drawing tools | [Drawing Tools](./drawings.md) |

@@ -148,5 +148,5 @@ For comparison, JavaScript-only charting libraries typically use 50–120 MB at 
 ## Next steps
 
 - [Getting Started](getting-started.md) — Basic setup
-- [Real-Time Data](real-time-data.md) — WebSocket integration
+- [Candlestick Data](data.md) — Data format, real-time updates, WebSocket integration
 - [API Reference](../api/README.md) — Full method documentation

@@ -479,18 +479,51 @@ Free 14-day trial included. Contact us for pricing and license options:
 
 ## Documentation
 
-| Resource | Description |
+> **[→ Full Documentation Table of Contents](docs/guides/README.md)**
+
+### Tutorials
+
+| Guide | Description |
 |---|---|
-| [Getting Started](docs/guides/getting-started.md) | Install, create a chart, load data, first render |
-| [Real-Time Data](docs/guides/real-time-data.md) | Binance WebSocket integration, paginated loading |
-| [Orderbook Heatmap](docs/guides/orderbook-heatmap.md) | Render depth data behind candles |
-| [Footprint Chart](docs/guides/footprint-chart.md) | Bid/ask volume at every price level, POC, delta |
-| [Indicators](docs/guides/indicators.md) | RSI, Volume, OI, CVD, VRVP, TPO, and more |
-| [Drawing Tools](docs/guides/drawings.md) | 10+ tools, serialization, events |
-| [Themes](docs/guides/themes.md) | Dark/light mode switching |
-| [Custom Indicators](docs/guides/custom-indicators.md) | Build your own indicators with the plugin API |
-| [Performance](docs/guides/performance.md) | Benchmarks, memory, optimization tips |
-| [Licensing](docs/guides/licensing.md) | Trial mode, license keys, plans |
+| [Getting Started](docs/guides/getting-started.md) | Installation, creating your first chart, loading data, starting the render loop |
+| [Core Concepts & Architecture](docs/guides/architecture.md) | Architecture overview, native engine, command buffer pipeline, responsibility model |
+| [Framework Integration](docs/examples/framework-integration.md) | Complete examples for React, Vue 3, Svelte, Vanilla JS with SSR handling |
+
+### Data & Chart Types
+
+| Guide | Description |
+|---|---|
+| [Candlestick Data](docs/guides/data.md) | OHLCV data format, real-time updates, append/prepend, chart types |
+| [Orderbook Heatmap](docs/guides/orderbook-heatmap.md) | Depth matrix setup, real-time streaming, range configuration, prefetch |
+| [Footprint Chart](docs/guides/footprint-chart.md) | Trade stream ingestion, display modes, delta histogram, signals |
+| [Chart Aggregation](docs/guides/chart-aggregation.md) | Renko, Range, and Tick chart construction from OHLCV data |
+
+### Indicators & Analysis
+
+| Guide | Description |
+|---|---|
+| [Built-in Indicators](docs/guides/indicators.md) | All 14+ indicators — RSI, CVD, OI, Funding Rate, VRVP, TPO, VPIN, Smart Ranges, EMA Structure |
+| [Custom Indicators](docs/guides/custom-indicators.md) | Plugin API with `compute` + `render`, engine-backed drawing primitives |
+
+### Drawing & Interaction
+
+| Guide | Description |
+|---|---|
+| [Drawing Tools](docs/guides/drawings.md) | All 10+ tools, programmatic creation, styling, JSON serialization |
+| [Events & Tooltips](docs/guides/tooltip.md) | Tooltip callback, drawing events, hover hit tests, crosshair data |
+| [Viewport & Interaction](docs/guides/viewport-interaction.md) | Pan, zoom, pinch gestures, bar replay, crosshair sync, Y-axis scaling |
+
+### Configuration
+
+| Guide | Description |
+|---|---|
+| [Theming](docs/guides/themes.md) | Dark/light mode, framework theme synchronization |
+| [Advanced Topics](docs/guides/advanced.md) | Iceberg detection, licensing, performance optimization, memory management |
+
+### Reference
+
+| Guide | Description |
+|---|---|
 | [API Reference](docs/api/README.md) | Complete method & event documentation |
 | [React Integration](docs/examples/react.md) | Hooks, resize, WebSocket |
 | [Vue 3 Integration](docs/examples/vue.md) | Composables, theme switching |
