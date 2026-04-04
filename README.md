@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/media/heatmap-large-trades.png" alt="Kline Orderbook Heatmap Chart — Candlestick with real-time orderbook depth heatmap" width="100%" />
+  <img src="assets/media/kline-orderbook-chart.png" alt="Kline Orderbook Chart — Candlestick with real-time orderbook heatmap, footprint chart, liquidation heatmap, and indicators" width="100%" />
 </p>
 
 <h1 align="center">Kline Orderbook Chart</h1>
