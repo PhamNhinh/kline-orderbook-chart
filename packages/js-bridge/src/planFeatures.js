@@ -21,12 +21,15 @@ const PLAN_FEATURES = {
     largeTrades: true,
     vrvp: true,
     tpo: true,
+    cvdProfile: true,
     smartRanges: true,
     emaStructure: true,
     customIndicators: true,
     forexSignals: true,
     vpin: true,
     stopIceberg: true,
+    aggLiquidations: true,
+    mrdPullback: true,
   },
 
   standard: {
@@ -44,12 +47,15 @@ const PLAN_FEATURES = {
     largeTrades: false,
     vrvp: false,
     tpo: false,
+    cvdProfile: true,
     smartRanges: false,
     emaStructure: false,
     customIndicators: false,
     forexSignals: false,
     vpin: false,
     stopIceberg: false,
+    aggLiquidations: false,
+    mrdPullback: false,
   },
 
   professional: {
@@ -67,12 +73,15 @@ const PLAN_FEATURES = {
     largeTrades: true,
     vrvp: false,
     tpo: false,
+    cvdProfile: true,
     smartRanges: false,
     emaStructure: false,
     customIndicators: false,
     forexSignals: false,
     vpin: false,
     stopIceberg: false,
+    aggLiquidations: true,
+    mrdPullback: true,
   },
 
   enterprise: {
@@ -90,12 +99,15 @@ const PLAN_FEATURES = {
     largeTrades: true,
     vrvp: true,
     tpo: true,
+    cvdProfile: true,
     smartRanges: true,
     emaStructure: true,
     customIndicators: true,
     forexSignals: true,
     vpin: true,
     stopIceberg: true,
+    aggLiquidations: true,
+    mrdPullback: true,
   },
 }
 
@@ -111,6 +123,7 @@ const FEATURE_LABELS = {
   largeTrades: 'Large Trades',
   vrvp: 'VRVP',
   tpo: 'TPO / Market Profile',
+  cvdProfile: 'CVD Profile',
   smartRanges: 'Smart Ranges',
   emaStructure: 'EMA Structure',
   drawingFull: 'All Drawing Tools',
@@ -118,6 +131,8 @@ const FEATURE_LABELS = {
   forexSignals: 'Forex Signals',
   vpin: 'VPIN',
   stopIceberg: 'Stops & Icebergs',
+  aggLiquidations: 'Aggregated Liquidations',
+  mrdPullback: 'mrD-Pullback Signals',
 }
 
 const FEATURE_MIN_PLAN = {
@@ -139,6 +154,8 @@ const FEATURE_MIN_PLAN = {
   forexSignals: 'Enterprise',
   vpin: 'Enterprise',
   stopIceberg: 'Enterprise',
+  aggLiquidations: 'Professional',
+  mrdPullback: 'Professional',
 }
 
 export function getPlanFeatures(plan) {

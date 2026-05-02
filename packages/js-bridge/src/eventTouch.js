@@ -4,14 +4,18 @@
  */
 
 import {
-  ZONE_XAXIS, ZONE_YAXIS,
+  ZONE_MAIN, ZONE_XAXIS, ZONE_YAXIS, ZONE_RSI, ZONE_RSI_YAXIS,
   PANE_MAIN,
-  TAP_THRESHOLD, LONG_PRESS_MS, LIQ_PIN_MS, DOUBLE_TAP_MS, DOUBLE_TAP_DIST,
+  TAP_THRESHOLD as _BASE_TAP_THRESHOLD, LONG_PRESS_MS, LIQ_PIN_MS, DOUBLE_TAP_MS, DOUBLE_TAP_DIST,
   TOOL_REGISTRY,
   is2Point, is3Point, is1Point, isFreehand, isNPoint, isElliottManual,
   addDrawing, showPreview, screenToWorld, paneFromZone, isDrawableZone,
   panChartViewport, isIndicatorSubPaneZone, isIndicatorYAxisZone, indicatorPaneId,
+  addBrushPointsDensified,
 } from './eventConstants.js'
+
+// Touch taps have more natural jitter than mouse clicks
+const TAP_THRESHOLD = 25
 
 export function setupTouchEvents(canvas, engine, callbacks, ctx) {
   // ── Touch start ──
@@ -21,7 +25,12 @@ export function setupTouchEvents(canvas, engine, callbacks, ctx) {
     ctx.cancelMomentum()
     if (e.touches.length === 2) {
       clearTimeout(ctx.longPressTimer)
+      if (ctx.liqPinTimer) { clearTimeout(ctx.liqPinTimer); ctx.liqPinTimer = null }
       ctx.isCrosshairMode = false
+      ctx.pinchActive = true
+      // Cancel any pending single-tap pairing so the previous solo tap
+      // can't combine with the post-pinch finger-lift to fake a double-tap.
+      ctx.lastTapTime = 0
       const rect = canvas.getBoundingClientRect()
       const dx = e.touches[1].clientX - e.touches[0].clientX
       const dy = e.touches[1].clientY - e.touches[0].clientY
@@ -29,6 +38,7 @@ export function setupTouchEvents(canvas, engine, callbacks, ctx) {
       ctx.lastX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left
       ctx.lastY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top
       ctx.dragZone = engine.hit_zone(ctx.lastX, ctx.lastY)
+      ctx.pinchAnchorY = ctx.lastY
     } else if (e.touches.length === 1) {
       const rect = canvas.getBoundingClientRect()
       const tx = e.touches[0].clientX - rect.left
@@ -75,6 +85,8 @@ export function setupTouchEvents(canvas, engine, callbacks, ctx) {
             engine.start_brush(dm.style.r, dm.style.g, dm.style.b, dm.style.lineWidth, pane)
             engine.add_brush_point(wx, wy)
             ctx.isBrushing = true
+            ctx.brushLastSx = tx
+            ctx.brushLastSy = ty
           } else if (is3Point(tool)) {
             if (dm.step === 0) {
               dm.x1 = wx; dm.y1 = wy; dm.pane = pane; dm.step = 1
@@ -111,9 +123,8 @@ export function setupTouchEvents(canvas, engine, callbacks, ctx) {
         return
       }
 
-      // Batch hit test: [zone, selDraw, anchorHit, drawingHit, markerHit]
-      const hit = engine.hover_hit_test(tx, ty)
-      const zone = hit[0], selDraw = hit[1], anchorHit = hit[2]
+      let hit = engine.hover_hit_test(tx, ty)
+      let zone = hit[0], selDraw = hit[1], anchorHit = hit[2]
       if (isDrawableZone(zone) && !ctx.drawingMode && selDraw > 0) {
         if (anchorHit >= 0) {
           ctx.isDraggingAnchor = true
@@ -205,8 +216,9 @@ export function setupTouchEvents(canvas, engine, callbacks, ctx) {
       const tx = e.touches[0].clientX - rect.left
       const ty = e.touches[0].clientY - rect.top
       const p = dm.pane || PANE_MAIN
-      const { wx, wy } = screenToWorld(engine, tx, ty, p)
-      engine.add_brush_point(wx, wy)
+      addBrushPointsDensified(engine, tx, ty, ctx.brushLastSx, ctx.brushLastSy, p)
+      ctx.brushLastSx = tx
+      ctx.brushLastSy = ty
       engine.set_crosshair(tx, ty)
       callbacks.onDirty()
       ctx.touchMoved = true
@@ -272,6 +284,7 @@ export function setupTouchEvents(canvas, engine, callbacks, ctx) {
 
     if (e.touches.length === 2) {
       ctx.velSamples = []
+      ctx.pinchActive = true
       const dx = e.touches[1].clientX - e.touches[0].clientX
       const dy = e.touches[1].clientY - e.touches[0].clientY
       const dist = Math.sqrt(dx * dx + dy * dy)
@@ -279,9 +292,14 @@ export function setupTouchEvents(canvas, engine, callbacks, ctx) {
       const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left
       const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top
 
-      if (ctx.dragZone === ZONE_YAXIS) { engine.zoom_y(cy, factor) }
-      else if (isIndicatorYAxisZone(ctx.dragZone)) { engine.zoom_indicator_y(indicatorPaneId(ctx.dragZone), cy, factor) }
-      else if (ctx.dragZone === ZONE_XAXIS) { engine.zoom_x(cx, factor) }
+      const yAnchor = ctx.pinchAnchorY ?? cy
+      if (ctx.dragZone === ZONE_YAXIS) { engine.zoom_y(yAnchor, factor) }
+      else if (isIndicatorYAxisZone(ctx.dragZone) && ctx.dragZone !== ZONE_RSI_YAXIS) {
+        engine.zoom_indicator_y(indicatorPaneId(ctx.dragZone), yAnchor, factor)
+      } else if (ctx.dragZone === ZONE_RSI_YAXIS) {
+        engine.zoom_x(cx, factor)
+        panChartViewport(engine, ZONE_RSI, cx - ctx.lastX, cy - ctx.lastY)
+      } else if (ctx.dragZone === ZONE_XAXIS) { engine.zoom_x(cx, factor) }
       else if (isIndicatorSubPaneZone(ctx.dragZone)) {
         engine.zoom_x(cx, factor)
         panChartViewport(engine, ctx.dragZone, cx - ctx.lastX, cy - ctx.lastY)
@@ -313,7 +331,7 @@ export function setupTouchEvents(canvas, engine, callbacks, ctx) {
         callbacks.onDirty()
         callbacks.onCrosshairMove?.(tx, ty, ctx.dragZone)
         callbacks.onVrvpHover?.(tx, ty)
-      } else {
+      } else if (ctx.touchMoved) {
         ctx.lastX = tx
         ctx.lastY = ty
 
@@ -323,12 +341,17 @@ export function setupTouchEvents(canvas, engine, callbacks, ctx) {
         if (ctx.dragZone === ZONE_XAXIS) { engine.pan_x(dx) }
         else if (ctx.dragZone === ZONE_YAXIS) {
           const factor = Math.pow(1.005, dy)
-          engine.zoom_y(ty, factor)
+          engine.zoom_y(ctx.touchStartY, factor)
+        } else if (ctx.dragZone === ZONE_RSI_YAXIS) {
+          /* RSI Y-axis: zoom locked — do not pan main chart */
         } else if (isIndicatorYAxisZone(ctx.dragZone)) {
           const factor = Math.pow(1.005, dy)
-          engine.zoom_indicator_y(indicatorPaneId(ctx.dragZone), ty, factor)
+          engine.zoom_indicator_y(indicatorPaneId(ctx.dragZone), ctx.touchStartY, factor)
         } else { panChartViewport(engine, ctx.dragZone, dx, dy) }
         callbacks.onDirty()
+      } else {
+        ctx.lastX = tx
+        ctx.lastY = ty
       }
     }
   }, { passive: false })
@@ -366,6 +389,8 @@ export function setupTouchEvents(canvas, engine, callbacks, ctx) {
     // Complete freehand brush on touch end
     if (ctx.isBrushing) {
       ctx.isBrushing = false
+      ctx.brushLastSx = null
+      ctx.brushLastSy = null
       engine.finish_brush()
       ctx.finishDrawing()
       callbacks.onDirty()
@@ -515,34 +540,55 @@ export function setupTouchEvents(canvas, engine, callbacks, ctx) {
     }
 
     // Tap detection for selection + double-tap to edit
-    // Uses batch hover_hit_test: 1 WASM call instead of 5-6 separate calls
-    if (!ctx.touchMoved && !ctx.drawingMode && ctx.isDragging) {
+    // Uses direct hit_test_drawing/hit_test_marker (simple u32) instead of hover_hit_test (Int32Array)
+    //
+    // Gate on `e.touches.length === 0` and `!ctx.pinchActive` so a pinch
+    // zoom never fires a phantom tap. A pinch produces two touchend events
+    // (2→1 fingers, then 1→0); without these guards the per-finger lifts
+    // get classified as taps at the original first-finger position and
+    // two consecutive pinches register as a fake double-tap, which on the
+    // main chart would toggle Focus Mode and hide indicator sub-panes.
+    const allFingersUp = e.touches.length === 0
+    const _isTap = allFingersUp && !ctx.pinchActive && !ctx.touchMoved && !ctx.drawingMode
+    if (_isTap) {
       const now = Date.now()
-      const tdx = ctx.touchStartX - ctx.lastTapX
-      const tdy = ctx.touchStartY - ctx.lastTapY
-      const dist = Math.sqrt(tdx * tdx + tdy * tdy)
-      const isDoubleTap = (now - ctx.lastTapTime < DOUBLE_TAP_MS) && (dist < DOUBLE_TAP_DIST)
+      const tx = ctx.touchStartX
+      const ty = ctx.touchStartY
+      const tdx = tx - ctx.lastTapX
+      const tdy = ty - ctx.lastTapY
+      const tapDist = Math.sqrt(tdx * tdx + tdy * tdy)
+      const isDoubleTap = (now - ctx.lastTapTime < DOUBLE_TAP_MS) && (tapDist < DOUBLE_TAP_DIST)
+      const zone = engine.hit_zone(tx, ty)
 
-      const hit = engine.hover_hit_test(ctx.touchStartX, ctx.touchStartY)
-      const zone = hit[0], selDraw = hit[1], drawingHit = hit[3], markerHit = hit[4]
+      // On double-tap, give drawings priority over Y-auto reset so drawings in
+      // sub-panes (RSI/OI/FR/CVD/VPIN/AggLiq) can still open the edit popup.
+      const dblTapDrawingHit = isDoubleTap
+        ? engine.hit_test_drawing(tx, ty)
+        : 0
 
-      if (isDoubleTap && (isIndicatorSubPaneZone(zone) || isIndicatorYAxisZone(zone))) {
+      if (isDoubleTap && (isIndicatorSubPaneZone(zone) || isIndicatorYAxisZone(zone)) && dblTapDrawingHit <= 0) {
         engine.reset_indicator_y_auto(indicatorPaneId(zone))
         callbacks.onDirty()
-        ctx.lastTapTime = now
-        ctx.lastTapX = ctx.touchStartX
-        ctx.lastTapY = ctx.touchStartY
       } else if (isDrawableZone(zone)) {
+        const selDraw = engine.get_selected_drawing()
+
+        let drawingHit = dblTapDrawingHit > 0 ? dblTapDrawingHit : engine.hit_test_drawing(tx, ty)
+        let markerHit = 0
+        if (drawingHit <= 0) {
+          markerHit = engine.hit_test_marker(tx, ty)
+        }
+
+        
         if (drawingHit > 0) {
           engine.deselect_marker()
           callbacks.onMarkerSelected?.(0)
           engine.select_drawing(drawingHit)
           const rect = canvas.getBoundingClientRect()
-          const clientX = ctx.touchStartX + rect.left
-          const clientY = ctx.touchStartY + rect.top
+          const clientX = tx + rect.left
+          const clientY = ty + rect.top
           callbacks.onDrawingSelected?.(drawingHit, clientX, clientY)
           if (selDraw <= 0 || selDraw === drawingHit) {
-            callbacks.onDrawingDblClick?.(drawingHit, ctx.touchStartX, ctx.touchStartY, clientX, clientY)
+            callbacks.onDrawingDblClick?.(drawingHit, tx, ty, clientX, clientY)
           }
           callbacks.onDirty()
         } else if (markerHit > 0) {
@@ -555,15 +601,24 @@ export function setupTouchEvents(canvas, engine, callbacks, ctx) {
           if (selDraw > 0) { engine.deselect_drawing(); callbacks.onDrawingSelected?.(0); callbacks.onDirty() }
           const selMark = engine.get_selected_marker()
           if (selMark > 0) { engine.deselect_marker(); callbacks.onMarkerSelected?.(0); callbacks.onDirty() }
+          // Double-tap on empty main chart → forward to host for Focus
+          // Mode (TradingView-style: hide indicator sub-panes).
+          if (isDoubleTap && zone === ZONE_MAIN) {
+            const rect = canvas.getBoundingClientRect()
+            callbacks.onChartDblClick?.(tx, ty, tx + rect.left, ty + rect.top)
+          }
         }
       }
 
       ctx.lastTapTime = now
-      ctx.lastTapX = ctx.touchStartX
-      ctx.lastTapY = ctx.touchStartY
+      ctx.lastTapX = tx
+      ctx.lastTapY = ty
     }
 
-    if (ctx.touchMoved && !ctx.isCrosshairMode && !ctx.drawingMode
+    // Inertial scrolling only fires when the whole gesture finishes and
+    // it was a real single-finger pan, never the tail of a pinch.
+    if (allFingersUp && !ctx.pinchActive
+        && ctx.touchMoved && !ctx.isCrosshairMode && !ctx.drawingMode
         && ctx.dragZone !== ZONE_YAXIS && !isIndicatorYAxisZone(ctx.dragZone)) {
       ctx.startMomentum(ctx.dragZone)
     }
@@ -571,11 +626,35 @@ export function setupTouchEvents(canvas, engine, callbacks, ctx) {
     ctx.isDragging = false
     ctx.isCrosshairMode = false
     ctx.lastTouchDist = 0
+    // Pinch state survives intermediate touchend events (when one of two
+    // fingers lifts but the other is still down) and only clears once the
+    // user is fully off the canvas — otherwise the final lift would still
+    // be classified as a tap.
+    if (allFingersUp) ctx.pinchActive = false
     if (!ctx.drawingMode || ctx.drawingMode.step === 0) {
       engine.hide_crosshair()
       callbacks.onCrosshairHide?.()
     }
     callbacks.onDirty()
     callbacks.onVrvpHover?.(null, null)
+  })
+
+  // Reset state when browser cancels touch (system gesture, etc.)
+  canvas.addEventListener('touchcancel', () => {
+    clearTimeout(ctx.longPressTimer)
+    if (ctx.liqPinTimer) { clearTimeout(ctx.liqPinTimer); ctx.liqPinTimer = null }
+    ctx.isDragging = false
+    ctx.isDraggingAnchor = false
+    ctx.isDraggingDrawing = false
+    ctx.isBrushing = false
+    ctx.brushLastSx = null
+    ctx.brushLastSy = null
+    ctx.isCrosshairMode = false
+    ctx.lastTouchDist = 0
+    ctx.pinchActive = false
+    ctx.cancelMomentum()
+    engine.hide_crosshair()
+    callbacks.onCrosshairHide?.()
+    callbacks.onDirty()
   })
 }

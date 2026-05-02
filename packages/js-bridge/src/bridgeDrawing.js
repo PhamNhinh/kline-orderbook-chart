@@ -131,6 +131,13 @@ export function createDrawingMethods(engine, markDirty, isDestroyed, getGate) {
       return id
     },
 
+    addTextNote(x, y, r, g, b, fontSize, pane = 0) {
+      const [cr, cg, cb] = c(r, g, b)
+      const id = engine.add_text_note(x, y, cr, cg, cb, fontSize, pane)
+      markDirty()
+      return id
+    },
+
     addElliottImpulse(x, y, r, g, b, fontSize, pane = 0) {
       if (!gate('drawingFull')) return 0
       const [cr, cg, cb] = c(r, g, b)
@@ -192,6 +199,22 @@ export function createDrawingMethods(engine, markDirty, isDestroyed, getGate) {
     setDrawingHideLabel(id, hide) {
       engine.set_drawing_hide_label(id, hide)
       markDirty()
+    },
+
+    getDrawingFlipLeft(id) {
+      try { return engine.get_drawing_flip_left(id) } catch { return false }
+    },
+
+    setDrawingFlipLeft(id, flip) {
+      try { engine.set_drawing_flip_left(id, flip); markDirty() } catch {}
+    },
+
+    getDrawingTextWrap(id) {
+      try { return engine.get_drawing_text_wrap(id) } catch { return false }
+    },
+
+    setDrawingTextWrap(id, wrap) {
+      try { engine.set_drawing_text_wrap(id, wrap); markDirty() } catch {}
     },
 
     getDrawingKindId(id) {

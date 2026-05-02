@@ -250,7 +250,9 @@ prefetchWasm()
 // Create chart
 const canvas = document.getElementById('chart')
 const chart = await createChartBridge(canvas, {
-  licenseKey: 'YOUR_LICENSE_KEY',   // omit for 14-day trial
+  // Ed25519-signed token (JWS-compact). Omit, or pass 'trial', for a
+  // 14-day watermarked trial.
+  licenseKey: 'YOUR_LICENSE_TOKEN',
 })
 
 // Load data (six separate arrays)

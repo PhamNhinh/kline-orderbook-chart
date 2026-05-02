@@ -31,33 +31,57 @@
 
 let nextId = 1
 
-function parseColor(color) {
-  if (typeof color !== 'string') return { r: 255, g: 255, b: 255, a: 153 }
+// Memoised colour parser. Custom indicators (esp. trade-history /
+// position overlays) issue thousands of `draw.marker` / `draw.text`
+// calls per frame, all with a small palette of colour strings. Without
+// the cache `parseColor` becomes a hot allocator: 4 string slices + 3
+// `parseInt` per call → measurable lag on dense histories.
+//
+// LRU-ish cap (4096) with a hard `clear` when full keeps memory bounded
+// against rare callers that pass dynamic per-call colours.
+const _COLOR_CACHE = new Map()
+const _COLOR_CACHE_MAX = 4096
+const _COLOR_FALLBACK = Object.freeze({ r: 255, g: 255, b: 255, a: 153 })
 
-  if (color.startsWith('#')) {
+function _parseColorRaw(color) {
+  if (typeof color !== 'string') return _COLOR_FALLBACK
+
+  if (color.charCodeAt(0) === 35 /* '#' */) {
     const hex = color.slice(1)
     if (hex.length === 8) {
-      return {
+      return Object.freeze({
         r: parseInt(hex.slice(0, 2), 16),
         g: parseInt(hex.slice(2, 4), 16),
         b: parseInt(hex.slice(4, 6), 16),
         a: parseInt(hex.slice(6, 8), 16),
-      }
+      })
     }
-    const r = parseInt(hex.slice(0, 2), 16)
-    const g = parseInt(hex.slice(2, 4), 16)
-    const b = parseInt(hex.slice(4, 6), 16)
-    return { r, g, b, a: 255 }
+    return Object.freeze({
+      r: parseInt(hex.slice(0, 2), 16),
+      g: parseInt(hex.slice(2, 4), 16),
+      b: parseInt(hex.slice(4, 6), 16),
+      a: 255,
+    })
   }
 
   const rgba = color.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+))?\)/)
   if (rgba) {
-    return {
+    return Object.freeze({
       r: +rgba[1], g: +rgba[2], b: +rgba[3],
       a: rgba[4] !== undefined ? Math.round(+rgba[4] * 255) : 255,
-    }
+    })
   }
-  return { r: 255, g: 255, b: 255, a: 153 }
+  return _COLOR_FALLBACK
+}
+
+function parseColor(color) {
+  if (typeof color !== 'string') return _COLOR_FALLBACK
+  const cached = _COLOR_CACHE.get(color)
+  if (cached !== undefined) return cached
+  if (_COLOR_CACHE.size >= _COLOR_CACHE_MAX) _COLOR_CACHE.clear()
+  const parsed = _parseColorRaw(color)
+  _COLOR_CACHE.set(color, parsed)
+  return parsed
 }
 
 export function createCustomIndicatorManager(engine, wasmMemory, dispatchFn) {
@@ -303,23 +327,43 @@ export function createCustomIndicatorManager(engine, wasmMemory, dispatchFn) {
    * Called after main WASM render + dispatch. Runs all custom indicator
    * compute + render, writing to WASM custom_cmd_buf, then dispatches it.
    */
+  const EMPTY_OHLCV = Object.freeze({
+    length: 0,
+    timestamps: [],
+    open: [],
+    high: [],
+    low: [],
+    close: [],
+    volume: [],
+  })
+
   function renderAll(ctx) {
     if (indicators.size === 0) return
     const ohlcv = getOhlcv()
-    if (!ohlcv) return
+
+    let anyToDraw = false
+    for (const ind of indicators.values()) {
+      if (!ind.enabled) continue
+      if (ind.compute && !ohlcv) continue
+      anyToDraw = true
+      break
+    }
+    if (!anyToDraw) return
 
     engine.custom_begin()
 
     const draw = createDrawAPI()
+    const ohlcvArg = ohlcv || EMPTY_OHLCV
 
     for (const ind of indicators.values()) {
       if (!ind.enabled) continue
+      if (ind.compute && !ohlcv) continue
       if (ind._needsCompute) {
         recompute(ind)
         ind._needsCompute = false
       }
       try {
-        ind.render.call(ind, draw, ind._computed || {}, ohlcv)
+        ind.render.call(ind, draw, ind._computed || {}, ohlcvArg)
       } catch (e) {
         console.warn(`[CustomIndicator "${ind.name}"] render error:`, e)
       }

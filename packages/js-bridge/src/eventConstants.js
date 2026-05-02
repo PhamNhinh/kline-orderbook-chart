@@ -22,6 +22,12 @@ export const ZONE_OI_YAXIS = 15
 export const ZONE_FR_YAXIS = 16
 export const ZONE_CVD_YAXIS = 17
 export const ZONE_VPIN_YAXIS = 18
+export const ZONE_OB_FLOW = 19
+export const ZONE_OB_FLOW_SEP = 20
+export const ZONE_OB_FLOW_YAXIS = 21
+export const ZONE_AGG_LIQ = 22
+export const ZONE_AGG_LIQ_SEP = 23
+export const ZONE_AGG_LIQ_YAXIS = 24
 
 export const PANE_MAIN = 0
 export const PANE_RSI = 1
@@ -29,6 +35,8 @@ export const PANE_OI = 2
 export const PANE_FR = 3
 export const PANE_CVD = 4
 export const PANE_VPIN = 5
+export const PANE_OB_FLOW = 6
+export const PANE_AGG_LIQ = 7
 
 export const TAP_THRESHOLD = 10
 export const LONG_PRESS_MS = 300
@@ -91,6 +99,12 @@ export function addDrawing(engine, tool, dm, wx, wy, s) {
   } else {
     id = engine[reg.addFn](wy, s.r, s.g, s.b, s.lineWidth, s.dashed, dm.pane)
   }
+  // Apply font size for tools whose add-fn signature doesn't carry fontSize
+  // (e.g. fib/fibext) so the settings popover choice is honored.
+  if (id && s.fontSize && typeof engine.set_drawing_font_size === 'function'
+      && (reg.type === '2point' || reg.type === '3point')) {
+    try { engine.set_drawing_font_size(id, s.fontSize) } catch {}
+  }
   return id || 0
 }
 
@@ -125,16 +139,54 @@ export function showPreview(engine, tool, dm, wx, wy, s, pane) {
   }
 }
 
+/**
+ * Add a freehand brush point, densifying the stroke between the previous
+ * screen-space sample and the current one via short linear interpolations.
+ *
+ * mousemove / touchmove typically fire at ≤ ~60 Hz. Fast strokes can move
+ * tens of pixels between samples, so if we fed only raw samples to the
+ * engine the resulting polyline would show visible straight segments /
+ * corners ("gấp khúc") even after the renderer's Catmull-Rom smoothing.
+ * By emitting intermediate points every ~1.5 px in screen space we keep
+ * neighbour samples close enough for the spline smoothing to produce a
+ * continuously curved stroke, matching TradingView behavior.
+ *
+ * Interpolation is done in SCREEN space (not world) so the stroke follows
+ * the visual path the user drew, independent of viewport scale.
+ */
+export function addBrushPointsDensified(engine, sx, sy, prevSx, prevSy, pane) {
+  const STEP = 1.5
+  if (prevSx != null && prevSy != null) {
+    const dx = sx - prevSx
+    const dy = sy - prevSy
+    const dist = Math.sqrt(dx * dx + dy * dy)
+    if (dist > STEP * 1.2) {
+      const steps = Math.min(128, Math.ceil(dist / STEP))
+      for (let i = 1; i < steps; i++) {
+        const t = i / steps
+        const ix = prevSx + dx * t
+        const iy = prevSy + dy * t
+        const { wx: iwx, wy: iwy } = screenToWorld(engine, ix, iy, pane)
+        engine.add_brush_point(iwx, iwy)
+      }
+    }
+  }
+  const { wx, wy } = screenToWorld(engine, sx, sy, pane)
+  engine.add_brush_point(wx, wy)
+}
+
 export function screenToWorld(engine, sx, sy, pane) {
   const wx = engine.screen_to_world_x(sx)
   let wy
   switch (pane) {
-    case PANE_RSI:  wy = engine.screen_to_rsi_y(sy); break
-    case PANE_OI:   wy = engine.screen_to_oi_y(sy); break
-    case PANE_FR:   wy = engine.screen_to_fr_y(sy); break
-    case PANE_CVD:  wy = engine.screen_to_cvd_y(sy); break
-    case PANE_VPIN: wy = engine.screen_to_vpin_y(sy); break
-    default:        wy = engine.screen_to_world_y(sy); break
+    case PANE_RSI:     wy = engine.screen_to_rsi_y(sy); break
+    case PANE_OI:      wy = engine.screen_to_oi_y(sy); break
+    case PANE_FR:      wy = engine.screen_to_fr_y(sy); break
+    case PANE_CVD:     wy = engine.screen_to_cvd_y(sy); break
+    case PANE_VPIN:    wy = engine.screen_to_vpin_y(sy); break
+    case PANE_OB_FLOW: wy = engine.screen_to_ob_flow_y(sy); break
+    case PANE_AGG_LIQ: wy = engine.screen_to_agg_liq_y(sy); break
+    default:           wy = engine.screen_to_world_y(sy); break
   }
   return { wx, wy }
 }
@@ -145,36 +197,43 @@ export function paneFromZone(zone) {
   if (zone === ZONE_FR) return PANE_FR
   if (zone === ZONE_CVD) return PANE_CVD
   if (zone === ZONE_VPIN) return PANE_VPIN
+  if (zone === ZONE_OB_FLOW) return PANE_OB_FLOW
+  if (zone === ZONE_AGG_LIQ) return PANE_AGG_LIQ
   return PANE_MAIN
 }
 
-/** RSI/OI/FR/CVD/VPIN share time (X) with the main chart but use a fixed Y range; vertical drag there must not rescale price. */
+/** Indicator sub-pane zones share time (X) with the main chart but use a fixed Y range. */
 export function isIndicatorSubPaneZone(zone) {
   return zone === ZONE_RSI || zone === ZONE_OI || zone === ZONE_FR
-      || zone === ZONE_CVD || zone === ZONE_VPIN
+      || zone === ZONE_CVD || zone === ZONE_VPIN || zone === ZONE_OB_FLOW
+      || zone === ZONE_AGG_LIQ
 }
 
 /** Indicator Y-axis zones (right-side axis of each indicator pane). */
 export function isIndicatorYAxisZone(zone) {
   return zone === ZONE_RSI_YAXIS || zone === ZONE_OI_YAXIS || zone === ZONE_FR_YAXIS
-      || zone === ZONE_CVD_YAXIS || zone === ZONE_VPIN_YAXIS
+      || zone === ZONE_CVD_YAXIS || zone === ZONE_VPIN_YAXIS || zone === ZONE_OB_FLOW_YAXIS
+      || zone === ZONE_AGG_LIQ_YAXIS
 }
 
-/** Map zone constant to indicator pane id (1=RSI,2=OI,3=FR,4=CVD,5=VPIN). Works for both body and Y-axis zones. */
+/** Map zone constant to indicator pane id (1=RSI,2=OI,3=FR,4=CVD,5=VPIN,6=ObFlow,7=AggLiq). Works for both body and Y-axis zones. */
 export function indicatorPaneId(zone) {
   if (zone === ZONE_RSI  || zone === ZONE_RSI_YAXIS)  return 1
   if (zone === ZONE_OI   || zone === ZONE_OI_YAXIS)   return 2
   if (zone === ZONE_FR   || zone === ZONE_FR_YAXIS)   return 3
   if (zone === ZONE_CVD  || zone === ZONE_CVD_YAXIS)  return 4
   if (zone === ZONE_VPIN || zone === ZONE_VPIN_YAXIS)  return 5
+  if (zone === ZONE_OB_FLOW || zone === ZONE_OB_FLOW_YAXIS) return 6
+  if (zone === ZONE_AGG_LIQ || zone === ZONE_AGG_LIQ_YAXIS) return 7
   return 0
 }
 
-/** Main chart: pan X+Y (price scroll). Indicator panes: pan X on main chart + pan Y on sub-pane. */
+/** Main chart: pan X+Y (price scroll). Indicator panes: pan X on main chart + pan Y on sub-pane.
+ *  RSI pane: Y pan is disabled (only Y zoom allowed via scroll wheel). */
 export function panChartViewport(engine, zone, dx, dy) {
   if (isIndicatorSubPaneZone(zone)) {
     engine.pan(dx, 0)
-    if (Math.abs(dy) > 0.01) engine.pan_indicator_y(indicatorPaneId(zone), dy)
+    if (Math.abs(dy) > 0.01 && zone !== ZONE_RSI) engine.pan_indicator_y(indicatorPaneId(zone), dy)
   } else {
     engine.pan(dx, dy)
   }
@@ -183,4 +242,5 @@ export function panChartViewport(engine, zone, dx, dy) {
 export function isDrawableZone(zone) {
   return zone === ZONE_MAIN || zone === ZONE_RSI || zone === ZONE_OI
       || zone === ZONE_FR || zone === ZONE_CVD || zone === ZONE_VPIN
+      || zone === ZONE_AGG_LIQ
 }

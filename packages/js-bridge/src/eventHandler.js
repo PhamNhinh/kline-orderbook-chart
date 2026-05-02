@@ -9,7 +9,7 @@
  * Constants and pure helpers live in eventConstants.js.
  */
 
-import { ZONE_MAIN, ZONE_XAXIS, ZONE_YAXIS, PANE_MAIN, panChartViewport, isIndicatorSubPaneZone, isIndicatorYAxisZone, indicatorPaneId } from './eventConstants.js'
+import { ZONE_MAIN, ZONE_XAXIS, ZONE_YAXIS, ZONE_RSI_YAXIS, PANE_MAIN, panChartViewport, isIndicatorSubPaneZone, isIndicatorYAxisZone, indicatorPaneId } from './eventConstants.js'
 import { setupMouseEvents } from './eventMouse.js'
 import { setupTouchEvents } from './eventTouch.js'
 
@@ -40,6 +40,10 @@ export function setupEvents(canvas, engine, callbacks) {
     touchStartX: 0,
     touchStartY: 0,
     touchMoved: false,
+    // True once the active gesture has used >= 2 fingers (pinch zoom).
+    // Stays true until ALL fingers are lifted, so the per-finger touchend
+    // sequence of a pinch (2→1→0) never gets misread as one or two taps.
+    pinchActive: false,
     longPressTimer: null,
     isCrosshairMode: false,
     liqPinTimer: null,
@@ -103,6 +107,7 @@ export function setupEvents(canvas, engine, callbacks) {
       }
       if (ctx.momentumZone === ZONE_XAXIS) engine.pan_x(ctx.momentumVx)
       else if (ctx.momentumZone === ZONE_YAXIS) engine.pan_y(ctx.momentumVy)
+      else if (ctx.momentumZone === ZONE_RSI_YAXIS) { ctx.momentumRaf = null; return }
       else if (isIndicatorYAxisZone(ctx.momentumZone)) engine.pan_indicator_y(indicatorPaneId(ctx.momentumZone), ctx.momentumVy)
       else panChartViewport(engine, ctx.momentumZone, ctx.momentumVx, ctx.momentumVy)
       callbacks.onDirty()

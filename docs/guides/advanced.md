@@ -111,36 +111,42 @@ setInterval(() => detector.pushToEngine(chart), 3000)
 
 ## Licensing
 
-### License Key Format
+### Token format
 
-License keys follow the format: `MRD-XXXX-XXXX-XXXX-YYYYMMDD`
+License tokens are JWS-compact-encoded strings signed with **Ed25519**:
 
-The last segment is the expiry date.
+```
+header_b64url . payload_b64url . sig_b64url
+```
 
-### Validation
+Signing happens server-side with a private key (`MRD_LICENSE_PRIVATE_KEY`
+on your BE). The FE bundle only contains the matching public key, so it
+can verify but cannot forge. See `docs/chart-license-be-spec.md` for the
+endpoint contract and a Node.js reference implementation.
+
+### Validation (async)
 
 ```javascript
 import { validateLicense } from '@mrd/chart-engine'
 
-const info = validateLicense('MRD-XXXX-XXXX-XXXX-20270101')
+const info = await validateLicense(token)
 console.log(info)
 // → {
 //   valid: true,
 //   plan: 'professional',     // 'standard' | 'professional' | 'enterprise' | 'trial' | 'free'
-//   expired: false,
+//   expiry: 1777731163,       // epoch sec, 0 = perpetual
 //   watermark: false,
-//   daysLeft: 365,
 //   features: { ... },
-//   error: null,
+//   subject: 'user-123',
 // }
 ```
 
-### Runtime License Update
+### Runtime license update (async)
 
-You can change the license key at runtime without recreating the chart:
+You can replace the license token at runtime without recreating the chart:
 
 ```javascript
-const valid = chart.setLicenseKey('MRD-NEW-KEY-HERE-20280101')
+const valid = await chart.setLicenseKey(newTokenFromBE)
 if (valid) {
   console.log('License updated successfully')
 }
@@ -171,19 +177,26 @@ chart.enableCvd()
 // No error thrown — method is a no-op
 ```
 
-### License Key Generation (Internal)
+### License Token Issuance (Admin / BE)
 
-```javascript
-import { generateLicenseKey } from '@mrd/chart-engine'
+Tokens are issued by your backend, never by the FE. The FE bundle only
+contains the public key for verification.
 
-const key = generateLicenseKey({
-  plan: 'professional',
-  domain: 'myapp.com',
-  expiryDays: 365,
-  name: 'Acme Corp',
-  email: 'admin@acme.com',
-})
+To issue a token from a one-off CLI (e.g. for QA / a customer who pays
+out-of-band), use the helper script in this repo (it reads the Ed25519
+private key from the `MRD_LICENSE_PRIVATE_KEY` env var):
+
+```bash
+MRD_LICENSE_PRIVATE_KEY=$PRIV \
+  node scripts/license/issue-token.mjs \
+    --plan professional \
+    --domain "myapp.com" \
+    --days 365 \
+    --sub "admin@acme.com"
 ```
+
+For your production BE, see `docs/chart-license-be-spec.md` for the
+endpoint contract and a drop-in Node.js (Express) reference.
 
 ---
 

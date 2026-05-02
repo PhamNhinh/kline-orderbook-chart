@@ -20,6 +20,7 @@ const CMD = {
   BUBBLE_3D: 0x0D,
   FILL_POLYGON: 0x0E,
   DASHED_POLYLINE: 0x0F,
+  GRADIENT_RECT: 0x10,
   END_FRAME: 0xFF,
 }
 
@@ -45,6 +46,30 @@ function getCachedColor(r, g, b, a) {
 
 const decoder = new TextDecoder()
 
+// Snap in device-pixel space for crisp rendering across fractional DPR values.
+// Example: at DPR=1.5, snapping in CSS pixels (`Math.round`) still lands on half
+// device pixels and looks soft. We snap to device pixels then map back to CSS.
+function snapCoord(v, dpr) {
+  return Math.round(v * dpr) / dpr
+}
+function snapLine(v, lw, dpr) {
+  const widthDevPx = Math.max(1, Math.round(lw * dpr))
+  const base = Math.round(v * dpr) / dpr
+  return (widthDevPx & 1) ? (base + 0.5 / dpr) : base
+}
+function snapRect(x, y, w, h, dpr) {
+  const x0 = Math.round(x * dpr)
+  const y0 = Math.round(y * dpr)
+  const x1 = Math.round((x + w) * dpr)
+  const y1 = Math.round((y + h) * dpr)
+  return {
+    x: x0 / dpr,
+    y: y0 / dpr,
+    w: (x1 - x0) / dpr,
+    h: (y1 - y0) / dpr,
+  }
+}
+
 export function dispatchCommands(ctx, wasmMemory, ptr, len) {
   const buf = wasmMemory.buffer
   if (ptr + len > buf.byteLength) return
@@ -55,6 +80,7 @@ export function dispatchCommands(ctx, wasmMemory, ptr, len) {
   let lastStrokeColor = ''
   let lastLineWidth = -1
   let lastFont = ''
+  const dpr = Math.max(1, Math.abs(ctx.getTransform?.().a || (window.devicePixelRatio || 1)))
 
   while (offset < len) {
     const type = bytes[offset]
@@ -70,7 +96,8 @@ export function dispatchCommands(ctx, wasmMemory, ptr, len) {
         const h = view.getFloat32(offset, true); offset += 4
         const c = getCachedColor(bytes[offset], bytes[offset+1], bytes[offset+2], bytes[offset+3]); offset += 4
         if (c !== lastFillColor) { ctx.fillStyle = c; lastFillColor = c }
-        ctx.fillRect(x, y, w, h)
+        const r = snapRect(x, y, w, h, dpr)
+        ctx.fillRect(r.x, r.y, r.w, r.h)
         break
       }
 
@@ -83,7 +110,11 @@ export function dispatchCommands(ctx, wasmMemory, ptr, len) {
         const lw = view.getFloat32(offset, true); offset += 4
         if (c !== lastStrokeColor) { ctx.strokeStyle = c; lastStrokeColor = c }
         if (lw !== lastLineWidth) { ctx.lineWidth = lw; lastLineWidth = lw }
-        ctx.strokeRect(x, y, w, h)
+        const sx = snapLine(x, lw, dpr)
+        const sy = snapLine(y, lw, dpr)
+        const sw = Math.round(w * dpr) / dpr
+        const sh = Math.round(h * dpr) / dpr
+        ctx.strokeRect(sx, sy, sw, sh)
         break
       }
 
@@ -98,8 +129,8 @@ export function dispatchCommands(ctx, wasmMemory, ptr, len) {
         if (c !== lastStrokeColor) { ctx.strokeStyle = c; lastStrokeColor = c }
         if (lw !== lastLineWidth) { ctx.lineWidth = lw; lastLineWidth = lw }
         ctx.setLineDash([])
-        ctx.moveTo(x1, y1)
-        ctx.lineTo(x2, y2)
+        ctx.moveTo(snapLine(x1, lw, dpr), snapLine(y1, lw, dpr))
+        ctx.lineTo(snapLine(x2, lw, dpr), snapLine(y2, lw, dpr))
         ctx.stroke()
         break
       }
@@ -117,8 +148,8 @@ export function dispatchCommands(ctx, wasmMemory, ptr, len) {
         if (c !== lastStrokeColor) { ctx.strokeStyle = c; lastStrokeColor = c }
         if (lw !== lastLineWidth) { ctx.lineWidth = lw; lastLineWidth = lw }
         ctx.setLineDash([dash, gap])
-        ctx.moveTo(x1, y1)
-        ctx.lineTo(x2, y2)
+        ctx.moveTo(snapLine(x1, lw, dpr), snapLine(y1, lw, dpr))
+        ctx.lineTo(snapLine(x2, lw, dpr), snapLine(y2, lw, dpr))
         ctx.stroke()
         ctx.setLineDash([])
         break
@@ -140,21 +171,32 @@ export function dispatchCommands(ctx, wasmMemory, ptr, len) {
           ctx.setLineDash([])
           ctx.lineJoin = 'round'
           ctx.lineCap = 'round'
-          if (count <= 3) {
+          if (count === 2) {
             ctx.moveTo(pts[0], pts[1])
-            for (let i = 1; i < count; i++) ctx.lineTo(pts[i * 2], pts[i * 2 + 1])
+            ctx.lineTo(pts[2], pts[3])
           } else {
+            // Uniform Catmull-Rom spline → cubic Bezier segments.
+            // Produces a C1-continuous curve that passes through every
+            // sample point, yielding a truly smooth stroke (no visible
+            // polygonal corners) even when the stored sample points are
+            // sparse. Endpoints are duplicated (P[-1]=P[0], P[n]=P[n-1])
+            // so the curve starts/ends with zero tangent at the boundaries.
             ctx.moveTo(pts[0], pts[1])
-            ctx.lineTo(
-              (pts[0] + pts[2]) * 0.5,
-              (pts[1] + pts[3]) * 0.5
-            )
-            for (let i = 1; i < count - 1; i++) {
-              const cpx = pts[i * 2], cpy = pts[i * 2 + 1]
-              const nx = pts[(i + 1) * 2], ny = pts[(i + 1) * 2 + 1]
-              ctx.quadraticCurveTo(cpx, cpy, (cpx + nx) * 0.5, (cpy + ny) * 0.5)
+            for (let i = 0; i < count - 1; i++) {
+              const i0 = i > 0 ? i - 1 : 0
+              const i1 = i
+              const i2 = i + 1
+              const i3 = i < count - 2 ? i + 2 : count - 1
+              const p0x = pts[i0 * 2],     p0y = pts[i0 * 2 + 1]
+              const p1x = pts[i1 * 2],     p1y = pts[i1 * 2 + 1]
+              const p2x = pts[i2 * 2],     p2y = pts[i2 * 2 + 1]
+              const p3x = pts[i3 * 2],     p3y = pts[i3 * 2 + 1]
+              const c1x = p1x + (p2x - p0x) / 6
+              const c1y = p1y + (p2y - p0y) / 6
+              const c2x = p2x - (p3x - p1x) / 6
+              const c2y = p2y - (p3y - p1y) / 6
+              ctx.bezierCurveTo(c1x, c1y, c2x, c2y, p2x, p2y)
             }
-            ctx.lineTo(pts[(count - 1) * 2], pts[(count - 1) * 2 + 1])
           }
           ctx.stroke()
         }
@@ -171,11 +213,11 @@ export function dispatchCommands(ctx, wasmMemory, ptr, len) {
         const text = decoder.decode(new Uint8Array(wasmMemory.buffer, ptr + offset, strLen))
         offset += strLen
         if (c !== lastFillColor) { ctx.fillStyle = c; lastFillColor = c }
-        const font = `${fontSize}px "IBM Plex Mono",monospace`
+        const font = `${Math.round(fontSize)}px "IBM Plex Mono",monospace`
         if (font !== lastFont) { ctx.font = font; lastFont = font }
         ctx.textAlign = ALIGN_MAP[align] || 'left'
         ctx.textBaseline = 'middle'
-        ctx.fillText(text, x, y)
+        ctx.fillText(text, snapCoord(x, dpr), snapCoord(y, dpr))
         break
       }
 
@@ -235,8 +277,9 @@ export function dispatchCommands(ctx, wasmMemory, ptr, len) {
         const y = view.getFloat32(offset, true); offset += 4
         const w = view.getFloat32(offset, true); offset += 4
         const h = view.getFloat32(offset, true); offset += 4
+        const r = snapRect(x, y, w, h, dpr)
         ctx.beginPath()
-        ctx.rect(x, y, w, h)
+        ctx.rect(r.x, r.y, r.w, r.h)
         ctx.clip()
         break
       }
@@ -372,6 +415,23 @@ export function dispatchCommands(ctx, wasmMemory, ptr, len) {
         } else {
           offset += count * 8
         }
+        break
+      }
+
+      case CMD.GRADIENT_RECT: {
+        const x = view.getFloat32(offset, true); offset += 4
+        const y = view.getFloat32(offset, true); offset += 4
+        const w = view.getFloat32(offset, true); offset += 4
+        const h = view.getFloat32(offset, true); offset += 4
+        const c1 = getCachedColor(bytes[offset], bytes[offset+1], bytes[offset+2], bytes[offset+3]); offset += 4
+        const c2 = getCachedColor(bytes[offset], bytes[offset+1], bytes[offset+2], bytes[offset+3]); offset += 4
+        const r = snapRect(x, y, w, h, dpr)
+        const grad = ctx.createLinearGradient(r.x, r.y, r.x, r.y + r.h)
+        grad.addColorStop(0, c1)
+        grad.addColorStop(1, c2)
+        ctx.fillStyle = grad
+        lastFillColor = ''
+        ctx.fillRect(r.x, r.y, r.w, r.h)
         break
       }
 
