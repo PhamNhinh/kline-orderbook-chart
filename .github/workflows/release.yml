@@ -45,5 +45,5 @@ jobs:
             ## Install via npm
 
             ```bash
-            npm install @mrd/chart-engine
+            npm install kline-orderbook-chart
             ```
