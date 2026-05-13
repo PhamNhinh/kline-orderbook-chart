@@ -1,6 +1,6 @@
 # Drawing Tools
 
-@mrd/chart-engine provides 10+ drawing tools for technical analysis — trendlines, Fibonacci retracements, position boxes, anchored VWAP, Elliott Wave counts, and more. Drawings support programmatic creation, interactive mode, per-drawing styling, selection, and JSON serialization.
+kline-orderbook-chart provides 10+ drawing tools for technical analysis — trendlines, Fibonacci retracements, position boxes, anchored VWAP, Elliott Wave counts, and more. Drawings support programmatic creation, interactive mode, per-drawing styling, selection, and JSON serialization.
 
 ---
 

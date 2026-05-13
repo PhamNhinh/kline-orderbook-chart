@@ -1,5 +1,5 @@
 /**
- * @mrd/chart-engine — Public API
+ * kline-orderbook-chart — Public API
  *
  * Framework-agnostic chart engine powered by WebAssembly.
  * This is the single entry point consumers should import from.

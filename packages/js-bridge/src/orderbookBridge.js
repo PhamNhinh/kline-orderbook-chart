@@ -3,7 +3,7 @@
  * manages render loop and event handling for the orderbook panel.
  *
  * Usage:
- *   import { createOrderbookBridge } from '@mrd/chart-engine'
+ *   import { createOrderbookBridge } from 'kline-orderbook-chart'
  *   const ob = await createOrderbookBridge(canvas, { symbol: 'ETH', tickSize: 0.25 })
  *   ob.start()
  *   ob.pushSnapshot(bids, asks, midPrice)

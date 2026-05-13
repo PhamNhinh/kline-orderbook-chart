@@ -25,7 +25,7 @@ Complete reference for all public methods on a `MrdChart` instance.
 Creates and initializes a new chart instance. Loads the engine module (cached after first call).
 
 ```javascript
-import { createChartBridge } from '@mrd/chart-engine'
+import { createChartBridge } from 'kline-orderbook-chart'
 
 const chart = await createChartBridge(canvas, {
   licenseKey: 'MRD-PRO-XXXXXXXX-20270101-XXXXXX',
@@ -48,7 +48,7 @@ const chart = await createChartBridge(canvas, {
 Starts loading the engine module in the background without blocking. Call during application boot to reduce the perceived load time when the chart is first created.
 
 ```javascript
-import { prefetchWasm } from '@mrd/chart-engine'
+import { prefetchWasm } from 'kline-orderbook-chart'
 
 // In your app entry point, before the chart page is shown
 prefetchWasm()

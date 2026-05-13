@@ -10,7 +10,7 @@ Complete integration examples for React, Vue 3, Svelte, and Vanilla JS — inclu
 
 ```jsx
 import { useEffect, useRef } from 'react'
-import { createChartBridge, prefetchWasm } from '@mrd/chart-engine'
+import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
 
 // Prefetch at module level — runs once when the module is imported
 prefetchWasm()
@@ -82,7 +82,7 @@ export function CandlestickChart({ klines, licenseKey, theme = 'dark' }) {
 
 ```jsx
 import { useEffect, useRef, useCallback } from 'react'
-import { createChartBridge, prefetchWasm } from '@mrd/chart-engine'
+import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
 
 prefetchWasm()
 
@@ -180,7 +180,7 @@ export default function Chart({ klines }) {
 
     async function init() {
       // Dynamic import ensures the engine only loads in the browser
-      const { createChartBridge, prefetchWasm } = await import('@mrd/chart-engine')
+      const { createChartBridge, prefetchWasm } = await import('kline-orderbook-chart')
       prefetchWasm()
 
       chart = await createChartBridge(canvasRef.current, {
@@ -227,7 +227,7 @@ export default function TradingPage() {
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-import { createChartBridge, prefetchWasm } from '@mrd/chart-engine'
+import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
 
 prefetchWasm()
 
@@ -311,7 +311,7 @@ defineExpose({
 ```javascript
 // composables/useChart.js
 import { ref, onMounted, onBeforeUnmount, shallowRef } from 'vue'
-import { createChartBridge, prefetchWasm } from '@mrd/chart-engine'
+import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
 
 prefetchWasm()
 
@@ -393,7 +393,7 @@ const canvasEl = ref(null)
 let chart = null
 
 onMounted(async () => {
-  const { createChartBridge, prefetchWasm } = await import('@mrd/chart-engine')
+  const { createChartBridge, prefetchWasm } = await import('kline-orderbook-chart')
   prefetchWasm()
   chart = await createChartBridge(canvasEl.value, {
     licenseKey: useRuntimeConfig().public.mrdKey,
@@ -416,7 +416,7 @@ onBeforeUnmount(() => chart?.destroy())
 ```svelte
 <script>
   import { onMount, onDestroy } from 'svelte'
-  import { createChartBridge, prefetchWasm } from '@mrd/chart-engine'
+  import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
 
   prefetchWasm()
 
@@ -475,7 +475,7 @@ onBeforeUnmount(() => chart?.destroy())
   onMount(async () => {
     if (!browser) return
 
-    const { createChartBridge, prefetchWasm } = await import('@mrd/chart-engine')
+    const { createChartBridge, prefetchWasm } = await import('kline-orderbook-chart')
     prefetchWasm()
 
     chart = await createChartBridge(canvasEl, { licenseKey })
@@ -516,7 +516,7 @@ onBeforeUnmount(() => chart?.destroy())
   </div>
 
   <script type="module">
-    import { createChartBridge, prefetchWasm } from '@mrd/chart-engine'
+    import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
 
     prefetchWasm()
 

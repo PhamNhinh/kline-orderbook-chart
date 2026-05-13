@@ -1,6 +1,6 @@
 # Getting Started
 
-This tutorial walks you through installing @mrd/chart-engine, creating your first candlestick chart, and starting the real-time render loop — in under 5 minutes.
+This tutorial walks you through installing kline-orderbook-chart, creating your first candlestick chart, and starting the real-time render loop — in under 5 minutes.
 
 **Prerequisites:** Node.js 16+ and a modern browser (Chrome 80+, Firefox 79+, Safari 15.2+).
 
@@ -9,7 +9,7 @@ This tutorial walks you through installing @mrd/chart-engine, creating your firs
 ## 1. Installation
 
 ```bash
-npm install @mrd/chart-engine
+npm install kline-orderbook-chart
 ```
 
 The package ships as a single ES module (`dist/mrd-chart-engine.mjs`) with the native engine binary included. No additional loaders or plugins are required.
@@ -48,7 +48,7 @@ The chart renders into a standard HTML `<canvas>` element. The canvas should be 
 ## 4. Initialize the Chart
 
 ```javascript
-import { createChartBridge, prefetchengine } from '@mrd/chart-engine'
+import { createChartBridge, prefetchengine } from 'kline-orderbook-chart'
 
 // Step 1: Prefetch the engine binary in the background (optional but recommended)
 // Call this as early as possible — e.g. when the app mounts, not when the chart page loads
@@ -225,7 +225,7 @@ function cleanup() {
   </div>
 
   <script type="module">
-    import { createChartBridge, prefetchengine } from '@mrd/chart-engine'
+    import { createChartBridge, prefetchengine } from 'kline-orderbook-chart'
 
     prefetchengine()
 

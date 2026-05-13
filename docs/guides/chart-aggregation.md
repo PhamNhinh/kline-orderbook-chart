@@ -1,6 +1,6 @@
 # Chart Aggregation
 
-@mrd/chart-engine includes utilities to build non-time-based charts from standard OHLCV data: **Renko**, **Range**, and **Tick** charts. These are computed in JavaScript and fed into the engine as regular kline data.
+kline-orderbook-chart includes utilities to build non-time-based charts from standard OHLCV data: **Renko**, **Range**, and **Tick** charts. These are computed in JavaScript and fed into the engine as regular kline data.
 
 ---
 
@@ -24,7 +24,7 @@ import {
   buildRange,
   buildTick,
   suggestDefaults,
-} from '@mrd/chart-engine'
+} from 'kline-orderbook-chart'
 ```
 
 ---
@@ -186,7 +186,7 @@ chart.appendRealTimestamp(newOriginalTimestamp)
 ## Complete Example: Renko with Live Updates
 
 ```javascript
-import { createChartBridge, buildRenko, suggestDefaults } from '@mrd/chart-engine'
+import { createChartBridge, buildRenko, suggestDefaults } from 'kline-orderbook-chart'
 
 const chart = await createChartBridge(canvas, { licenseKey: '...' })
 chart.setTheme('dark')

@@ -1,6 +1,6 @@
 # Theming
 
-@mrd/chart-engine supports dark and light themes with automatic color management for all chart elements — candles, indicators, axes, grid, drawings, and heatmaps.
+kline-orderbook-chart supports dark and light themes with automatic color management for all chart elements — candles, indicators, axes, grid, drawings, and heatmaps.
 
 ---
 

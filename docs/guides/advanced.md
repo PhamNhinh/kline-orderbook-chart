@@ -11,7 +11,7 @@ The library includes a pure-JavaScript iceberg order detector that monitors L2 o
 ### Import
 
 ```javascript
-import { createIcebergDetector } from '@mrd/chart-engine'
+import { createIcebergDetector } from 'kline-orderbook-chart'
 ```
 
 ### `createIcebergDetector(options?)` → Detector
@@ -83,7 +83,7 @@ Clears all tracked levels and detected events.
 ### Complete Example
 
 ```javascript
-import { createChartBridge, createIcebergDetector } from '@mrd/chart-engine'
+import { createChartBridge, createIcebergDetector } from 'kline-orderbook-chart'
 
 const chart = await createChartBridge(canvas, { licenseKey: '...' })
 // ... load klines, start chart ...
@@ -127,7 +127,7 @@ endpoint contract and a Node.js reference implementation.
 ### Validation (async)
 
 ```javascript
-import { validateLicense } from '@mrd/chart-engine'
+import { validateLicense } from 'kline-orderbook-chart'
 
 const info = await validateLicense(token)
 console.log(info)
@@ -208,7 +208,7 @@ Always call `prefetchWasm()` as early as possible — ideally at application sta
 
 ```javascript
 // In your app's entry point (main.js / App.jsx / etc.)
-import { prefetchWasm } from '@mrd/chart-engine'
+import { prefetchWasm } from 'kline-orderbook-chart'
 prefetchWasm()
 ```
 
@@ -393,7 +393,7 @@ const dirty = engine.is_dirty()
 Low-level function to render a native command buffer to a Canvas 2D context. Normally handled internally by the render loop.
 
 ```javascript
-import { dispatchCommands } from '@mrd/chart-engine'
+import { dispatchCommands } from 'kline-orderbook-chart'
 
 // Manual render (advanced use case)
 const cmdCount = engine.render()

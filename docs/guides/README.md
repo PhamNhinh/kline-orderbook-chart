@@ -1,12 +1,12 @@
-# @mrd/chart-engine — Documentation
+# kline-orderbook-chart — Documentation
 
 **Version 0.1.0** · [Live Demo](https://app.mrd-indicators.com/trading/chart-terminal) · [Pricing](https://app.mrd-indicators.com/charting-library/pricing) · [Discord](https://discord.gg/buX2h5ZZm)
 
 ---
 
-## What is @mrd/chart-engine?
+## What is kline-orderbook-chart?
 
-**@mrd/chart-engine** is a high-performance 2D charting library designed for financial trading applications. It renders candlestick charts, orderbook heatmaps, footprint charts, liquidation heatmaps, and 14+ technical indicators — all inside a single `<canvas>` element, powered by a native high-performance computation engine.
+**kline-orderbook-chart** is a high-performance 2D charting library designed for financial trading applications. It renders candlestick charts, orderbook heatmaps, footprint charts, liquidation heatmaps, and 14+ technical indicators — all inside a single `<canvas>` element, powered by a native high-performance computation engine.
 
 Unlike traditional JavaScript charting libraries, the entire computation pipeline — heatmap color mapping, indicator math, viewport transforms, hit testing — runs inside compiled native code. JavaScript only dispatches Canvas 2D draw calls from a binary command buffer, achieving 60 fps with 250,000+ heatmap cells, 10,000+ candles, and multiple indicators simultaneously.
 
@@ -82,7 +82,7 @@ Unlike traditional JavaScript charting libraries, the entire computation pipelin
 
 ## Licensing
 
-@mrd/chart-engine is commercial software. A valid license key is required for production use.
+kline-orderbook-chart is commercial software. A valid license key is required for production use.
 
 | Plan | Key Features |
 |---|---|

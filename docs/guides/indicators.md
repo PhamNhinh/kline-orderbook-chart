@@ -1,6 +1,6 @@
 # Built-in Indicators
 
-@mrd/chart-engine includes 14+ built-in indicators computed entirely inside the native engine. Each indicator renders in its own sub-pane or as an overlay on the main chart.
+kline-orderbook-chart includes 14+ built-in indicators computed entirely inside the native engine. Each indicator renders in its own sub-pane or as an overlay on the main chart.
 
 ---
 

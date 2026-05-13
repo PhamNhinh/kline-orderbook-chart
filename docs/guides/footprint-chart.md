@@ -251,7 +251,7 @@ chart.disableDeltaHistogram()
 ## Complete Example
 
 ```javascript
-import { createChartBridge } from '@mrd/chart-engine'
+import { createChartBridge } from 'kline-orderbook-chart'
 
 const chart = await createChartBridge(canvas, { licenseKey: '...' })
 

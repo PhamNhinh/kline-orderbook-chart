@@ -1,6 +1,6 @@
 # Core Concepts
 
-This page explains the architecture of @mrd/chart-engine — how the native computation engine, JavaScript bridge, and Canvas 2D renderer work together to deliver 60 fps financial charting.
+This page explains the architecture of kline-orderbook-chart — how the native computation engine, JavaScript bridge, and Canvas 2D renderer work together to deliver 60 fps financial charting.
 
 ---
 
@@ -10,12 +10,12 @@ This page explains the architecture of @mrd/chart-engine — how the native comp
   ┌─────────────────────────────────────────────────────────┐
   │  Your Application (React / Vue / Svelte / Vanilla JS)   │
   │                                                         │
-  │   import { createChartBridge } from '@mrd/chart-engine' │
+  │   import { createChartBridge } from 'kline-orderbook-chart' │
   │   const chart = await createChartBridge(canvas, opts)   │
   └────────────────────┬────────────────────────────────────┘
                        │
   ┌────────────────────▼────────────────────────────────────┐
-  │  JS Bridge Layer (@mrd/chart-engine)                    │
+  │  JS Bridge Layer (kline-orderbook-chart)                    │
   │                                                         │
   │  ┌──────────────────────────────────────────────┐       │
   │  │  Native Computation Engine                   │       │
@@ -142,7 +142,7 @@ The render loop follows a dirty-flag pattern:
 
 ### Why Dirty Flags Matter
 
-Unlike libraries that re-render on every frame, @mrd/chart-engine only renders when the visual state has changed. This means:
+Unlike libraries that re-render on every frame, kline-orderbook-chart only renders when the visual state has changed. This means:
 
 - **Idle CPU usage is near zero** — no animation frames when the chart is static
 - **Battery-friendly** on mobile devices
@@ -206,7 +206,7 @@ The engine module is loaded lazily on first use:
 
 ```javascript
 // Option A: Eager prefetch (recommended)
-import { prefetchWasm } from '@mrd/chart-engine'
+import { prefetchWasm } from 'kline-orderbook-chart'
 prefetchWasm()   // starts download + compile immediately, no await needed
 
 // Option B: Lazy load (on first createChartBridge call)
