@@ -1,6 +1,6 @@
-# MRD Chart Engine — Real-time Multi-Exchange Demo
+# Kline Orderbook Chart — Real-time Multi-Exchange Demo
 
-A production-grade demo application showcasing **@mrd/chart-engine** with live market data from Binance Futures and Bybit Linear.
+A production-grade demo application showcasing **[kline-orderbook-chart](https://www.npmjs.com/package/kline-orderbook-chart)** with live market data from Binance Futures and Bybit Linear.
 
 ## What This Demo Shows
 
@@ -99,11 +99,11 @@ demo/
 
 ## Tech Stack
 
-- **Chart Engine**: @mrd/chart-engine (Rust → WASM → Canvas 2D)
+- **Chart Engine**: kline-orderbook-chart (Rust → WASM → Canvas 2D)
 - **Frontend**: Vue 3 + Vite
 - **Server**: Node.js + ws (WebSocket)
 - **Data Sources**: Binance/Bybit public WebSocket + REST APIs
 
 ## License
 
-This demo is provided as a reference implementation for @mrd/chart-engine integration. The chart engine itself requires a license key.
+This demo is provided as a reference implementation for `kline-orderbook-chart` integration. The chart engine itself requires a license key — the demo runs in 14-day watermarked trial mode (`licenseKey: 'trial'`). Get a real key at [mrd-indicators.com](https://app.mrd-indicators.com/charting-library/pricing).

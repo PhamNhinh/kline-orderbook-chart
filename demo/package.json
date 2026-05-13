@@ -1,7 +1,8 @@
 {
-  "name": "mrd-chart-demo",
+  "name": "kline-orderbook-chart-demo",
   "version": "1.0.0",
   "type": "module",
+  "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -9,6 +10,7 @@
     "start": "concurrently \"npm run server\" \"npm run dev\""
   },
   "dependencies": {
+    "kline-orderbook-chart": "^1.0.0",
     "vue": "^3.5.0"
   },
   "devDependencies": {

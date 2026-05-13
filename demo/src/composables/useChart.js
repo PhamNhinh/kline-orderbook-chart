@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { createChartBridge, prefetchWasm } from '@mrd/chart-engine'
+import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
 
 prefetchWasm()
 
@@ -42,7 +42,7 @@ export function useChart() {
   }
 
   async function init(canvas) {
-    const b = await createChartBridge(canvas, { key: 'trial' })
+    const b = await createChartBridge(canvas, { licenseKey: 'trial' })
 
     b.setCandleInterval(_candleSec)
     b.setPrecision(2)
