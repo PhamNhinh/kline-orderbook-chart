@@ -51,6 +51,11 @@
             :class="{ active: oiOn }"
             @click="$emit('toggleOi')"
           >OI</button>
+          <button
+            :class="{ active: alphaTrendOn }"
+            title="Custom indicator written in plain JS — see src/indicators/alphaTrend.js"
+            @click="$emit('toggleAlphaTrend')"
+          >ALPHA</button>
         </div>
       </div>
     </div>
@@ -81,10 +86,14 @@ const props = defineProps({
   volumeOn: { type: Boolean, default: true },
   rsiOn: { type: Boolean, default: true },
   oiOn: { type: Boolean, default: true },
+  alphaTrendOn: { type: Boolean, default: true },
   stats: { type: Object, default: () => ({ trades: 0, depthUpdates: 0 }) },
 })
 
-const emit = defineEmits(['subscribe', 'chartType', 'toggleVolume', 'toggleRsi', 'toggleOi'])
+const emit = defineEmits([
+  'subscribe', 'chartType',
+  'toggleVolume', 'toggleRsi', 'toggleOi', 'toggleAlphaTrend',
+])
 
 const selectedExchange = ref('')
 const selectedSymbol = ref('')

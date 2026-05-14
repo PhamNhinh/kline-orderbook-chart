@@ -7,12 +7,14 @@
       :volume-on="chart.volumeEnabled.value"
       :rsi-on="chart.rsiEnabled.value"
       :oi-on="chart.oiEnabled.value"
+      :alpha-trend-on="chart.alphaTrendEnabled.value"
       :stats="market.stats.value"
       @subscribe="onSubscribe"
       @chart-type="onChartType"
       @toggle-volume="chart.toggleVolume()"
       @toggle-rsi="chart.toggleRsi()"
       @toggle-oi="chart.toggleOi()"
+      @toggle-alpha-trend="chart.toggleAlphaTrend()"
     />
 
     <HeatmapSlider :bridge="chart.bridge.value" />

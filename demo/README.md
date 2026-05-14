@@ -12,6 +12,7 @@ A production-grade demo application showcasing **[kline-orderbook-chart](https:/
 | **RSI Indicator** | 14-period RSI with signals, divergence, traps, EMA overlay |
 | **Open Interest** | Historical 5m OI aligned to kline bars + real-time polling |
 | **Volume Indicator** | Per-bar volume with bull/bear coloring |
+| **AlphaTrend (custom)** | Plain-JS custom indicator template — toggled via the **ALPHA** button |
 | **Drawing Tools** | 13 tools — trendline, fib, channel, long/short, VWAP, freehand, etc. |
 | **Heatmap Intensity** | Adjustable colormap range via top slider bar |
 | **Multi-Exchange** | Binance Futures + Bybit Linear, 5 symbols each |
@@ -67,6 +68,9 @@ demo/
 │   ├── composables/
 │   │   ├── useChart.js       # Chart engine bridge wrapper
 │   │   └── useMarketData.js  # WebSocket client to demo server
+│   ├── indicators/
+│   │   └── alphaTrend.js     # Custom indicator example — copy this as
+│   │                         #   the starting template for your own
 │   └── components/
 │       ├── ChartView.vue     # Canvas wrapper + resize observer
 │       ├── ControlBar.vue    # Exchange/symbol/chart type/indicator controls
@@ -76,6 +80,22 @@ demo/
 ├── vite.config.js
 └── package.json
 ```
+
+## Writing your own indicator
+
+This demo ships **AlphaTrend** as a reference — a complete custom
+indicator written in ~150 lines of plain JS. It's a good template
+to copy when you want to add your own analysis on top of the chart.
+
+| File | What it shows |
+|---|---|
+| [`src/indicators/alphaTrend.js`](./src/indicators/alphaTrend.js) | The `compute` + `render` plugin shape using only public API (`draw.seriesLine`, `draw.markerUp`, `draw.markerDown`, `draw.priceLabel`) |
+| [`src/composables/useChart.js`](./src/composables/useChart.js) | How to register the indicator on `bridge.addIndicator(...)` and toggle visibility with `bridge.setIndicatorEnabled(id, on)` |
+| [`src/components/ControlBar.vue`](./src/components/ControlBar.vue) | The **ALPHA** toggle button wired into the demo UI |
+
+Full reference for every `draw.*` helper, lifecycle of `compute`,
+parameter hot-reloading, and performance tips lives in
+[`docs/guides/custom-indicators.md`](../docs/guides/custom-indicators.md).
 
 ## Supported Exchanges & Symbols
 

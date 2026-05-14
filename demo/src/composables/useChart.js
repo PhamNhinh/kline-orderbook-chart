@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
+import { registerAlphaTrend } from '../indicators/alphaTrend.js'
 
 prefetchWasm()
 
@@ -10,6 +11,14 @@ export function useChart() {
   const volumeEnabled = ref(true)
   const rsiEnabled = ref(true)
   const oiEnabled = ref(true)
+  const alphaTrendEnabled = ref(true)
+
+  // Holds the id returned by `bridge.addIndicator(...)` so we can toggle
+  // visibility / update params / remove the indicator later. See
+  // `src/indicators/alphaTrend.js` for the indicator itself — it's a
+  // self-contained module that you can copy-paste as a starting point
+  // for your own custom indicators.
+  let _alphaTrendId = null
 
   let _tickSize = 10
   let _klineCount = 0
@@ -61,6 +70,11 @@ export function useChart() {
 
     b.onDrawingComplete(() => { activeDrawingTool.value = null })
     b.onDrawingCancel(() => { activeDrawingTool.value = null })
+
+    // Register the example custom indicator. Registration only needs
+    // to happen once per chart — toggling visibility later is done via
+    // `bridge.setIndicatorEnabled(id, on)` (see `toggleAlphaTrend`).
+    _alphaTrendId = registerAlphaTrend(b, { period: 14, coef: 1 })
 
     b.start()
     bridge.value = b
@@ -257,23 +271,34 @@ export function useChart() {
     oiEnabled.value ? b.enableOi() : b.disableOi()
   }
 
+  // Custom indicators are toggled via `setIndicatorEnabled(id, on)` —
+  // a no-op when the id is null (e.g. while the bridge is still booting
+  // or the engine refused registration because of a license gate).
+  function toggleAlphaTrend() {
+    const b = bridge.value
+    if (!b || _alphaTrendId === null) return
+    alphaTrendEnabled.value = !alphaTrendEnabled.value
+    b.setIndicatorEnabled(_alphaTrendId, alphaTrendEnabled.value)
+  }
+
   function destroy() {
     if (_tradeFlushId !== null) cancelAnimationFrame(_tradeFlushId)
     if (_heatmapFlushId !== null) cancelAnimationFrame(_heatmapFlushId)
     _tradeBuf.length = 0
     _heatmapColsBuf.length = 0
     _oiValues = null
+    _alphaTrendId = null
     bridge.value?.destroy()
     bridge.value = null
   }
 
   return {
     bridge, chartType, activeDrawingTool,
-    volumeEnabled, rsiEnabled, oiEnabled,
+    volumeEnabled, rsiEnabled, oiEnabled, alphaTrendEnabled,
     init, setHistory,
     handleKline, handleTrade, handleHeatmapColumn, handleHeatmapFrozen, handleOi,
     setChartTypeValue, startDrawing, cancelDrawing, deleteSelected, clearDrawings,
-    toggleVolume, toggleRsi, toggleOi,
+    toggleVolume, toggleRsi, toggleOi, toggleAlphaTrend,
     destroy,
   }
 }
