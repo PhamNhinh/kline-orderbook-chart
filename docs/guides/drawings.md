@@ -1,5 +1,8 @@
 # Drawing Tools
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/drawing](https://mrd-indicators.com/docs/drawing)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 kline-orderbook-chart provides 10+ drawing tools for technical analysis — trendlines, Fibonacci retracements, position boxes, anchored VWAP, Elliott Wave counts, and more. Drawings support programmatic creation, interactive mode, per-drawing styling, selection, and JSON serialization.
 
 ---

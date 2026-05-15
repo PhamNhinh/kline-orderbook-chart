@@ -1,5 +1,8 @@
 # Getting Started
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/getting-started](https://mrd-indicators.com/docs/getting-started)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 This tutorial walks you through installing kline-orderbook-chart, creating your first candlestick chart, and starting the real-time render loop — in under 5 minutes.
 
 **Prerequisites:** Node.js 16+ and a modern browser (Chrome 80+, Firefox 79+, Safari 15.2+).
@@ -48,14 +51,14 @@ The chart renders into a standard HTML `<canvas>` element. The canvas should be 
 ## 4. Initialize the Chart
 
 ```javascript
-import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
+import { createChartBridge, prefetchEngine } from 'kline-orderbook-chart'
 
 // Step 1: Prefetch the engine binary in the background (optional but recommended)
 // Call this as early as possible — e.g. when the app mounts, not when the chart page loads
-prefetchWasm()
+prefetchEngine()
 ```
 
-`prefetchWasm()` starts downloading and compiling the native engine module immediately. It is fire-and-forget — no await needed. When `createChartBridge` is called later, it reuses the already-loaded module.
+`prefetchEngine()` starts downloading and compiling the native engine module immediately. It is fire-and-forget — no await needed. When `createChartBridge` is called later, it reuses the already-loaded module.
 
 ```javascript
 // Step 2: Create the chart bridge
@@ -225,9 +228,9 @@ function cleanup() {
   </div>
 
   <script type="module">
-    import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
+    import { createChartBridge, prefetchEngine } from 'kline-orderbook-chart'
 
-    prefetchWasm()
+    prefetchEngine()
 
     const canvas = document.getElementById('chart')
     const chart  = await createChartBridge(canvas, {

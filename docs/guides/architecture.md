@@ -1,5 +1,8 @@
 # Core Concepts
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/intro](https://mrd-indicators.com/docs/intro)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 This page explains the architecture of kline-orderbook-chart — how the native computation engine, JavaScript bridge, and Canvas 2D renderer work together to deliver 60 fps financial charting.
 
 ---
@@ -206,8 +209,8 @@ The engine module is loaded lazily on first use:
 
 ```javascript
 // Option A: Eager prefetch (recommended)
-import { prefetchWasm } from 'kline-orderbook-chart'
-prefetchWasm()   // starts download + compile immediately, no await needed
+import { prefetchEngine } from 'kline-orderbook-chart'
+prefetchEngine()   // starts download + compile immediately, no await needed
 
 // Option B: Lazy load (on first createChartBridge call)
 const chart = await createChartBridge(canvas, options)

@@ -1,5 +1,8 @@
 # Candlestick Data
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/data-loading](https://mrd-indicators.com/docs/data-loading)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 This page covers everything about loading, updating, and accessing OHLCV candlestick data in the chart engine.
 
 ---

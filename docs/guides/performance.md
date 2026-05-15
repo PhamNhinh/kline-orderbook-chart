@@ -1,5 +1,8 @@
 # Performance & Optimization
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/intro](https://mrd-indicators.com/docs/intro)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 Kline Orderbook Chart is built for high-frequency, data-intensive charting. This guide covers how the engine achieves its performance and best practices for your application.
 
 ## Architecture overview
@@ -60,15 +63,15 @@ FPS remains above 11,000 even at 100K candles — no performance degradation at 
 
 ## Best practices
 
-### 1. Use `prefetchWasm()` for faster first render
+### 1. Use `prefetchEngine()` for faster first render
 
-Call `prefetchWasm()` as early as possible (e.g., when your app loads, before the user navigates to the chart page). This pre-downloads and compiles the engine binary so `createChartBridge()` is instant.
+Call `prefetchEngine()` as early as possible (e.g., when your app loads, before the user navigates to the chart page). This pre-downloads and compiles the engine binary so `createChartBridge()` is instant.
 
 ```javascript
-import { prefetchWasm } from 'kline-orderbook-chart'
+import { prefetchEngine } from 'kline-orderbook-chart'
 
 // Call on app init — the engine will be ready when the chart page loads
-prefetchWasm()
+prefetchEngine()
 ```
 
 ### 2. Pause rendering when hidden

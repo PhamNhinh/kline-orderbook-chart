@@ -1,5 +1,8 @@
 # API Reference
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/intro](https://mrd-indicators.com/docs/intro)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 Complete reference for all public methods on a `MrdChart` instance.
 
 - [Initialization](#initialization)
@@ -43,15 +46,15 @@ const chart = await createChartBridge(canvas, {
 | `precision` | `number` | `2` | Price decimal places |
 | `appId` | `string` | — | Mobile app bundle identifier (mobile licenses) |
 
-### `prefetchWasm()`
+### `prefetchEngine()`
 
 Starts loading the engine module in the background without blocking. Call during application boot to reduce the perceived load time when the chart is first created.
 
 ```javascript
-import { prefetchWasm } from 'kline-orderbook-chart'
+import { prefetchEngine } from 'kline-orderbook-chart'
 
 // In your app entry point, before the chart page is shown
-prefetchWasm()
+prefetchEngine()
 ```
 
 ---

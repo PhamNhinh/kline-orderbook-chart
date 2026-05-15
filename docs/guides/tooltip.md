@@ -1,5 +1,8 @@
 # Events & Tooltips
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/chart-instance](https://mrd-indicators.com/docs/chart-instance)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 This page covers all event callbacks, the tooltip system, and hit testing APIs.
 
 ---

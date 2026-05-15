@@ -2,6 +2,8 @@
 
 A production-grade demo application showcasing **[kline-orderbook-chart](https://www.npmjs.com/package/kline-orderbook-chart)** with live market data from Binance Futures and Bybit Linear.
 
+> **📖 Looking for the full docs?** Read them at **[mrd-indicators.com/docs/getting-started](https://mrd-indicators.com/docs/getting-started)** — install, lifecycle, data loading, footprint, orderbook heatmap, indicators, drawing tools, and framework integrations.
+
 ## What This Demo Shows
 
 | Feature | Description |
@@ -22,7 +24,7 @@ A production-grade demo application showcasing **[kline-orderbook-chart](https:/
 ```
 ┌──────────────┐   WebSocket    ┌───────────────┐   WebSocket    ┌──────────────┐
 │  Binance /   │ ◄──────────── │  Demo Server   │ ─────────────► │  Vue 3 App   │
-│  Bybit APIs  │  aggTrade     │  Node.js :4400 │  kline, trade  │  + WASM      │
+│  Bybit APIs  │  aggTrade     │  Node.js :4400 │  kline, trade  │  + Native    │
 │              │  depth@100ms  │                │  heatmap, oi   │  Chart Engine│
 │              │  kline_1m     │                │                │              │
 └──────────────┘               └───────────────┘                └──────────────┘
@@ -30,7 +32,7 @@ A production-grade demo application showcasing **[kline-orderbook-chart](https:/
 
 **Server** connects to exchange WebSocket streams, maintains a local orderbook, aggregates depth into heatmap columns, polls OI every 5s, and broadcasts everything to connected clients.
 
-**Client** receives data via WebSocket, feeds it into the WASM chart engine using RAF-batched calls for optimal rendering performance.
+**Client** receives data via WebSocket, feeds it into the native chart engine using RAF-batched calls for optimal rendering performance.
 
 ## Quick Start
 
@@ -119,7 +121,7 @@ parameter hot-reloading, and performance tips lives in
 
 ## Tech Stack
 
-- **Chart Engine**: kline-orderbook-chart (Rust → WASM → Canvas 2D)
+- **Chart Engine**: kline-orderbook-chart (native-speed engine, Canvas 2D)
 - **Frontend**: Vue 3 + Vite
 - **Server**: Node.js + ws (WebSocket)
 - **Data Sources**: Binance/Bybit public WebSocket + REST APIs

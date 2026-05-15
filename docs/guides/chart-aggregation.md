@@ -1,5 +1,8 @@
 # Chart Aggregation
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/data-loading](https://mrd-indicators.com/docs/data-loading)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 kline-orderbook-chart includes utilities to build non-time-based charts from standard OHLCV data: **Renko**, **Range**, and **Tick** charts. These are computed in JavaScript and fed into the engine as regular kline data.
 
 ---

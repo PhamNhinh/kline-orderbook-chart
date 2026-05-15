@@ -1,5 +1,8 @@
 # React Integration
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/react-integration](https://mrd-indicators.com/docs/react-integration)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 This guide shows how to use Kline Orderbook Chart in a React application with proper lifecycle management.
 
 ## Installation
@@ -12,9 +15,9 @@ npm install kline-orderbook-chart
 
 ```jsx
 import { useEffect, useRef } from 'react'
-import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
+import { createChartBridge, prefetchEngine } from 'kline-orderbook-chart'
 
-prefetchWasm()
+prefetchEngine()
 
 export function Chart({ licenseKey }) {
   const canvasRef = useRef(null)
@@ -207,9 +210,9 @@ function DrawingToolbar({ chart }) {
 
 ```jsx
 import { useEffect, useRef, useState } from 'react'
-import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
+import { createChartBridge, prefetchEngine } from 'kline-orderbook-chart'
 
-prefetchWasm()
+prefetchEngine()
 
 export function useChart(canvasRef, options = {}) {
   const chartRef = useRef(null)

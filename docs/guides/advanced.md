@@ -1,5 +1,8 @@
 # Advanced Topics
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs](https://mrd-indicators.com/docs)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 This page covers iceberg order detection, licensing, performance optimization, memory management, and multi-chart synchronization.
 
 ---
@@ -204,12 +207,12 @@ endpoint contract and a drop-in Node.js (Express) reference.
 
 ### Engine Prefetch
 
-Always call `prefetchWasm()` as early as possible — ideally at application startup, not when the chart page loads.
+Always call `prefetchEngine()` as early as possible — ideally at application startup, not when the chart page loads.
 
 ```javascript
 // In your app's entry point (main.js / App.jsx / etc.)
-import { prefetchWasm } from 'kline-orderbook-chart'
-prefetchWasm()
+import { prefetchEngine } from 'kline-orderbook-chart'
+prefetchEngine()
 ```
 
 This starts downloading and compiling the native engine module in the background. When the user navigates to the chart page, `createChartBridge` reuses the already-loaded module.

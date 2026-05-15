@@ -1,5 +1,8 @@
 # Footprint Chart
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/footprint-chart](https://mrd-indicators.com/docs/footprint-chart)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 The footprint chart (also called a cluster chart) shows bid/ask volume at each price level within each candle bar. It reveals order flow dynamics — who is buying vs. selling, at which prices, and where imbalances exist.
 
 **Plan requirement:** Professional or Enterprise.

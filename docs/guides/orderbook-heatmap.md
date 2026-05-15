@@ -1,5 +1,8 @@
 # Orderbook Heatmap
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/orderbook-heatmap](https://mrd-indicators.com/docs/orderbook-heatmap)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 The orderbook heatmap renders a **price-level × time-column** depth matrix directly behind the candlesticks on the same canvas. It visualizes order book depth over time, revealing support/resistance zones, spoofing patterns, and liquidity walls.
 
 **Plan requirement:** Professional or Enterprise.

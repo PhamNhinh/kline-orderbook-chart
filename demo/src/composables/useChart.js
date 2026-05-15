@@ -1,8 +1,8 @@
 import { ref } from 'vue'
-import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
+import { createChartBridge, prefetchEngine } from 'kline-orderbook-chart'
 import { registerAlphaTrend } from '../indicators/alphaTrend.js'
 
-prefetchWasm()
+prefetchEngine()
 
 export function useChart() {
   const bridge = ref(null)

@@ -9,9 +9,9 @@
 </p>
 
 <p align="center">
+  <a href="https://mrd-indicators.com/docs/getting-started"><strong>📖 Docs</strong></a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="https://app.mrd-indicators.com/trading/chart-terminal">Live Demo</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="#run-demo-locally">Run Demo Locally</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
-  <a href="#documentation">Documentation</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="https://discord.gg/buX2h5ZZm">Discord</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="https://x.com/mrDocTradingIO">X</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="mailto:support@mrd-indicators.com">Contact</a>
@@ -24,6 +24,10 @@
   <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-brightgreen" />
   <img alt="framework agnostic" src="https://img.shields.io/badge/framework-agnostic-blueviolet" />
   <img alt="license" src="https://img.shields.io/badge/license-commercial-orange" />
+</p>
+
+<p align="center">
+  📖 <strong>Full documentation:</strong> <a href="https://mrd-indicators.com/docs/getting-started"><code>mrd-indicators.com/docs/getting-started</code></a>
 </p>
 
 ---
@@ -242,10 +246,10 @@ npm install kline-orderbook-chart
 ### Basic usage
 
 ```javascript
-import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
+import { createChartBridge, prefetchEngine } from 'kline-orderbook-chart'
 
 // Pre-load engine for faster first render (optional)
-prefetchWasm()
+prefetchEngine()
 
 // Create chart
 const canvas = document.getElementById('chart')
@@ -358,9 +362,9 @@ For the **full experience** with all features:
 
 ```jsx
 import { useEffect, useRef } from 'react'
-import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
+import { createChartBridge, prefetchEngine } from 'kline-orderbook-chart'
 
-prefetchWasm()
+prefetchEngine()
 
 function Chart({ licenseKey }) {
   const canvasRef = useRef(null)
@@ -408,9 +412,9 @@ See [full React guide](docs/examples/react.md) for hooks, resize handling, and W
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
+import { createChartBridge, prefetchEngine } from 'kline-orderbook-chart'
 
-prefetchWasm()
+prefetchEngine()
 
 const el = ref(null)
 let chart = null
@@ -446,9 +450,9 @@ See [full Vue guide](docs/examples/vue.md) for composables, theme switching, and
 ```html
 <canvas id="chart" style="width:100%;height:600px"></canvas>
 <script type="module">
-  import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
+  import { createChartBridge, prefetchEngine } from 'kline-orderbook-chart'
 
-  prefetchWasm()
+  prefetchEngine()
 
   const chart = await createChartBridge(document.getElementById('chart'))
 
@@ -482,52 +486,54 @@ Free 14-day trial included. Contact us for pricing and license options:
 
 ## Documentation
 
-> **[→ Full Documentation Table of Contents](docs/guides/README.md)**
+> **[📖 Read the full documentation at mrd-indicators.com/docs](https://mrd-indicators.com/docs/getting-started)** — installable in 5 minutes, full API reference, framework integrations, and live runnable examples.
+
+The web docs are the canonical source. The Markdown copies below mirror the same content directly on GitHub for offline reading.
 
 ### Tutorials
 
-| Guide | Description |
-|---|---|
-| [Getting Started](docs/guides/getting-started.md) | Installation, creating your first chart, loading data, starting the render loop |
-| [Core Concepts & Architecture](docs/guides/architecture.md) | Architecture overview, native engine, command buffer pipeline, responsibility model |
-| [Framework Integration](docs/examples/framework-integration.md) | Complete examples for React, Vue 3, Svelte, Vanilla JS with SSR handling |
+| Guide | Web docs | GitHub mirror |
+|---|---|---|
+| Getting Started | [mrd-indicators.com/docs/getting-started](https://mrd-indicators.com/docs/getting-started) | [docs/guides/getting-started.md](docs/guides/getting-started.md) |
+| Core Concepts & Architecture | — | [docs/guides/architecture.md](docs/guides/architecture.md) |
+| Framework Integration | [mrd-indicators.com/docs/react-integration](https://mrd-indicators.com/docs/react-integration) | [docs/examples/framework-integration.md](docs/examples/framework-integration.md) |
 
 ### Data & Chart Types
 
-| Guide | Description |
-|---|---|
-| [Candlestick Data](docs/guides/data.md) | OHLCV data format, real-time updates, append/prepend, chart types |
-| [Orderbook Heatmap](docs/guides/orderbook-heatmap.md) | Depth matrix setup, real-time streaming, range configuration, prefetch |
-| [Footprint Chart](docs/guides/footprint-chart.md) | Trade stream ingestion, display modes, delta histogram, signals |
-| [Chart Aggregation](docs/guides/chart-aggregation.md) | Renko, Range, and Tick chart construction from OHLCV data |
+| Guide | Web docs | GitHub mirror |
+|---|---|---|
+| Candlestick Data | [mrd-indicators.com/docs/data-loading](https://mrd-indicators.com/docs/data-loading) | [docs/guides/data.md](docs/guides/data.md) |
+| Orderbook Heatmap | [mrd-indicators.com/docs/orderbook-heatmap](https://mrd-indicators.com/docs/orderbook-heatmap) | [docs/guides/orderbook-heatmap.md](docs/guides/orderbook-heatmap.md) |
+| Footprint Chart | [mrd-indicators.com/docs/footprint-chart](https://mrd-indicators.com/docs/footprint-chart) | [docs/guides/footprint-chart.md](docs/guides/footprint-chart.md) |
+| Chart Aggregation | — | [docs/guides/chart-aggregation.md](docs/guides/chart-aggregation.md) |
 
 ### Indicators & Analysis
 
-| Guide | Description |
-|---|---|
-| [Built-in Indicators](docs/guides/indicators.md) | All 14+ indicators — RSI, CVD, OI, Funding Rate, VRVP, TPO, VPIN, Smart Ranges, EMA Structure |
-| [Custom Indicators](docs/guides/custom-indicators.md) | Plugin API with `compute` + `render`, engine-backed drawing primitives |
+| Guide | Web docs | GitHub mirror |
+|---|---|---|
+| Built-in Indicators | [mrd-indicators.com/docs/indicators](https://mrd-indicators.com/docs/indicators) | [docs/guides/indicators.md](docs/guides/indicators.md) |
+| Custom Indicators | — | [docs/guides/custom-indicators.md](docs/guides/custom-indicators.md) |
 
 ### Drawing & Interaction
 
-| Guide | Description |
-|---|---|
-| [Drawing Tools](docs/guides/drawings.md) | All 10+ tools, programmatic creation, styling, JSON serialization |
-| [Events & Tooltips](docs/guides/tooltip.md) | Tooltip callback, drawing events, hover hit tests, crosshair data |
-| [Viewport & Interaction](docs/guides/viewport-interaction.md) | Pan, zoom, pinch gestures, bar replay, crosshair sync, Y-axis scaling |
+| Guide | Web docs | GitHub mirror |
+|---|---|---|
+| Drawing Tools | [mrd-indicators.com/docs/drawing](https://mrd-indicators.com/docs/drawing) | [docs/guides/drawings.md](docs/guides/drawings.md) |
+| Events & Tooltips | — | [docs/guides/tooltip.md](docs/guides/tooltip.md) |
+| Viewport & Interaction | — | [docs/guides/viewport-interaction.md](docs/guides/viewport-interaction.md) |
 
 ### Configuration
 
-| Guide | Description |
-|---|---|
-| [Theming](docs/guides/themes.md) | Dark/light mode, framework theme synchronization |
-| [Advanced Topics](docs/guides/advanced.md) | Iceberg detection, licensing, performance optimization, memory management |
+| Guide | Web docs | GitHub mirror |
+|---|---|---|
+| Theming | [mrd-indicators.com/docs/chart-instance](https://mrd-indicators.com/docs/chart-instance) | [docs/guides/themes.md](docs/guides/themes.md) |
+| Advanced Topics | — | [docs/guides/advanced.md](docs/guides/advanced.md) |
 
 ### Reference
 
-| Guide | Description |
-|---|---|
-| [API Reference](docs/api/README.md) | Complete method & event documentation |
+| Guide | Web docs | GitHub mirror |
+|---|---|---|
+| API Reference | [mrd-indicators.com/docs/intro](https://mrd-indicators.com/docs/intro) | [docs/api/README.md](docs/api/README.md) |
 | [React Integration](docs/examples/react.md) | Hooks, resize, WebSocket |
 | [Vue 3 Integration](docs/examples/vue.md) | Composables, theme switching |
 

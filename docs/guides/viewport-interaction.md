@@ -1,5 +1,8 @@
 # Viewport & Interaction
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/chart-instance](https://mrd-indicators.com/docs/chart-instance)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 This page covers the chart's viewport system — how panning, zooming, touch gestures, bar replay, and sub-pane resizing work.
 
 ---

@@ -1,5 +1,8 @@
 # Vue 3 Integration
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/react-integration](https://mrd-indicators.com/docs/react-integration)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 This guide shows how to use Kline Orderbook Chart in a Vue 3 application using the Composition API.
 
 ## Installation
@@ -17,9 +20,9 @@ npm install kline-orderbook-chart
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
+import { createChartBridge, prefetchEngine } from 'kline-orderbook-chart'
 
-prefetchWasm()
+prefetchEngine()
 
 const props = defineProps({
   licenseKey: { type: String, default: '' },
@@ -54,9 +57,9 @@ onBeforeUnmount(() => {
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
+import { createChartBridge, prefetchEngine } from 'kline-orderbook-chart'
 
-prefetchWasm()
+prefetchEngine()
 
 const props = defineProps({
   symbol: { type: String, default: 'BTCUSDT' },
@@ -151,9 +154,9 @@ Create a reusable composable for chart initialization:
 ```javascript
 // composables/useChart.js
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { createChartBridge, prefetchWasm } from 'kline-orderbook-chart'
+import { createChartBridge, prefetchEngine } from 'kline-orderbook-chart'
 
-prefetchWasm()
+prefetchEngine()
 
 export function useChart(canvasRef, options = {}) {
   const chart = ref(null)

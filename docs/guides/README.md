@@ -1,5 +1,8 @@
 # kline-orderbook-chart — Documentation
 
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs](https://mrd-indicators.com/docs)** — this Markdown mirror is kept for offline / GitHub browsing.
+
+
 **Version 0.1.0** · [Live Demo](https://app.mrd-indicators.com/trading/chart-terminal) · [Pricing](https://app.mrd-indicators.com/charting-library/pricing) · [Discord](https://discord.gg/buX2h5ZZm)
 
 ---
