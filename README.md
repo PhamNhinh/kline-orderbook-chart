@@ -60,6 +60,14 @@ Building it yourself means months of work: Canvas rendering, depth matrix manage
   <em>BTC/USDT — Footprint chart with bid/ask volume at every price level, POC, delta, VRVP profile panel</em>
 </p>
 
+<p align="center">
+  <img src="assets/media/footprint-basic.png" alt="Footprint order flow chart on BTC/USDT — bid vs ask volume per price level, delta histogram, POC and stacked imbalance markers" width="100%" />
+</p>
+
+<p align="center">
+  <em>Footprint order flow on BTC/USDT — buyer vs seller aggression at every price level, with delta histogram, Point of Control (POC) and stacked imbalance markers</em>
+</p>
+
 > **Video demos:** See the full interactive experience in the [`assets/media/`](assets/media/) folder — real-time orderbook heatmap streaming, drawing tools, theme switching, and more.
 
 ---
