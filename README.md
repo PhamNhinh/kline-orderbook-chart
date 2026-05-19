@@ -53,6 +53,17 @@ Building it yourself means months of work: Canvas rendering, depth matrix manage
 </p>
 
 <p align="center">
+  <a href="https://mrd-indicators.com/docs/charting-library/orderbook-heatmap" title="Orderbook Heatmap docs — depth matrix protocol, real-time append, walls and color schemes">
+    <img src="assets/media/orderbook-depth-profile.png" alt="Real-time orderbook depth heatmap behind BTC/USDT candles with bid ask color map, side depth profile and labeled wall markers" width="100%" />
+  </a>
+</p>
+
+<p align="center">
+  <em>BTC/USDT — Orderbook depth heatmap rendered behind the candles, with side depth profile and labeled walls.</em><br/>
+  <sub>📖 API guide: <a href="https://mrd-indicators.com/docs/charting-library/orderbook-heatmap"><code>setHeatmap()</code>, <code>appendHeatmapColumn()</code>, walls &amp; color schemes →</a></sub>
+</p>
+
+<p align="center">
   <img src="assets/media/footprint-chart.png" alt="Footprint chart with bid ask volume, delta, imbalance detection, and VRVP profile" width="100%" />
 </p>
 
