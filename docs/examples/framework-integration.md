@@ -1,6 +1,6 @@
 # Framework Integration
 
-> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/react-integration](https://mrd-indicators.com/docs/react-integration)** — this Markdown mirror is kept for offline / GitHub browsing.
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/charting-library/react-integration](https://mrd-indicators.com/docs/charting-library/react-integration)** — this Markdown mirror is kept for offline / GitHub browsing.
 
 
 Complete integration examples for React, Vue 3, Svelte, and Vanilla JS — including SSR handling, responsive resize, real-time WebSocket updates, and proper lifecycle management.

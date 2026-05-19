@@ -1,6 +1,6 @@
 # Custom Indicators
 
-> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/indicators](https://mrd-indicators.com/docs/indicators)** — this Markdown mirror is kept for offline / GitHub browsing.
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/charting-library/indicators](https://mrd-indicators.com/docs/charting-library/indicators)** — this Markdown mirror is kept for offline / GitHub browsing.
 
 
 The Custom Indicator API lets you create your own indicators with a `compute` + `render` plugin interface. Custom indicators render through the native command buffer pipeline — the same path as built-in indicators — ensuring pixel-perfect alignment and consistent performance.

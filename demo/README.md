@@ -2,7 +2,7 @@
 
 A production-grade demo application showcasing **[kline-orderbook-chart](https://www.npmjs.com/package/kline-orderbook-chart)** with live market data from Binance Futures and Bybit Linear.
 
-> **📖 Looking for the full docs?** Read them at **[mrd-indicators.com/docs/getting-started](https://mrd-indicators.com/docs/getting-started)** — install, lifecycle, data loading, footprint, orderbook heatmap, indicators, drawing tools, and framework integrations.
+> **📖 Looking for the full docs?** Read them at **[mrd-indicators.com/docs/charting-library/introduction](https://mrd-indicators.com/docs/charting-library/introduction)** — install, lifecycle, data loading, footprint, orderbook heatmap, indicators, drawing tools, and framework integrations.
 
 ## What This Demo Shows
 

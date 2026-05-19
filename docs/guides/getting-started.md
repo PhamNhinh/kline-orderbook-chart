@@ -1,6 +1,6 @@
 # Getting Started
 
-> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/getting-started](https://mrd-indicators.com/docs/getting-started)** — this Markdown mirror is kept for offline / GitHub browsing.
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/charting-library/getting-started](https://mrd-indicators.com/docs/charting-library/getting-started)** — this Markdown mirror is kept for offline / GitHub browsing.
 
 
 This tutorial walks you through installing kline-orderbook-chart, creating your first candlestick chart, and starting the real-time render loop — in under 5 minutes.

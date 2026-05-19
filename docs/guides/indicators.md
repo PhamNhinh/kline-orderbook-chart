@@ -1,6 +1,6 @@
 # Built-in Indicators
 
-> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/indicators](https://mrd-indicators.com/docs/indicators)** — this Markdown mirror is kept for offline / GitHub browsing.
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/charting-library/indicators](https://mrd-indicators.com/docs/charting-library/indicators)** — this Markdown mirror is kept for offline / GitHub browsing.
 
 
 kline-orderbook-chart includes 14+ built-in indicators computed entirely inside the native engine. Each indicator renders in its own sub-pane or as an overlay on the main chart.

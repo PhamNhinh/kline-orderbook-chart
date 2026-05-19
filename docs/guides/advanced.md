@@ -1,6 +1,6 @@
 # Advanced Topics
 
-> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs](https://mrd-indicators.com/docs)** — this Markdown mirror is kept for offline / GitHub browsing.
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/charting-library/performance](https://mrd-indicators.com/docs/charting-library/performance)** — this Markdown mirror is kept for offline / GitHub browsing.
 
 
 This page covers iceberg order detection, licensing, performance optimization, memory management, and multi-chart synchronization.

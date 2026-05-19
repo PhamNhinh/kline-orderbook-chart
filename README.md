@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://mrd-indicators.com/docs/getting-started"><strong>📖 Docs</strong></a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  <a href="https://mrd-indicators.com/docs/charting-library/introduction"><strong>📖 Docs</strong></a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="https://app.mrd-indicators.com/trading/chart-terminal">Live Demo</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="#run-demo-locally">Run Demo Locally</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="https://discord.gg/buX2h5ZZm">Discord</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
@@ -27,7 +27,7 @@
 </p>
 
 <p align="center">
-  📖 <strong>Full documentation:</strong> <a href="https://mrd-indicators.com/docs/getting-started"><code>mrd-indicators.com/docs/getting-started</code></a>
+  📖 <strong>Full documentation:</strong> <a href="https://mrd-indicators.com/docs/charting-library/introduction"><code>mrd-indicators.com/docs/charting-library/introduction</code></a>
 </p>
 
 ---
@@ -486,7 +486,7 @@ Free 14-day trial included. Contact us for pricing and license options:
 
 ## Documentation
 
-> **[📖 Read the full documentation at mrd-indicators.com/docs](https://mrd-indicators.com/docs/getting-started)** — installable in 5 minutes, full API reference, framework integrations, and live runnable examples.
+> **[📖 Read the full documentation at mrd-indicators.com/docs/charting-library](https://mrd-indicators.com/docs/charting-library/introduction)** — installable in 5 minutes, full API reference, framework integrations, and live runnable examples.
 
 The web docs are the canonical source. The Markdown copies below mirror the same content directly on GitHub for offline reading.
 
@@ -494,46 +494,46 @@ The web docs are the canonical source. The Markdown copies below mirror the same
 
 | Guide | Web docs | GitHub mirror |
 |---|---|---|
-| Getting Started | [mrd-indicators.com/docs/getting-started](https://mrd-indicators.com/docs/getting-started) | [docs/guides/getting-started.md](docs/guides/getting-started.md) |
-| Core Concepts & Architecture | — | [docs/guides/architecture.md](docs/guides/architecture.md) |
-| Framework Integration | [mrd-indicators.com/docs/react-integration](https://mrd-indicators.com/docs/react-integration) | [docs/examples/framework-integration.md](docs/examples/framework-integration.md) |
+| Getting Started | [mrd-indicators.com/docs/charting-library/getting-started](https://mrd-indicators.com/docs/charting-library/getting-started) | [docs/guides/getting-started.md](docs/guides/getting-started.md) |
+| Core Concepts & Architecture | [mrd-indicators.com/docs/charting-library/introduction](https://mrd-indicators.com/docs/charting-library/introduction) | [docs/guides/architecture.md](docs/guides/architecture.md) |
+| Framework Integration | [mrd-indicators.com/docs/charting-library/react-integration](https://mrd-indicators.com/docs/charting-library/react-integration) | [docs/examples/framework-integration.md](docs/examples/framework-integration.md) |
 
 ### Data & Chart Types
 
 | Guide | Web docs | GitHub mirror |
 |---|---|---|
-| Candlestick Data | [mrd-indicators.com/docs/data-loading](https://mrd-indicators.com/docs/data-loading) | [docs/guides/data.md](docs/guides/data.md) |
-| Orderbook Heatmap | [mrd-indicators.com/docs/orderbook-heatmap](https://mrd-indicators.com/docs/orderbook-heatmap) | [docs/guides/orderbook-heatmap.md](docs/guides/orderbook-heatmap.md) |
-| Footprint Chart | [mrd-indicators.com/docs/footprint-chart](https://mrd-indicators.com/docs/footprint-chart) | [docs/guides/footprint-chart.md](docs/guides/footprint-chart.md) |
+| Candlestick Data | [mrd-indicators.com/docs/charting-library/data-loading](https://mrd-indicators.com/docs/charting-library/data-loading) | [docs/guides/data.md](docs/guides/data.md) |
+| Orderbook Heatmap | [mrd-indicators.com/docs/charting-library/orderbook-heatmap](https://mrd-indicators.com/docs/charting-library/orderbook-heatmap) | [docs/guides/orderbook-heatmap.md](docs/guides/orderbook-heatmap.md) |
+| Footprint Chart | [mrd-indicators.com/docs/charting-library/footprint-chart](https://mrd-indicators.com/docs/charting-library/footprint-chart) | [docs/guides/footprint-chart.md](docs/guides/footprint-chart.md) |
 | Chart Aggregation | — | [docs/guides/chart-aggregation.md](docs/guides/chart-aggregation.md) |
 
 ### Indicators & Analysis
 
 | Guide | Web docs | GitHub mirror |
 |---|---|---|
-| Built-in Indicators | [mrd-indicators.com/docs/indicators](https://mrd-indicators.com/docs/indicators) | [docs/guides/indicators.md](docs/guides/indicators.md) |
+| Built-in Indicators | [mrd-indicators.com/docs/charting-library/indicators](https://mrd-indicators.com/docs/charting-library/indicators) | [docs/guides/indicators.md](docs/guides/indicators.md) |
 | Custom Indicators | — | [docs/guides/custom-indicators.md](docs/guides/custom-indicators.md) |
 
 ### Drawing & Interaction
 
 | Guide | Web docs | GitHub mirror |
 |---|---|---|
-| Drawing Tools | [mrd-indicators.com/docs/drawing](https://mrd-indicators.com/docs/drawing) | [docs/guides/drawings.md](docs/guides/drawings.md) |
-| Events & Tooltips | — | [docs/guides/tooltip.md](docs/guides/tooltip.md) |
-| Viewport & Interaction | — | [docs/guides/viewport-interaction.md](docs/guides/viewport-interaction.md) |
+| Drawing Tools | [mrd-indicators.com/docs/charting-library/drawing](https://mrd-indicators.com/docs/charting-library/drawing) | [docs/guides/drawings.md](docs/guides/drawings.md) |
+| Events & Tooltips | [mrd-indicators.com/docs/charting-library/events-and-tooltips](https://mrd-indicators.com/docs/charting-library/events-and-tooltips) | [docs/guides/tooltip.md](docs/guides/tooltip.md) |
+| Viewport & Interaction | [mrd-indicators.com/docs/charting-library/chart-instance](https://mrd-indicators.com/docs/charting-library/chart-instance) | [docs/guides/viewport-interaction.md](docs/guides/viewport-interaction.md) |
 
 ### Configuration
 
 | Guide | Web docs | GitHub mirror |
 |---|---|---|
-| Theming | [mrd-indicators.com/docs/chart-instance](https://mrd-indicators.com/docs/chart-instance) | [docs/guides/themes.md](docs/guides/themes.md) |
-| Advanced Topics | — | [docs/guides/advanced.md](docs/guides/advanced.md) |
+| Theming | [mrd-indicators.com/docs/charting-library/theming-and-colors](https://mrd-indicators.com/docs/charting-library/theming-and-colors) | [docs/guides/themes.md](docs/guides/themes.md) |
+| Advanced Topics | [mrd-indicators.com/docs/charting-library/performance](https://mrd-indicators.com/docs/charting-library/performance) | [docs/guides/advanced.md](docs/guides/advanced.md) |
 
 ### Reference
 
 | Guide | Web docs | GitHub mirror |
 |---|---|---|
-| API Reference | [mrd-indicators.com/docs/intro](https://mrd-indicators.com/docs/intro) | [docs/api/README.md](docs/api/README.md) |
+| API Reference | [mrd-indicators.com/docs/charting-library/introduction](https://mrd-indicators.com/docs/charting-library/introduction) | [docs/api/README.md](docs/api/README.md) |
 | [React Integration](docs/examples/react.md) | Hooks, resize, WebSocket |
 | [Vue 3 Integration](docs/examples/vue.md) | Composables, theme switching |
 

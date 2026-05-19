@@ -1,6 +1,6 @@
 # Core Concepts
 
-> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/intro](https://mrd-indicators.com/docs/intro)** — this Markdown mirror is kept for offline / GitHub browsing.
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/charting-library/introduction](https://mrd-indicators.com/docs/charting-library/introduction)** — this Markdown mirror is kept for offline / GitHub browsing.
 
 
 This page explains the architecture of kline-orderbook-chart — how the native computation engine, JavaScript bridge, and Canvas 2D renderer work together to deliver 60 fps financial charting.

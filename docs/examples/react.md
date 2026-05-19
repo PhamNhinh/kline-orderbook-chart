@@ -1,6 +1,6 @@
 # React Integration
 
-> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/react-integration](https://mrd-indicators.com/docs/react-integration)** — this Markdown mirror is kept for offline / GitHub browsing.
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/charting-library/react-integration](https://mrd-indicators.com/docs/charting-library/react-integration)** — this Markdown mirror is kept for offline / GitHub browsing.
 
 
 This guide shows how to use Kline Orderbook Chart in a React application with proper lifecycle management.

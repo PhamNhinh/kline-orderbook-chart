@@ -1,6 +1,6 @@
 # Kline Orderbook Chart — Documentation
 
-> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs](https://mrd-indicators.com/docs)** — this Markdown mirror is kept for offline / GitHub browsing.
+> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/charting-library/introduction](https://mrd-indicators.com/docs/charting-library/introduction)** — this Markdown mirror is kept for offline / GitHub browsing.
 
 
 Welcome to the official documentation for **Kline Orderbook Chart**, the only chart library that combines candlestick charts with real-time orderbook heatmap, footprint chart, and liquidation heatmap — all in a single `<canvas>`.
