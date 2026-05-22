@@ -128,4 +128,4 @@ parameter hot-reloading, and performance tips lives in
 
 ## License
 
-This demo is provided as a reference implementation for `kline-orderbook-chart` integration. The chart engine itself requires a license key — the demo runs in 14-day watermarked trial mode (`licenseKey: 'trial'`). Get a real key at [mrd-indicators.com](https://app.mrd-indicators.com/charting-library/pricing).
+This demo is provided as a reference implementation for `kline-orderbook-chart` integration. It ships with a perpetual enterprise license token bound to a single domain (`demo.mrd-indicators.com`) plus the implicit localhost / 127.0.0.1 bypass — so cloning and running `npm run dev` locally Just Works. If you deploy the demo to any other domain (your own host, GitHub Pages, Vercel, Netlify, etc.) the library transparently falls back to a 30-day watermarked trial. Get a production license at [mrd-indicators.com](https://app.mrd-indicators.com/charting-library/pricing).

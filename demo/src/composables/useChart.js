@@ -50,8 +50,33 @@ export function useChart() {
     pricelabel: { r: 230, g: 237, b: 243, lineWidth: 2, dashed: false, fontSize: 13 },
   }
 
+  // Demo-bundle license — Ed25519-signed perpetual enterprise token,
+  // bound to a SINGLE domain (`demo.mrd-indicators.com`) plus the
+  // implicit localhost / 127.0.0.1 / 0.0.0.0 bypass that the lib's
+  // `validateLicense` always applies. Cloning this demo and running
+  // `npm run dev` Just Works because of that bypass — no need to
+  // touch the token to evaluate the engine locally.
+  //
+  // Deliberately NARROW scope: an earlier revision of this token
+  // also covered `*.github.io,*.vercel.app,*.netlify.app,
+  // *.codesandbox.io,*.stackblitz.io` so a forked demo would render
+  // on those platforms without watermark. We pulled that whitelist
+  // because those platforms are valid permanent prod hosts — a
+  // clone with the embedded token could ship a free production
+  // instance of the engine indefinitely, defeating the paid model.
+  // On any domain outside `demo.mrd-indicators.com` + localhost the
+  // lib transparently falls back to a 30-day watermarked trial via
+  // `_createTrialLicense` (chart still works, just shows the
+  // trial-expiry counter + watermark badge).
+  //
+  // Token is public-by-design — see internal
+  // `release/mrd-chart-demo/src/main.js` for the long-form rationale
+  // block. Re-issue via the issuer script if the demo ever moves to
+  // a different domain; keep the domain list minimal.
+  const DEMO_LICENSE = 'eyJhbGciOiJFZERTQSIsInR5cCI6Ik1SRC1MSUMifQ.eyJwIjoiZW50ZXJwcmlzZSIsInBsIjoid2ViIiwiaWF0IjoxNzc5NDUzNDY0LCJpc3MiOiJtcmQtbGljZW5zZS1zdmMiLCJkIjoiZGVtby5tcmQtaW5kaWNhdG9ycy5jb20iLCJzdWIiOiJkZW1vLWJ1bmRsZSJ9.JnXmQz3EwPPfk0hkQt1UEpXuA7ul2bUlCwm7Nd9JG6tJMN8wqCZteMY3VZXR1BnG5HSM8xNJnt0ciU0OUMG-Cg'
+
   async function init(canvas) {
-    const b = await createChartBridge(canvas, { licenseKey: 'trial' })
+    const b = await createChartBridge(canvas, { licenseKey: DEMO_LICENSE })
 
     b.setCandleInterval(_candleSec)
     b.setPrecision(2)
