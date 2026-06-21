@@ -28,7 +28,7 @@
 </p>
 
 <p align="center">
-  <a href="https://mrd-indicators.com/examples"><img alt="Live Demos — run in your browser" src="https://img.shields.io/badge/▶_LIVE_DEMOS-run_in_your_browser-0a7cff?style=for-the-badge" /></a>
+  <a href="https://mrd-indicators.com/examples"><img alt="Live Demos — run in your browser" src="https://img.shields.io/badge/LIVE_DEMOS-run_in_your_browser-0a7cff?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1Mi41OSA0OS42MSI%2BPHBhdGggZmlsbD0iI2ZmZiIgZD0iTTQwLjQ1LDE1LjljMi4xOSwwLDQuMTcuODgsNS42LDIuMzEsMS40MywxLjQzLDIuMzIsMy40LDIuMzIsNS41OCwwLDQuMzYtMy41NSw3Ljg5LTcuOTIsNy44OWgtNS4wNHYtMTUuNzhoNS4wNFoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMjkuNTIsNDcuMzJsLTEuNi0yOS4wOWMwLTIuNDUtLjk4LTQuOC0yLjcyLTYuNTNMMTUuNzUsMi4yOXYyNS4zM2MwLDMuOTUsMS40Niw3Ljc1LDQuMSwxMC42OWw5LjY2LDkuMDFaIi8%2BPHBhdGggZmlsbD0iI2ZmZiIgZD0iTTI5LjUyLDQ3LjMyYy0uOTgtLjkzLTYuNTUtNi4wOS03LjY5LTcuMTctMS44Mi0xLjczLTMuMTUtMi44Mi00LjY1LTUuOTktMS40LTIuOTUtMS4zMy01LjE3LTEuNC03Ljkxdi0xMC4zNGMyLjU1LDIuNTIsNi4yMiw0LjkxLDYuMzMsOS4xbC4xMSwzLjkzcy4wMi42Ni4wNC45NmMuMTQsMi4xNywzLjY3LDEwLjAzLDcuMjYsMTcuNDRaIi8%2BPC9zdmc%2B" /></a>
 </p>
 
 <p align="center">
