@@ -9,8 +9,9 @@
 </p>
 
 <p align="center">
+  <a href="https://mrd-indicators.com/examples"><strong>▶ Live Demos</strong></a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="https://mrd-indicators.com/docs/charting-library/introduction"><strong>📖 Docs</strong></a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
-  <a href="https://app.mrd-indicators.com/trading/chart-terminal">Live Demo</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  <a href="https://app.mrd-indicators.com/trading/chart-terminal">Full App</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="#run-demo-locally">Run Demo Locally</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="https://discord.gg/buX2h5ZZm">Discord</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="https://x.com/mrDocTradingIO">X</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
@@ -24,6 +25,15 @@
   <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-brightgreen" />
   <img alt="framework agnostic" src="https://img.shields.io/badge/framework-agnostic-blueviolet" />
   <img alt="license" src="https://img.shields.io/badge/license-commercial-orange" />
+</p>
+
+<p align="center">
+  <a href="https://mrd-indicators.com/examples"><img alt="Live Demos — run in your browser" src="https://img.shields.io/badge/▶_LIVE_DEMOS-run_in_your_browser-0a7cff?style=for-the-badge" /></a>
+</p>
+
+<p align="center">
+  <strong><a href="https://mrd-indicators.com/examples">Try 20+ interactive demos live in your browser →</a></strong><br/>
+  Kline · Orderbook Heatmap · Footprint · DOM Ladder · Volume Profile · CVD · RSI · Bar Replay · Mobile — real Binance data, no clone, no build step.
 </p>
 
 <p align="center">
