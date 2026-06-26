@@ -1,6 +1,6 @@
 # Performance & Optimization
 
-> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/charting-library/performance](https://mrd-indicators.com/docs/charting-library/performance)** — this Markdown mirror is kept for offline / GitHub browsing.
+> 📖 **The canonical version of this page is now hosted at [https://tapedelta.com/docs/charting-library/performance](https://tapedelta.com/docs/charting-library/performance)** — this Markdown mirror is kept for offline / GitHub browsing.
 
 
 Kline Orderbook Chart is built for high-frequency, data-intensive charting. This guide covers how the engine achieves its performance and best practices for your application.

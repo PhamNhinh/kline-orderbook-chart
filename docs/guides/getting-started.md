@@ -1,6 +1,6 @@
 # Getting Started
 
-> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/charting-library/getting-started](https://mrd-indicators.com/docs/charting-library/getting-started)** — this Markdown mirror is kept for offline / GitHub browsing.
+> 📖 **The canonical version of this page is now hosted at [https://tapedelta.com/docs/charting-library/getting-started](https://tapedelta.com/docs/charting-library/getting-started)** — this Markdown mirror is kept for offline / GitHub browsing.
 
 
 This tutorial walks you through installing kline-orderbook-chart, creating your first candlestick chart, and starting the real-time render loop — in under 5 minutes.
@@ -28,7 +28,7 @@ The package ships as a single ES module (`dist/mrd-chart-engine.mjs`) with the n
 
 A license key is required. You can start with a **free 14-day trial** (no credit card):
 
-[Request a trial key →](https://app.mrd-indicators.com/charting-library/pricing)
+[Request a trial key →](https://app.tapedelta.com/charting-library/pricing)
 
 The trial key enables all features with a small watermark overlay.
 

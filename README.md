@@ -9,13 +9,13 @@
 </p>
 
 <p align="center">
-  <a href="https://mrd-indicators.com/examples"><strong>▶ Live Demos</strong></a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
-  <a href="https://mrd-indicators.com/docs/charting-library/introduction"><strong>📖 Docs</strong></a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
-  <a href="https://app.mrd-indicators.com/trading/chart-terminal">Full App</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  <a href="https://tapedelta.com/examples"><strong>▶ Live Demos</strong></a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  <a href="https://tapedelta.com/docs/charting-library/introduction"><strong>📖 Docs</strong></a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  <a href="https://app.tapedelta.com/trading/chart-terminal">Full App</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="#run-demo-locally">Run Demo Locally</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="https://discord.gg/buX2h5ZZm">Discord</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
   <a href="https://x.com/mrDocTradingIO">X</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
-  <a href="mailto:support@mrd-indicators.com">Contact</a>
+  <a href="mailto:support@tapedelta.com">Contact</a>
 </p>
 
 <p align="center">
@@ -28,16 +28,16 @@
 </p>
 
 <p align="center">
-  <a href="https://mrd-indicators.com/examples"><img alt="Live Demos — run in your browser" src="https://img.shields.io/badge/LIVE_DEMOS-run_in_your_browser-0a7cff?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1Mi41OSA0OS42MSI%2BPHBhdGggZmlsbD0iI2ZmZiIgZD0iTTQwLjQ1LDE1LjljMi4xOSwwLDQuMTcuODgsNS42LDIuMzEsMS40MywxLjQzLDIuMzIsMy40LDIuMzIsNS41OCwwLDQuMzYtMy41NSw3Ljg5LTcuOTIsNy44OWgtNS4wNHYtMTUuNzhoNS4wNFoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMjkuNTIsNDcuMzJsLTEuNi0yOS4wOWMwLTIuNDUtLjk4LTQuOC0yLjcyLTYuNTNMMTUuNzUsMi4yOXYyNS4zM2MwLDMuOTUsMS40Niw3Ljc1LDQuMSwxMC42OWw5LjY2LDkuMDFaIi8%2BPHBhdGggZmlsbD0iI2ZmZiIgZD0iTTI5LjUyLDQ3LjMyYy0uOTgtLjkzLTYuNTUtNi4wOS03LjY5LTcuMTctMS44Mi0xLjczLTMuMTUtMi44Mi00LjY1LTUuOTktMS40LTIuOTUtMS4zMy01LjE3LTEuNC03Ljkxdi0xMC4zNGMyLjU1LDIuNTIsNi4yMiw0LjkxLDYuMzMsOS4xbC4xMSwzLjkzcy4wMi42Ni4wNC45NmMuMTQsMi4xNywzLjY3LDEwLjAzLDcuMjYsMTcuNDRaIi8%2BPC9zdmc%2B" /></a>
+  <a href="https://tapedelta.com/examples"><img alt="Live Demos — run in your browser" src="https://img.shields.io/badge/LIVE_DEMOS-run_in_your_browser-0a7cff?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1Mi41OSA0OS42MSI%2BPHBhdGggZmlsbD0iI2ZmZiIgZD0iTTQwLjQ1LDE1LjljMi4xOSwwLDQuMTcuODgsNS42LDIuMzEsMS40MywxLjQzLDIuMzIsMy40LDIuMzIsNS41OCwwLDQuMzYtMy41NSw3Ljg5LTcuOTIsNy44OWgtNS4wNHYtMTUuNzhoNS4wNFoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMjkuNTIsNDcuMzJsLTEuNi0yOS4wOWMwLTIuNDUtLjk4LTQuOC0yLjcyLTYuNTNMMTUuNzUsMi4yOXYyNS4zM2MwLDMuOTUsMS40Niw3Ljc1LDQuMSwxMC42OWw5LjY2LDkuMDFaIi8%2BPHBhdGggZmlsbD0iI2ZmZiIgZD0iTTI5LjUyLDQ3LjMyYy0uOTgtLjkzLTYuNTUtNi4wOS03LjY5LTcuMTctMS44Mi0xLjczLTMuMTUtMi44Mi00LjY1LTUuOTktMS40LTIuOTUtMS4zMy01LjE3LTEuNC03Ljkxdi0xMC4zNGMyLjU1LDIuNTIsNi4yMiw0LjkxLDYuMzMsOS4xbC4xMSwzLjkzcy4wMi42Ni4wNC45NmMuMTQsMi4xNywzLjY3LDEwLjAzLDcuMjYsMTcuNDRaIi8%2BPC9zdmc%2B" /></a>
 </p>
 
 <p align="center">
-  <strong><a href="https://mrd-indicators.com/examples">Try 20+ interactive demos live in your browser →</a></strong><br/>
+  <strong><a href="https://tapedelta.com/examples">Try 20+ interactive demos live in your browser →</a></strong><br/>
   Kline · Orderbook Heatmap · Footprint · DOM Ladder · Volume Profile · CVD · RSI · Bar Replay · Mobile — real Binance data, no clone, no build step.
 </p>
 
 <p align="center">
-  📖 <strong>Full documentation:</strong> <a href="https://mrd-indicators.com/docs/charting-library/introduction"><code>mrd-indicators.com/docs/charting-library/introduction</code></a>
+  📖 <strong>Full documentation:</strong> <a href="https://tapedelta.com/docs/charting-library/introduction"><code>tapedelta.com/docs/charting-library/introduction</code></a>
 </p>
 
 ---
@@ -63,14 +63,14 @@ Building it yourself means months of work: Canvas rendering, depth matrix manage
 </p>
 
 <p align="center">
-  <a href="https://mrd-indicators.com/docs/charting-library/orderbook-heatmap" title="Orderbook Heatmap docs — depth matrix protocol, real-time append, walls and color schemes">
+  <a href="https://tapedelta.com/docs/charting-library/orderbook-heatmap" title="Orderbook Heatmap docs — depth matrix protocol, real-time append, walls and color schemes">
     <img src="assets/media/orderbook-depth-profile.png" alt="Real-time orderbook depth heatmap behind BTC/USDT candles with bid ask color map, side depth profile and labeled wall markers" width="100%" />
   </a>
 </p>
 
 <p align="center">
   <em>BTC/USDT — Orderbook depth heatmap rendered behind the candles, with side depth profile and labeled walls.</em><br/>
-  <sub>📖 API guide: <a href="https://mrd-indicators.com/docs/charting-library/orderbook-heatmap"><code>setHeatmap()</code>, <code>appendHeatmapColumn()</code>, walls &amp; color schemes →</a></sub>
+  <sub>📖 API guide: <a href="https://tapedelta.com/docs/charting-library/orderbook-heatmap"><code>setHeatmap()</code>, <code>appendHeatmapColumn()</code>, walls &amp; color schemes →</a></sub>
 </p>
 
 <p align="center">
@@ -350,7 +350,7 @@ Open [http://localhost:5180](http://localhost:5180) — see [demo/README.md](dem
 
 For the **full experience** with all features:
 
-**[app.mrd-indicators.com/trading/chart-terminal](https://app.mrd-indicators.com/trading/chart-terminal)**
+**[app.tapedelta.com/trading/chart-terminal](https://app.tapedelta.com/trading/chart-terminal)**
 
 ---
 
@@ -450,7 +450,7 @@ let chart = null
 
 onMounted(async () => {
   chart = await createChartBridge(el.value, {
-    licenseKey: import.meta.env.VITE_MRD_KEY,
+    licenseKey: import.meta.env.VITE_TAPEDELTA_KEY,
   })
 
   const res = await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=5m&limit=1000')
@@ -507,15 +507,15 @@ See [full Vue guide](docs/examples/vue.md) for composables, theme switching, and
 Free 14-day trial included. Contact us for pricing and license options:
 
 <p align="center">
-  <a href="https://app.mrd-indicators.com/trading/chart-terminal">Try live demo</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
-  <a href="mailto:support@mrd-indicators.com"><strong>Contact for pricing &rarr;</strong></a>
+  <a href="https://app.tapedelta.com/trading/chart-terminal">Try live demo</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  <a href="mailto:support@tapedelta.com"><strong>Contact for pricing &rarr;</strong></a>
 </p>
 
 ---
 
 ## Documentation
 
-> **[📖 Read the full documentation at mrd-indicators.com/docs/charting-library](https://mrd-indicators.com/docs/charting-library/introduction)** — installable in 5 minutes, full API reference, framework integrations, and live runnable examples.
+> **[📖 Read the full documentation at tapedelta.com/docs/charting-library](https://tapedelta.com/docs/charting-library/introduction)** — installable in 5 minutes, full API reference, framework integrations, and live runnable examples.
 
 The web docs are the canonical source. The Markdown copies below mirror the same content directly on GitHub for offline reading.
 
@@ -523,46 +523,46 @@ The web docs are the canonical source. The Markdown copies below mirror the same
 
 | Guide | Web docs | GitHub mirror |
 |---|---|---|
-| Getting Started | [mrd-indicators.com/docs/charting-library/getting-started](https://mrd-indicators.com/docs/charting-library/getting-started) | [docs/guides/getting-started.md](docs/guides/getting-started.md) |
-| Core Concepts & Architecture | [mrd-indicators.com/docs/charting-library/introduction](https://mrd-indicators.com/docs/charting-library/introduction) | [docs/guides/architecture.md](docs/guides/architecture.md) |
-| Framework Integration | [mrd-indicators.com/docs/charting-library/react-integration](https://mrd-indicators.com/docs/charting-library/react-integration) | [docs/examples/framework-integration.md](docs/examples/framework-integration.md) |
+| Getting Started | [tapedelta.com/docs/charting-library/getting-started](https://tapedelta.com/docs/charting-library/getting-started) | [docs/guides/getting-started.md](docs/guides/getting-started.md) |
+| Core Concepts & Architecture | [tapedelta.com/docs/charting-library/introduction](https://tapedelta.com/docs/charting-library/introduction) | [docs/guides/architecture.md](docs/guides/architecture.md) |
+| Framework Integration | [tapedelta.com/docs/charting-library/react-integration](https://tapedelta.com/docs/charting-library/react-integration) | [docs/examples/framework-integration.md](docs/examples/framework-integration.md) |
 
 ### Data & Chart Types
 
 | Guide | Web docs | GitHub mirror |
 |---|---|---|
-| Candlestick Data | [mrd-indicators.com/docs/charting-library/data-loading](https://mrd-indicators.com/docs/charting-library/data-loading) | [docs/guides/data.md](docs/guides/data.md) |
-| Orderbook Heatmap | [mrd-indicators.com/docs/charting-library/orderbook-heatmap](https://mrd-indicators.com/docs/charting-library/orderbook-heatmap) | [docs/guides/orderbook-heatmap.md](docs/guides/orderbook-heatmap.md) |
-| Footprint Chart | [mrd-indicators.com/docs/charting-library/footprint-chart](https://mrd-indicators.com/docs/charting-library/footprint-chart) | [docs/guides/footprint-chart.md](docs/guides/footprint-chart.md) |
+| Candlestick Data | [tapedelta.com/docs/charting-library/data-loading](https://tapedelta.com/docs/charting-library/data-loading) | [docs/guides/data.md](docs/guides/data.md) |
+| Orderbook Heatmap | [tapedelta.com/docs/charting-library/orderbook-heatmap](https://tapedelta.com/docs/charting-library/orderbook-heatmap) | [docs/guides/orderbook-heatmap.md](docs/guides/orderbook-heatmap.md) |
+| Footprint Chart | [tapedelta.com/docs/charting-library/footprint-chart](https://tapedelta.com/docs/charting-library/footprint-chart) | [docs/guides/footprint-chart.md](docs/guides/footprint-chart.md) |
 | Chart Aggregation | — | [docs/guides/chart-aggregation.md](docs/guides/chart-aggregation.md) |
 
 ### Indicators & Analysis
 
 | Guide | Web docs | GitHub mirror |
 |---|---|---|
-| Built-in Indicators | [mrd-indicators.com/docs/charting-library/indicators](https://mrd-indicators.com/docs/charting-library/indicators) | [docs/guides/indicators.md](docs/guides/indicators.md) |
+| Built-in Indicators | [tapedelta.com/docs/charting-library/indicators](https://tapedelta.com/docs/charting-library/indicators) | [docs/guides/indicators.md](docs/guides/indicators.md) |
 | Custom Indicators | — | [docs/guides/custom-indicators.md](docs/guides/custom-indicators.md) |
 
 ### Drawing & Interaction
 
 | Guide | Web docs | GitHub mirror |
 |---|---|---|
-| Drawing Tools | [mrd-indicators.com/docs/charting-library/drawing](https://mrd-indicators.com/docs/charting-library/drawing) | [docs/guides/drawings.md](docs/guides/drawings.md) |
-| Events & Tooltips | [mrd-indicators.com/docs/charting-library/events-and-tooltips](https://mrd-indicators.com/docs/charting-library/events-and-tooltips) | [docs/guides/tooltip.md](docs/guides/tooltip.md) |
-| Viewport & Interaction | [mrd-indicators.com/docs/charting-library/chart-instance](https://mrd-indicators.com/docs/charting-library/chart-instance) | [docs/guides/viewport-interaction.md](docs/guides/viewport-interaction.md) |
+| Drawing Tools | [tapedelta.com/docs/charting-library/drawing](https://tapedelta.com/docs/charting-library/drawing) | [docs/guides/drawings.md](docs/guides/drawings.md) |
+| Events & Tooltips | [tapedelta.com/docs/charting-library/events-and-tooltips](https://tapedelta.com/docs/charting-library/events-and-tooltips) | [docs/guides/tooltip.md](docs/guides/tooltip.md) |
+| Viewport & Interaction | [tapedelta.com/docs/charting-library/chart-instance](https://tapedelta.com/docs/charting-library/chart-instance) | [docs/guides/viewport-interaction.md](docs/guides/viewport-interaction.md) |
 
 ### Configuration
 
 | Guide | Web docs | GitHub mirror |
 |---|---|---|
-| Theming | [mrd-indicators.com/docs/charting-library/theming-and-colors](https://mrd-indicators.com/docs/charting-library/theming-and-colors) | [docs/guides/themes.md](docs/guides/themes.md) |
-| Advanced Topics | [mrd-indicators.com/docs/charting-library/performance](https://mrd-indicators.com/docs/charting-library/performance) | [docs/guides/advanced.md](docs/guides/advanced.md) |
+| Theming | [tapedelta.com/docs/charting-library/theming-and-colors](https://tapedelta.com/docs/charting-library/theming-and-colors) | [docs/guides/themes.md](docs/guides/themes.md) |
+| Advanced Topics | [tapedelta.com/docs/charting-library/performance](https://tapedelta.com/docs/charting-library/performance) | [docs/guides/advanced.md](docs/guides/advanced.md) |
 
 ### Reference
 
 | Guide | Web docs | GitHub mirror |
 |---|---|---|
-| API Reference | [mrd-indicators.com/docs/charting-library/introduction](https://mrd-indicators.com/docs/charting-library/introduction) | [docs/api/README.md](docs/api/README.md) |
+| API Reference | [tapedelta.com/docs/charting-library/introduction](https://tapedelta.com/docs/charting-library/introduction) | [docs/api/README.md](docs/api/README.md) |
 | [React Integration](docs/examples/react.md) | Hooks, resize, WebSocket |
 | [Vue 3 Integration](docs/examples/vue.md) | Composables, theme switching |
 
@@ -593,5 +593,5 @@ See [LICENSE](./LICENSE) for full terms.
 
 <p align="center">
   <sub>Native high-performance engine. Designed for traders who need to see the full order book.</sub><br/>
-  <sub>&copy; 2026 MRD Technologies. All rights reserved.</sub>
+  <sub>&copy; 2026 Tape Delta. All rights reserved.</sub>
 </p>

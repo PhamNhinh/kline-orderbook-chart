@@ -2,7 +2,7 @@
 
 A production-grade demo application showcasing **[kline-orderbook-chart](https://www.npmjs.com/package/kline-orderbook-chart)** with live market data from Binance Futures and Bybit Linear.
 
-> **📖 Looking for the full docs?** Read them at **[mrd-indicators.com/docs/charting-library/introduction](https://mrd-indicators.com/docs/charting-library/introduction)** — install, lifecycle, data loading, footprint, orderbook heatmap, indicators, drawing tools, and framework integrations.
+> **📖 Looking for the full docs?** Read them at **[tapedelta.com/docs/charting-library/introduction](https://tapedelta.com/docs/charting-library/introduction)** — install, lifecycle, data loading, footprint, orderbook heatmap, indicators, drawing tools, and framework integrations.
 
 ## What This Demo Shows
 
@@ -128,4 +128,4 @@ parameter hot-reloading, and performance tips lives in
 
 ## License
 
-This demo is provided as a reference implementation for `kline-orderbook-chart` integration. It ships with a perpetual enterprise license token bound to a single domain (`demo.mrd-indicators.com`) plus the implicit localhost / 127.0.0.1 bypass — so cloning and running `npm run dev` locally Just Works. If you deploy the demo to any other domain (your own host, GitHub Pages, Vercel, Netlify, etc.) the library transparently falls back to a 30-day watermarked trial. Get a production license at [mrd-indicators.com](https://app.mrd-indicators.com/charting-library/pricing).
+This demo is provided as a reference implementation for `kline-orderbook-chart` integration. It ships with a perpetual enterprise license token bound to a single domain (`demo.tapedelta.com`) plus the implicit localhost / 127.0.0.1 bypass — so cloning and running `npm run dev` locally Just Works. If you deploy the demo to any other domain (your own host, GitHub Pages, Vercel, Netlify, etc.) the library transparently falls back to a 30-day watermarked trial. Get a production license at [tapedelta.com](https://app.tapedelta.com/charting-library/pricing).

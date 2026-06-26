@@ -1,6 +1,6 @@
 # Kline Orderbook Chart — Documentation
 
-> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/charting-library/introduction](https://mrd-indicators.com/docs/charting-library/introduction)** — this Markdown mirror is kept for offline / GitHub browsing.
+> 📖 **The canonical version of this page is now hosted at [https://tapedelta.com/docs/charting-library/introduction](https://tapedelta.com/docs/charting-library/introduction)** — this Markdown mirror is kept for offline / GitHub browsing.
 
 
 Welcome to the official documentation for **Kline Orderbook Chart**, the only chart library that combines candlestick charts with real-time orderbook heatmap, footprint chart, and liquidation heatmap — all in a single `<canvas>`.
@@ -70,8 +70,8 @@ Welcome to the official documentation for **Kline Orderbook Chart**, the only ch
 
 ---
 
-- [Live Demo](https://app.mrd-indicators.com/trading/chart-terminal) — Full-featured demo with real market data
+- [Live Demo](https://app.tapedelta.com/trading/chart-terminal) — Full-featured demo with real market data
 - [npm Package](https://www.npmjs.com/package/kline-orderbook-chart)
 - [GitHub Repository](https://github.com/PhamNhinh/kline-orderbook-chart)
 - [Discord Community](https://discord.gg/buX2h5ZZm)
-- [Contact Sales](mailto:support@mrd-indicators.com)
+- [Contact Sales](mailto:support@tapedelta.com)

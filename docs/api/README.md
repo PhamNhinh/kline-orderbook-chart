@@ -1,6 +1,6 @@
 # API Reference
 
-> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/charting-library/introduction](https://mrd-indicators.com/docs/charting-library/introduction)** — this Markdown mirror is kept for offline / GitHub browsing.
+> 📖 **The canonical version of this page is now hosted at [https://tapedelta.com/docs/charting-library/introduction](https://tapedelta.com/docs/charting-library/introduction)** — this Markdown mirror is kept for offline / GitHub browsing.
 
 
 Complete reference for all public methods on a `MrdChart` instance.

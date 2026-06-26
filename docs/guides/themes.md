@@ -1,6 +1,6 @@
 # Theming
 
-> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/charting-library/theming-and-colors](https://mrd-indicators.com/docs/charting-library/theming-and-colors)** — this Markdown mirror is kept for offline / GitHub browsing.
+> 📖 **The canonical version of this page is now hosted at [https://tapedelta.com/docs/charting-library/theming-and-colors](https://tapedelta.com/docs/charting-library/theming-and-colors)** — this Markdown mirror is kept for offline / GitHub browsing.
 
 
 kline-orderbook-chart supports dark and light themes with automatic color management for all chart elements — candles, indicators, axes, grid, drawings, and heatmaps.

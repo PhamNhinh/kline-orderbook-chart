@@ -1,9 +1,9 @@
 # kline-orderbook-chart — Documentation
 
-> 📖 **The canonical version of this page is now hosted at [https://mrd-indicators.com/docs/charting-library/introduction](https://mrd-indicators.com/docs/charting-library/introduction)** — this Markdown mirror is kept for offline / GitHub browsing.
+> 📖 **The canonical version of this page is now hosted at [https://tapedelta.com/docs/charting-library/introduction](https://tapedelta.com/docs/charting-library/introduction)** — this Markdown mirror is kept for offline / GitHub browsing.
 
 
-**Version 0.1.0** · [Live Demo](https://app.mrd-indicators.com/trading/chart-terminal) · [Pricing](https://app.mrd-indicators.com/charting-library/pricing) · [Discord](https://discord.gg/buX2h5ZZm)
+**Version 0.1.0** · [Live Demo](https://app.tapedelta.com/trading/chart-terminal) · [Pricing](https://app.tapedelta.com/charting-library/pricing) · [Discord](https://discord.gg/buX2h5ZZm)
 
 ---
 
@@ -95,4 +95,4 @@ kline-orderbook-chart is commercial software. A valid license key is required fo
 
 A **14-day free trial** is available with no credit card required. Trial builds render correctly but display a watermark.
 
-[Request a trial key →](https://app.mrd-indicators.com/charting-library/pricing)
+[Request a trial key →](https://app.tapedelta.com/charting-library/pricing)
